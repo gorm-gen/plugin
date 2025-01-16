@@ -1,4 +1,4 @@
-module plugin
+module github.com/gorm-gen/plugin
 
 go 1.23.4
 
