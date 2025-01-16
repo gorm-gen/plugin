@@ -25,13 +25,19 @@ func (g *Generate) SetDataTypeMap(newMap map[string]func(columnType gorm.ColumnT
 			if detailType.Name() == "deleted_at" {
 				return "gorm.DeletedAt"
 			}
-			return "*time.Time"
+			if nullable, ok := detailType.Nullable(); nullable && ok {
+				return "*time.Time"
+			}
+			return "time.Time"
 		},
 		"timestamp": func(detailType gorm.ColumnType) (dataType string) {
 			if detailType.Name() == "deleted_at" {
 				return "gorm.DeletedAt"
 			}
-			return "*time.Time"
+			if nullable, ok := detailType.Nullable(); nullable && ok {
+				return "*time.Time"
+			}
+			return "time.Time"
 		},
 		"tinyint": func(detailType gorm.ColumnType) (dataType string) {
 			return "int8"
