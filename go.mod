@@ -1,6 +1,6 @@
 module github.com/gorm-gen/plugin
 
-go 1.23.4
+go 1.23.5
 
 require (
 	github.com/shopspring/decimal v1.4.0
