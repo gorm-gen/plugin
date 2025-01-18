@@ -44,13 +44,13 @@ func WithModelPkgPath(modelPkgPath string) Option {
 
 func WithGenerateModel(tableNames ...string) Option {
 	return func(g *Generate) {
-		g.generateModel = tableNames
+		g.generateModel = append(g.generateModel, tableNames...)
 	}
 }
 
 func WithApplyBasic(models ...interface{}) Option {
 	return func(g *Generate) {
-		g.applyBasic = models
+		g.applyBasic = append(g.applyBasic, models...)
 	}
 }
 
@@ -106,12 +106,14 @@ func WithReplaceJsonTagName(jsonTagName map[string]map[string]string) Option {
 
 func New(db *gorm.DB, opts ...Option) *Generate {
 	g := &Generate{
-		db:           db,
-		outPath:      "./internal/query",
-		mode:         gen.WithoutContext | gen.WithDefaultQuery | gen.WithQueryInterface,
-		modelPkgPath: "models",
-		dataTypeMap:  dataTypeMap(),
-		jsonTagName:  jsonTagName(),
+		db:            db,
+		outPath:       "./internal/query",
+		mode:          gen.WithoutContext | gen.WithDefaultQuery | gen.WithQueryInterface,
+		modelPkgPath:  "models",
+		dataTypeMap:   dataTypeMap(),
+		jsonTagName:   jsonTagName(),
+		generateModel: make([]string, 0),
+		applyBasic:    make([]interface{}, 0),
 	}
 
 	for _, opt := range opts {
@@ -128,11 +130,11 @@ func New(db *gorm.DB, opts ...Option) *Generate {
 }
 
 func (g *Generate) Execute() {
-	if g.dataTypeMap != nil {
+	if g.dataTypeMap != nil && len(g.dataTypeMap) > 0 {
 		g.generate.WithDataTypeMap(g.dataTypeMap)
 	}
 
-	if g.jsonTagName != nil {
+	if g.jsonTagName != nil && len(g.jsonTagName) > 0 {
 		g.generate.WithJSONTagNameStrategy(func(columnName string) string {
 			if tag, ok := g.jsonTagName[columnName]; ok {
 				for k, v := range tag {
