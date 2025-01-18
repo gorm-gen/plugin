@@ -60,9 +60,47 @@ func WithDataTypeMap(dataTypeMap map[string]func(gorm.ColumnType) string) Option
 	}
 }
 
+func WithReplaceDataTypeMap(dataTypeMap map[string]func(gorm.ColumnType) string) Option {
+	return func(g *Generate) {
+		if dataTypeMap == nil {
+			g.dataTypeMap = nil
+			return
+		}
+		if g.dataTypeMap == nil {
+			g.dataTypeMap = make(map[string]func(gorm.ColumnType) string)
+		}
+		for k, v := range dataTypeMap {
+			if v == nil {
+				delete(g.dataTypeMap, k)
+				continue
+			}
+			g.dataTypeMap[k] = v
+		}
+	}
+}
+
 func WithJsonTagName(jsonTagName map[string]map[string]string) Option {
 	return func(g *Generate) {
 		g.jsonTagName = jsonTagName
+	}
+}
+
+func WithReplaceJsonTagName(jsonTagName map[string]map[string]string) Option {
+	return func(g *Generate) {
+		if jsonTagName == nil {
+			g.jsonTagName = nil
+			return
+		}
+		if g.jsonTagName == nil {
+			g.jsonTagName = make(map[string]map[string]string)
+		}
+		for k, v := range jsonTagName {
+			if v == nil {
+				delete(g.jsonTagName, k)
+				continue
+			}
+			g.jsonTagName[k] = v
+		}
 	}
 }
 
