@@ -1,6 +1,8 @@
 package generate
 
 import (
+	"fmt"
+
 	_ "github.com/shopspring/decimal"
 	_ "gorm.io/plugin/soft_delete"
 
@@ -9,15 +11,95 @@ import (
 )
 
 type Generate struct {
-	generate *gen.Generator
+	db            *gorm.DB
+	outPath       string
+	mode          gen.GenerateMode
+	modelPkgPath  string
+	dataTypeMap   map[string]func(gorm.ColumnType) string
+	jsonTagName   map[string]map[string]string
+	generateModel []string
+	applyBasic    []interface{}
+	generate      *gen.Generator
 }
 
-func New(generate *gen.Generator) *Generate {
-	return &Generate{generate: generate}
+type Option func(*Generate)
+
+func WithOutPath(outPath string) Option {
+	return func(g *Generate) {
+		g.outPath = outPath
+	}
 }
 
-func (g *Generate) SetDataTypeMap(newMap map[string]func(columnType gorm.ColumnType) (dataType string)) {
-	dataMap := map[string]func(detailType gorm.ColumnType) string{
+func WithMode(mode gen.GenerateMode) Option {
+	return func(g *Generate) {
+		g.mode = mode
+	}
+}
+
+func WithModelPkgPath(modelPkgPath string) Option {
+	return func(g *Generate) {
+		g.modelPkgPath = modelPkgPath
+	}
+}
+
+func WithGenerateModel(generateModel ...string) Option {
+	return func(g *Generate) {
+		g.generateModel = generateModel
+	}
+}
+
+func WithApplyBasic(applyBasic ...interface{}) Option {
+	return func(g *Generate) {
+		g.applyBasic = applyBasic
+	}
+}
+
+func New(db *gorm.DB, opts ...Option) *Generate {
+	g := &Generate{
+		db:           db,
+		outPath:      "./internal/query",
+		mode:         gen.WithoutContext | gen.WithDefaultQuery | gen.WithQueryInterface,
+		modelPkgPath: "models",
+		dataTypeMap:  dataTypeMap(),
+		jsonTagName:  jsonTagName(),
+	}
+
+	for _, opt := range opts {
+		opt(g)
+	}
+
+	g.generate = gen.NewGenerator(gen.Config{
+		OutPath:      g.outPath,
+		Mode:         g.mode,
+		ModelPkgPath: g.modelPkgPath,
+	})
+
+	return g
+}
+
+func (g *Generate) Execute() {
+	if g.dataTypeMap != nil {
+		g.generate.WithDataTypeMap(g.dataTypeMap)
+	}
+
+	if g.jsonTagName != nil {
+		g.generate.WithJSONTagNameStrategy(func(columnName string) string {
+			if tag, ok := g.jsonTagName[columnName]; ok {
+				for k, v := range tag {
+					return fmt.Sprintf(`%s" %s:"%s`, columnName, k, v)
+				}
+			}
+			return columnName
+		})
+	}
+
+	g.generate.UseDB(g.db)
+	//
+	g.generate.Execute()
+}
+
+func dataTypeMap() map[string]func(gorm.ColumnType) string {
+	return map[string]func(detailType gorm.ColumnType) string{
 		"decimal": func(detailType gorm.ColumnType) (dataType string) {
 			return "decimal.Decimal"
 		},
@@ -73,38 +155,11 @@ func (g *Generate) SetDataTypeMap(newMap map[string]func(columnType gorm.ColumnT
 			return "string"
 		},
 	}
-
-	if newMap != nil {
-		for k, v := range newMap {
-			if v == nil {
-				delete(dataMap, k)
-				continue
-			}
-			dataMap[k] = v
-		}
-	}
-
-	g.generate.WithDataTypeMap(dataMap)
 }
 
-func (g *Generate) SetJSONTagNameStrategy(newTags map[string]string) {
-	tags := map[string]string{
-		"created_at": "sql_datetime",
-		"updated_at": "sql_datetime",
+func jsonTagName() map[string]map[string]string {
+	return map[string]map[string]string{
+		"created_at": {"time_format": "sql_datetime"},
+		"updated_at": {"time_format": "sql_datetime"},
 	}
-	if newTags != nil {
-		for k, v := range newTags {
-			if v == "" {
-				delete(tags, k)
-				continue
-			}
-			tags[k] = v
-		}
-	}
-	g.generate.WithJSONTagNameStrategy(func(columnName string) string {
-		if v, ok := tags[columnName]; ok {
-			return columnName + "\" time_format:\"" + v
-		}
-		return columnName
-	})
 }
