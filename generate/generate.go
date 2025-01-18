@@ -42,15 +42,15 @@ func WithModelPkgPath(modelPkgPath string) Option {
 	}
 }
 
-func WithGenerateModel(generateModel ...string) Option {
+func WithGenerateModel(tableNames ...string) Option {
 	return func(g *Generate) {
-		g.generateModel = generateModel
+		g.generateModel = tableNames
 	}
 }
 
-func WithApplyBasic(applyBasic ...interface{}) Option {
+func WithApplyBasic(models ...interface{}) Option {
 	return func(g *Generate) {
-		g.applyBasic = applyBasic
+		g.applyBasic = models
 	}
 }
 
@@ -94,7 +94,15 @@ func (g *Generate) Execute() {
 	}
 
 	g.generate.UseDB(g.db)
-	//
+
+	for _, tableName := range g.generateModel {
+		g.generate.GenerateModel(tableName)
+	}
+
+	if len(g.applyBasic) > 0 {
+		g.generate.ApplyBasic(g.applyBasic...)
+	}
+
 	g.generate.Execute()
 }
 
