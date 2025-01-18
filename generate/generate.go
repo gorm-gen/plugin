@@ -54,6 +54,18 @@ func WithApplyBasic(models ...interface{}) Option {
 	}
 }
 
+func WithDataTypeMap(dataTypeMap map[string]func(gorm.ColumnType) string) Option {
+	return func(g *Generate) {
+		g.dataTypeMap = dataTypeMap
+	}
+}
+
+func WithJsonTagName(jsonTagName map[string]map[string]string) Option {
+	return func(g *Generate) {
+		g.jsonTagName = jsonTagName
+	}
+}
+
 func New(db *gorm.DB, opts ...Option) *Generate {
 	g := &Generate{
 		db:           db,
