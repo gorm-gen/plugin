@@ -1,19 +1,64 @@
 package field
 
 import (
-	"database/sql/driver"
-	
 	"github.com/shopspring/decimal"
+	"gorm.io/gen/field"
 )
 
-type Decimal struct {
-	value decimal.Decimal
+type Field struct {
+	tableName string
+	column    string
 }
 
-func NewDecimal(value decimal.Decimal) *Decimal {
-	return &Decimal{value: value}
+func NewDecimal(genField field.Field, opts ...Option) *Field {
+	f := &Field{
+		column: genField.ColumnName().String(),
+	}
+
+	for _, opt := range opts {
+		opt(f)
+	}
+
+	return f
 }
 
-func (d Decimal) Value() (driver.Value, error) {
-	return d.value.InexactFloat64(), nil
+type Option func(*Field)
+
+func WithTableName(tableName string) Option {
+	return func(f *Field) {
+		f.tableName = tableName
+	}
+}
+
+func (f *Field) newField64() field.Float64 {
+	return field.NewFloat64(f.tableName, f.column)
+}
+
+func (f *Field) toFloat64(val decimal.Decimal) float64 {
+	return val.InexactFloat64()
+}
+
+// Value =
+func (f *Field) Value(val decimal.Decimal) field.AssignExpr {
+	return f.newField64().Value(f.toFloat64(val))
+}
+
+// Add +=
+func (f *Field) Add(val decimal.Decimal) field.AssignExpr {
+	return f.newField64().Add(f.toFloat64(val))
+}
+
+// Sub -=
+func (f *Field) Sub(val decimal.Decimal) field.AssignExpr {
+	return f.newField64().Sub(f.toFloat64(val))
+}
+
+// Mul *=
+func (f *Field) Mul(val decimal.Decimal) field.AssignExpr {
+	return f.newField64().Mul(f.toFloat64(val))
+}
+
+// Div /=
+func (f *Field) Div(val decimal.Decimal) field.AssignExpr {
+	return f.newField64().Div(f.toFloat64(val))
 }
