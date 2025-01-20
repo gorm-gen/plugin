@@ -43,6 +43,11 @@ func (f *Field) Value(val decimal.Decimal) field.AssignExpr {
 	return f.newField64().Value(f.toFloat64(val))
 }
 
+// Sum 累加
+func (f *Field) Sum() field.Float64 {
+	return f.newField64().Sum()
+}
+
 // Add +=
 func (f *Field) Add(val decimal.Decimal) field.AssignExpr {
 	return f.newField64().Add(f.toFloat64(val))
