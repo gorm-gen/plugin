@@ -38,22 +38,27 @@ func (f *Field) toFloat64(val decimal.Decimal) float64 {
 	return val.InexactFloat64()
 }
 
-// Add +
+// Value =
+func (f *Field) Value(val decimal.Decimal) field.AssignExpr {
+	return f.createNewField().Value(f.toFloat64(val))
+}
+
+// Add +=
 func (f *Field) Add(val decimal.Decimal) field.AssignExpr {
 	return f.createNewField().Add(f.toFloat64(val))
 }
 
-// Sub -
+// Sub -=
 func (f *Field) Sub(val decimal.Decimal) field.AssignExpr {
 	return f.createNewField().Sub(f.toFloat64(val))
 }
 
-// Mul *
+// Mul *=
 func (f *Field) Mul(val decimal.Decimal) field.AssignExpr {
 	return f.createNewField().Mul(f.toFloat64(val))
 }
 
-// Div /
+// Div /=
 func (f *Field) Div(val decimal.Decimal) field.AssignExpr {
 	return f.createNewField().Div(f.toFloat64(val))
 }
