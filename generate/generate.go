@@ -44,13 +44,27 @@ func WithModelPkgPath(modelPkgPath string) Option {
 
 func WithGenerateModel(tableNames ...string) Option {
 	return func(g *Generate) {
-		g.generateModel = append(g.generateModel, tableNames...)
+		_tableNames := make([]string, 0, len(tableNames))
+		for _, tableName := range tableNames {
+			if tableName == "" {
+				continue
+			}
+			_tableNames = append(_tableNames, tableName)
+		}
+		g.generateModel = append(g.generateModel, _tableNames...)
 	}
 }
 
 func WithApplyBasic(models ...interface{}) Option {
 	return func(g *Generate) {
-		g.applyBasic = append(g.applyBasic, models...)
+		_models := make([]interface{}, 0, len(models))
+		for _, model := range models {
+			if model == nil {
+				continue
+			}
+			_models = append(_models, model)
+		}
+		g.applyBasic = append(g.applyBasic, _models...)
 	}
 }
 
