@@ -38,6 +38,64 @@ func (f *Field) toFloat64(val decimal.Decimal) float64 {
 	return val.InexactFloat64()
 }
 
+// Lte <=
+func (f *Field) Lte(val decimal.Decimal) field.Expr {
+	return f.newField64().Lte(f.toFloat64(val))
+}
+
+// Lt <
+func (f *Field) Lt(val decimal.Decimal) field.Expr {
+	return f.newField64().Lt(f.toFloat64(val))
+}
+
+// Gte >=
+func (f *Field) Gte(val decimal.Decimal) field.Expr {
+	return f.newField64().Gte(f.toFloat64(val))
+}
+
+// Gt >
+func (f *Field) Gt(val decimal.Decimal) field.Expr {
+	return f.newField64().Gt(f.toFloat64(val))
+}
+
+// Eq =
+func (f *Field) Eq(val decimal.Decimal) field.Expr {
+	return f.newField64().Eq(f.toFloat64(val))
+}
+
+// Neq !=
+func (f *Field) Neq(val decimal.Decimal) field.Expr {
+	return f.newField64().Neq(f.toFloat64(val))
+}
+
+// In in
+func (f *Field) In(vals ...decimal.Decimal) field.Expr {
+	var float64Vals []float64
+	for _, val := range vals {
+		float64Vals = append(float64Vals, f.toFloat64(val))
+	}
+	return f.newField64().In(float64Vals...)
+}
+
+// NotIn not in
+func (f *Field) NotIn(vals ...decimal.Decimal) field.Expr {
+	var float64Vals []float64
+	for _, val := range vals {
+		float64Vals = append(float64Vals, f.toFloat64(val))
+	}
+	return f.newField64().NotIn(float64Vals...)
+}
+
+// Between between
+func (f *Field) Between(left, right decimal.Decimal) field.Expr {
+	return f.newField64().Between(f.toFloat64(left), f.toFloat64(right))
+}
+
+// NotBetween not between
+func (f *Field) NotBetween(left, right decimal.Decimal) field.Expr {
+	return f.newField64().NotBetween(f.toFloat64(left), f.toFloat64(right))
+}
+
 // Value =
 func (f *Field) Value(val decimal.Decimal) field.AssignExpr {
 	return f.newField64().Value(f.toFloat64(val))
