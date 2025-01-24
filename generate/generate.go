@@ -19,7 +19,7 @@ type Generate struct {
 	jsonTagName   map[string]map[string]string
 	generateModel []string
 	applyBasic    []interface{}
-	generate      *gen.Generator
+	generator     *gen.Generator
 }
 
 type Option func(*Generate)
@@ -134,7 +134,7 @@ func New(db *gorm.DB, opts ...Option) *Generate {
 		opt(g)
 	}
 
-	g.generate = gen.NewGenerator(gen.Config{
+	g.generator = gen.NewGenerator(gen.Config{
 		OutPath:      g.outPath,
 		Mode:         g.mode,
 		ModelPkgPath: g.modelPkgPath,
@@ -143,13 +143,17 @@ func New(db *gorm.DB, opts ...Option) *Generate {
 	return g
 }
 
+func (g *Generate) Generator() *gen.Generator {
+	return g.generator
+}
+
 func (g *Generate) Execute() {
 	if g.dataTypeMap != nil && len(g.dataTypeMap) > 0 {
-		g.generate.WithDataTypeMap(g.dataTypeMap)
+		g.generator.WithDataTypeMap(g.dataTypeMap)
 	}
 
 	if g.jsonTagName != nil && len(g.jsonTagName) > 0 {
-		g.generate.WithJSONTagNameStrategy(func(columnName string) string {
+		g.generator.WithJSONTagNameStrategy(func(columnName string) string {
 			if tag, ok := g.jsonTagName[columnName]; ok {
 				for k, v := range tag {
 					return fmt.Sprintf(`%s" %s:"%s`, columnName, k, v)
@@ -159,17 +163,17 @@ func (g *Generate) Execute() {
 		})
 	}
 
-	g.generate.UseDB(g.db)
+	g.generator.UseDB(g.db)
 
 	for _, tableName := range g.generateModel {
-		g.generate.GenerateModel(tableName)
+		g.generator.GenerateModel(tableName)
 	}
 
 	if len(g.applyBasic) > 0 {
-		g.generate.ApplyBasic(g.applyBasic...)
+		g.generator.ApplyBasic(g.applyBasic...)
 	}
 
-	g.generate.Execute()
+	g.generator.Execute()
 }
 
 func dataTypeMap() map[string]func(gorm.ColumnType) string {
