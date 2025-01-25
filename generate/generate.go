@@ -136,6 +136,8 @@ func New(db *gorm.DB, opts ...Option) *Generate {
 		ModelPkgPath: g.modelPkgPath,
 	})
 
+	g.generator.UseDB(db)
+
 	return g
 }
 
@@ -158,8 +160,6 @@ func (g *Generate) Execute() {
 			return columnName
 		})
 	}
-
-	g.generator.UseDB(g.db)
 
 	for _, tableName := range g.generateModel {
 		g.generator.GenerateModel(tableName)
