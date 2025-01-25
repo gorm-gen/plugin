@@ -42,30 +42,26 @@ func WithModelPkgPath(modelPkgPath string) Option {
 	}
 }
 
-func WithGenerateModel(tableNames ...string) Option {
-	return func(g *Generate) {
-		_tableNames := make([]string, 0, len(tableNames))
-		for _, tableName := range tableNames {
-			if tableName == "" {
-				continue
-			}
-			_tableNames = append(_tableNames, tableName)
+func (g *Generate) SetGenerateModel(tableNames ...string) {
+	_tableNames := make([]string, 0, len(tableNames))
+	for _, tableName := range tableNames {
+		if tableName == "" {
+			continue
 		}
-		g.generateModel = append(g.generateModel, _tableNames...)
+		_tableNames = append(_tableNames, tableName)
 	}
+	g.generateModel = append(g.generateModel, _tableNames...)
 }
 
-func WithApplyBasic(models ...interface{}) Option {
-	return func(g *Generate) {
-		_models := make([]interface{}, 0, len(models))
-		for _, model := range models {
-			if model == nil {
-				continue
-			}
-			_models = append(_models, model)
+func (g *Generate) SetApplyBasic(models ...interface{}) {
+	_models := make([]interface{}, 0, len(models))
+	for _, model := range models {
+		if model == nil {
+			continue
 		}
-		g.applyBasic = append(g.applyBasic, _models...)
+		_models = append(_models, model)
 	}
+	g.applyBasic = append(g.applyBasic, _models...)
 }
 
 func WithDataTypeMap(dataTypeMap map[string]func(gorm.ColumnType) string) Option {
