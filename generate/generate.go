@@ -2,7 +2,7 @@ package generate
 
 import (
 	"fmt"
-
+	
 	_ "github.com/shopspring/decimal"
 	_ "gorm.io/plugin/soft_delete"
 
@@ -136,16 +136,6 @@ func New(db *gorm.DB, opts ...Option) *Generate {
 		ModelPkgPath: g.modelPkgPath,
 	})
 
-	g.generator.UseDB(db)
-
-	return g
-}
-
-func (g *Generate) Generator() *gen.Generator {
-	return g.generator
-}
-
-func (g *Generate) Execute() {
 	if g.dataTypeMap != nil && len(g.dataTypeMap) > 0 {
 		g.generator.WithDataTypeMap(g.dataTypeMap)
 	}
@@ -161,6 +151,16 @@ func (g *Generate) Execute() {
 		})
 	}
 
+	g.generator.UseDB(db)
+
+	return g
+}
+
+func (g *Generate) Generator() *gen.Generator {
+	return g.generator
+}
+
+func (g *Generate) Execute() {
 	for _, tableName := range g.generateModel {
 		g.generator.GenerateModel(tableName)
 	}
