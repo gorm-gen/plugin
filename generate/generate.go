@@ -2,7 +2,7 @@ package generate
 
 import (
 	"fmt"
-	
+
 	_ "github.com/shopspring/decimal"
 	_ "gorm.io/plugin/soft_delete"
 
@@ -16,7 +16,7 @@ type Generate struct {
 	mode          gen.GenerateMode
 	modelPkgPath  string
 	dataTypeMap   map[string]func(gorm.ColumnType) string
-	jsonTagName   map[string]map[string]string
+	jsonTagName   map[string]JsonTag
 	generateModel []string
 	applyBasic    []interface{}
 	generator     *gen.Generator
@@ -89,26 +89,22 @@ func WithReplaceDataTypeMap(dataTypeMap map[string]func(gorm.ColumnType) string)
 	}
 }
 
-func WithJsonTagName(jsonTagName map[string]map[string]string) Option {
+func WithJsonTagName(jsonTagName map[string]JsonTag) Option {
 	return func(g *Generate) {
 		g.jsonTagName = jsonTagName
 	}
 }
 
-func WithReplaceJsonTagName(jsonTagName map[string]map[string]string) Option {
+func WithReplaceJsonTagName(jsonTagName map[string]JsonTag) Option {
 	return func(g *Generate) {
 		if jsonTagName == nil {
 			g.jsonTagName = nil
 			return
 		}
 		if g.jsonTagName == nil {
-			g.jsonTagName = make(map[string]map[string]string)
+			g.jsonTagName = make(map[string]JsonTag)
 		}
 		for k, v := range jsonTagName {
-			if v == nil {
-				delete(g.jsonTagName, k)
-				continue
-			}
 			g.jsonTagName[k] = v
 		}
 	}
@@ -143,9 +139,17 @@ func New(db *gorm.DB, opts ...Option) *Generate {
 	if g.jsonTagName != nil && len(g.jsonTagName) > 0 {
 		g.generator.WithJSONTagNameStrategy(func(columnName string) string {
 			if tag, ok := g.jsonTagName[columnName]; ok {
-				for k, v := range tag {
-					return fmt.Sprintf(`%s" %s:"%s`, columnName, k, v)
+				var appends string
+				for _, v := range tag.Append {
+					appends += "," + v
 				}
+				var adds string
+				for _, m := range tag.Add {
+					for k, v := range m {
+						adds += fmt.Sprintf(`" %s:"%s`, k, v)
+					}
+				}
+				return fmt.Sprintf(`%s%s%s`, columnName, appends, adds)
 			}
 			return columnName
 		})
@@ -231,9 +235,14 @@ func dataTypeMap() map[string]func(gorm.ColumnType) string {
 	}
 }
 
-func jsonTagName() map[string]map[string]string {
-	return map[string]map[string]string{
-		"created_at": {"time_format": "sql_datetime"},
-		"updated_at": {"time_format": "sql_datetime"},
+type JsonTag struct {
+	Append []string
+	Add    []map[string]string
+}
+
+func jsonTagName() map[string]JsonTag {
+	return map[string]JsonTag{
+		"created_at": {Append: []string{"omitzero"}, Add: []map[string]string{{"time_format": "sql_datetime"}}},
+		"updated_at": {Append: []string{"omitzero"}, Add: []map[string]string{{"time_format": "sql_datetime"}}},
 	}
 }
