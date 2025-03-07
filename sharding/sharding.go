@@ -10,6 +10,7 @@ type Sharding struct {
 	numberOfShards        uint
 	primaryKeyGenerator   int
 	primaryKeyGeneratorFn func(int64) int64
+	shardingAlgorithm     func(any) (string, error)
 }
 
 func New(shardingKey string, numberOfShards uint, opts ...Option) *Sharding {
@@ -49,11 +50,19 @@ func WithTable(tables ...any) Option {
 	}
 }
 
+// WithShardingAlgorithm 根据分表列的值来指定分表表名的后缀
+func WithShardingAlgorithm(fn func(columnValue any) (suffix string, err error)) Option {
+	return func(s *Sharding) {
+		s.shardingAlgorithm = fn
+	}
+}
+
 func (s *Sharding) Register() *sharding.Sharding {
 	return sharding.Register(sharding.Config{
 		ShardingKey:           s.shardingKey,
 		NumberOfShards:        s.numberOfShards,
 		PrimaryKeyGenerator:   s.primaryKeyGenerator,
 		PrimaryKeyGeneratorFn: s.primaryKeyGeneratorFn,
+		ShardingAlgorithm:     s.shardingAlgorithm,
 	}, s.tables...)
 }
