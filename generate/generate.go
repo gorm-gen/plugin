@@ -2,6 +2,7 @@ package generate
 
 import (
 	"fmt"
+	"strings"
 
 	_ "github.com/shopspring/decimal"
 	_ "gorm.io/plugin/soft_delete"
@@ -200,6 +201,10 @@ func dataTypeMap() map[string]func(gorm.ColumnType) string {
 			return "time.Time"
 		},
 		"tinyint": func(detailType gorm.ColumnType) (dataType string) {
+			ct, _ := detailType.ColumnType()
+			if strings.HasPrefix(ct, "tinyint(1)") {
+				return "bool"
+			}
 			return "int8"
 		},
 		"smallint": func(detailType gorm.ColumnType) (dataType string) {
