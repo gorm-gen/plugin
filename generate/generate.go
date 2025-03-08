@@ -178,61 +178,70 @@ func (g *Generate) Execute() {
 }
 
 func dataTypeMap() map[string]func(gorm.ColumnType) string {
-	return map[string]func(detailType gorm.ColumnType) string{
-		"decimal": func(detailType gorm.ColumnType) (dataType string) {
+	return map[string]func(gorm.ColumnType) string{
+		"decimal": func(columnType gorm.ColumnType) (dataType string) {
 			return "decimal.Decimal"
 		},
-		"datetime": func(detailType gorm.ColumnType) (dataType string) {
-			if detailType.Name() == "deleted_at" {
+
+		"datetime": func(columnType gorm.ColumnType) (dataType string) {
+			if columnType.Name() == "deleted_at" {
 				return "gorm.DeletedAt"
 			}
-			if nullable, ok := detailType.Nullable(); nullable && ok {
+			if nullable, ok := columnType.Nullable(); nullable && ok {
 				return "*time.Time"
 			}
 			return "time.Time"
 		},
-		"timestamp": func(detailType gorm.ColumnType) (dataType string) {
-			if detailType.Name() == "deleted_at" {
+
+		"timestamp": func(columnType gorm.ColumnType) (dataType string) {
+			if columnType.Name() == "deleted_at" {
 				return "gorm.DeletedAt"
 			}
-			if nullable, ok := detailType.Nullable(); nullable && ok {
+			if nullable, ok := columnType.Nullable(); nullable && ok {
 				return "*time.Time"
 			}
 			return "time.Time"
 		},
-		"tinyint": func(detailType gorm.ColumnType) (dataType string) {
-			ct, _ := detailType.ColumnType()
+
+		"tinyint": func(columnType gorm.ColumnType) (dataType string) {
+			ct, _ := columnType.ColumnType()
 			if strings.HasPrefix(ct, "tinyint(1)") {
 				return "bool"
 			}
 			return "int8"
 		},
-		"smallint": func(detailType gorm.ColumnType) (dataType string) {
+
+		"smallint": func(columnType gorm.ColumnType) (dataType string) {
 			return "int16"
 		},
-		"mediumint": func(detailType gorm.ColumnType) (dataType string) {
+
+		"mediumint": func(columnType gorm.ColumnType) (dataType string) {
 			return "int32"
 		},
-		"int": func(detailType gorm.ColumnType) (dataType string) {
-			if detailType.Name() == "deleted_at" {
+
+		"int": func(columnType gorm.ColumnType) (dataType string) {
+			if columnType.Name() == "deleted_at" {
 				return "soft_delete.DeletedAt"
 			}
 			return "int"
 		},
-		"bigint": func(detailType gorm.ColumnType) (dataType string) {
-			if detailType.Name() == "deleted_at" {
+
+		"bigint": func(columnType gorm.ColumnType) (dataType string) {
+			if columnType.Name() == "deleted_at" {
 				return "soft_delete.DeletedAt"
 			}
 			return "int64"
 		},
-		"varchar": func(detailType gorm.ColumnType) (dataType string) {
-			if nullable, ok := detailType.Nullable(); nullable && ok {
+
+		"varchar": func(columnType gorm.ColumnType) (dataType string) {
+			if nullable, ok := columnType.Nullable(); nullable && ok {
 				return "*string"
 			}
 			return "string"
 		},
-		"char": func(detailType gorm.ColumnType) (dataType string) {
-			if nullable, ok := detailType.Nullable(); nullable && ok {
+
+		"char": func(columnType gorm.ColumnType) (dataType string) {
+			if nullable, ok := columnType.Nullable(); nullable && ok {
 				return "*string"
 			}
 			return "string"
