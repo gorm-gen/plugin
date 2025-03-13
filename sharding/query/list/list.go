@@ -2,7 +2,7 @@ package list
 
 import (
 	"sort"
-	
+
 	"github.com/shopspring/decimal"
 )
 
@@ -119,7 +119,11 @@ func (l *List) Analysis() []Sl {
 	}
 
 	for k, v := range list {
-		totalPage := (decimal.NewFromInt(v.Total).Div(decimal.NewFromInt(l.offset))).Ceil().BigInt().Int64()
+		offset := l.offset
+		if offset > v.Total {
+			offset = v.Total
+		}
+		totalPage := (decimal.NewFromInt(v.Total).Div(decimal.NewFromInt(offset))).Ceil().BigInt().Int64()
 		_break = false
 		n = 0
 		sldList := make([]Sld, 0, totalPage)
@@ -131,12 +135,12 @@ func (l *List) Analysis() []Sl {
 
 			sld := Sld{
 				Page:     i,
-				PageSize: l.offset,
+				PageSize: offset,
 			}
 			if n >= v.Start {
 				sld.Start = 1
 			}
-			for j := int64(1); j <= l.offset; j++ {
+			for j := int64(1); j <= offset; j++ {
 				n++
 				if n == v.Start {
 					sld.Start = j
@@ -146,7 +150,7 @@ func (l *List) Analysis() []Sl {
 					_break = true
 					break
 				}
-				if j == l.offset {
+				if j == offset {
 					sld.End = j
 				}
 			}

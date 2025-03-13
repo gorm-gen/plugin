@@ -33,7 +33,7 @@ func TestAnalysis(t *testing.T) {
 		ShardingValue: "202506",
 		Total:         30,
 	})
-	res := list.New(l, list.WithAsc(), list.WithPage(2), list.WithPageSize(10), list.WithOffset(3)).Analysis()
+	res := list.New(l, list.WithAsc(), list.WithPage(2), list.WithPageSize(16), list.WithOffset(3)).Analysis()
 	jb, err := json.Marshal(res)
 	if err != nil {
 		t.Error(err)
