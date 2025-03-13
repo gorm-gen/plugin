@@ -48,7 +48,18 @@ type Sl struct {
 	List          []Sld
 }
 
-func (l *List) Analysis() []Sl {
+type SL []Sl
+
+func (sl SL) ToSliceIndex() {
+	for k, v := range sl {
+		sl[k].Start -= 1
+		for kk := range v.List {
+			sl[k].List[kk].Start -= 1
+		}
+	}
+}
+
+func (l *List) Analysis() SL {
 	if l.list == nil {
 		return nil
 	}
