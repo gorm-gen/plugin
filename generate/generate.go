@@ -246,6 +246,12 @@ func dataTypeMap() map[string]func(gorm.ColumnType) string {
 			}
 			return "string"
 		},
+		"json": func(columnType gorm.ColumnType) (dataType string) {
+			if nullable, ok := columnType.Nullable(); nullable && ok {
+				return "*string"
+			}
+			return "string"
+		},
 	}
 }
 
