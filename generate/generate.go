@@ -184,7 +184,7 @@ func dataTypeMap() map[string]func(gorm.ColumnType) string {
 		},
 
 		"datetime": func(columnType gorm.ColumnType) (dataType string) {
-			if columnType.Name() == "deleted_at" {
+			if cn := columnType.Name(); cn == "deleted_at" || cn == "deletedAt" || cn == "DeletedAt" {
 				return "gorm.DeletedAt"
 			}
 			if nullable, ok := columnType.Nullable(); nullable && ok {
@@ -194,7 +194,7 @@ func dataTypeMap() map[string]func(gorm.ColumnType) string {
 		},
 
 		"timestamp": func(columnType gorm.ColumnType) (dataType string) {
-			if columnType.Name() == "deleted_at" {
+			if cn := columnType.Name(); cn == "deleted_at" || cn == "deletedAt" || cn == "DeletedAt" {
 				return "gorm.DeletedAt"
 			}
 			if nullable, ok := columnType.Nullable(); nullable && ok {
@@ -220,7 +220,7 @@ func dataTypeMap() map[string]func(gorm.ColumnType) string {
 		},
 
 		"int": func(columnType gorm.ColumnType) (dataType string) {
-			if columnType.Name() == "deleted_at" {
+			if cn := columnType.Name(); cn == "deleted_at" || cn == "deletedAt" || cn == "DeletedAt" {
 				return "soft_delete.DeletedAt"
 			}
 			return "int"
