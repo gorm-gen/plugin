@@ -208,14 +208,23 @@ func dataTypeMap() map[string]func(gorm.ColumnType) string {
 			if strings.HasPrefix(ct, "tinyint(1)") {
 				return "bool"
 			}
+			if nullable, ok := columnType.Nullable(); nullable && ok {
+				return "*int8"
+			}
 			return "int8"
 		},
 
 		"smallint": func(columnType gorm.ColumnType) (dataType string) {
+			if nullable, ok := columnType.Nullable(); nullable && ok {
+				return "*int16"
+			}
 			return "int16"
 		},
 
 		"mediumint": func(columnType gorm.ColumnType) (dataType string) {
+			if nullable, ok := columnType.Nullable(); nullable && ok {
+				return "*int32"
+			}
 			return "int32"
 		},
 
@@ -223,12 +232,18 @@ func dataTypeMap() map[string]func(gorm.ColumnType) string {
 			if cn := columnType.Name(); cn == "deleted_at" || cn == "deletedAt" || cn == "DeletedAt" {
 				return "soft_delete.DeletedAt"
 			}
+			if nullable, ok := columnType.Nullable(); nullable && ok {
+				return "*int"
+			}
 			return "int"
 		},
 
 		"bigint": func(columnType gorm.ColumnType) (dataType string) {
 			if cn := columnType.Name(); cn == "deleted_at" || cn == "deletedAt" || cn == "DeletedAt" {
 				return "soft_delete.DeletedAt"
+			}
+			if nullable, ok := columnType.Nullable(); nullable && ok {
+				return "*int64"
 			}
 			return "int64"
 		},
