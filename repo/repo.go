@@ -10,6 +10,7 @@ import (
 type Repo struct {
 	module       string
 	repoPath     string
+	repoPkg      string
 	repoPkgName  string
 	genQueryPkg  string
 	gormDBVar    string
