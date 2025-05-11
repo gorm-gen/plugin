@@ -4,6 +4,7 @@ import (
 	"html/template"
 	"os"
 	"path"
+	"reflect"
 	"strings"
 )
 
@@ -76,6 +77,52 @@ func (r *Repo) Generate(models ...interface{}) error {
 	}
 	if err = t.Execute(baseFile, baseData); err != nil {
 		return err
+	}
+
+	for _, model := range models {
+		rt := reflect.TypeOf(model)
+		if rt.Kind() == reflect.Ptr {
+			rt = rt.Elem()
+		}
+
+		abbr := strings.ToLower(rt.Name()[:1])
+
+		filename := abbr + rt.Name()[1:]
+		paths := path.Join(r.repoPath, filename)
+		if err = os.MkdirAll(paths, os.ModePerm); err != nil {
+			return err
+		}
+
+		genBaseData := struct {
+			Package     string
+			ZapVarPkg   string
+			GenQueryPkg string
+			RepoPkg     string
+			RepoPkgName string
+			StructName  string
+			Abbr        string
+		}{
+			Package:     filename,
+			ZapVarPkg:   r.zapVarPkg,
+			GenQueryPkg: r.genQueryPkg,
+			RepoPkg:     r.repoPkg,
+			RepoPkgName: r.repoPkgName,
+			StructName:  rt.Name(),
+			Abbr:        abbr,
+		}
+
+		baseFile, err = os.Create(path.Join(paths, "base.gen.go"))
+		if err != nil {
+			return err
+		}
+		defer baseFile.Close()
+		t, err = template.New(r.genBaseTemplate()).Parse(r.genBaseTemplate())
+		if err != nil {
+			return err
+		}
+		if err = t.Execute(baseFile, genBaseData); err != nil {
+			return err
+		}
 	}
 
 	return nil

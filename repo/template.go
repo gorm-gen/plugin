@@ -61,7 +61,7 @@ type {{.StructName}} struct {
 
 func New() *{{.StructName}} {
 	return &{{.StructName}}{
-		q:      repositories.GetQuery(),
+		q:      {{.RepoPkgName}}.GetQuery(),
 		logger: global.Logger,
 	}
 }
