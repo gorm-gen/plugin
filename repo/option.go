@@ -14,12 +14,6 @@ func WithRepoPath(repoPath string) Option {
 	}
 }
 
-func WithRepoPkg(repoPkg string) Option {
-	return func(r *Repo) {
-		r.repoPkg = repoPkg
-	}
-}
-
 func WithGenQueryPkg(genQueryPkg string) Option {
 	return func(r *Repo) {
 		r.genQueryPkg = genQueryPkg

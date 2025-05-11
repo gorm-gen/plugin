@@ -34,6 +34,8 @@ func New(opts ...Option) *Repo {
 	repoPathArr := strings.Split(repo.repoPath, "/")
 	repo.repoPkgName = repoPathArr[len(repoPathArr)-1]
 
+	repo.repoPkg = path.Join(repo.module, repo.repoPath)
+
 	return repo
 }
 
