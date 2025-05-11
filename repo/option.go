@@ -31,3 +31,15 @@ func WithGormDBVarPkg(gormDBVarPkg string) Option {
 		r.gormDBVarPkg = gormDBVarPkg
 	}
 }
+
+func WithZapVar(zapVar string) Option {
+	return func(r *Repo) {
+		r.zapVar = zapVar
+	}
+}
+
+func WithZapVarPkg(zapVarPkg string) Option {
+	return func(r *Repo) {
+		r.zapVarPkg = zapVarPkg
+	}
+}

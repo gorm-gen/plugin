@@ -15,6 +15,8 @@ type Repo struct {
 	genQueryPkg  string
 	gormDBVar    string
 	gormDBVarPkg string
+	zapVar       string
+	zapVarPkg    string
 }
 
 func New(opts ...Option) *Repo {
@@ -25,6 +27,8 @@ func New(opts ...Option) *Repo {
 		genQueryPkg:  "demo/internal/query",
 		gormDBVar:    "global.DB",
 		gormDBVarPkg: "demo/internal/global",
+		zapVar:       "global.Logger",
+		zapVarPkg:    "demo/internal/global",
 	}
 
 	for _, opt := range opts {
