@@ -30,7 +30,9 @@ func GetQuery() *query.Query {
 }
 
 func IsRealErr(err error) bool {
-	return !errors.Is(err, gorm.ErrRecordNotFound) && !errors.Is(err, context.DeadlineExceeded) && !errors.Is(err, context.Canceled)
+	return !errors.Is(err, gorm.ErrRecordNotFound) &&
+		!errors.Is(err, context.DeadlineExceeded) &&
+		!errors.Is(err, context.Canceled)
 }
 `
 }
