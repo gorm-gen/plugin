@@ -265,6 +265,42 @@ func (r *Repo) Generate(models ...interface{}) error {
 				return err
 			}
 		}
+
+		// last.go
+		{
+			genLastData := struct {
+				Package     string
+				GenQueryPkg string
+				RepoPkg     string
+				ModelPkg    string
+				ModelName   string
+				RepoPkgName string
+				StructName  string
+				Abbr        string
+			}{
+				Package:     filename,
+				GenQueryPkg: r.genQueryPkg,
+				RepoPkg:     r.repoPkg,
+				ModelPkg:    rt.PkgPath(),
+				ModelName:   modelName,
+				RepoPkgName: r.repoPkgName,
+				StructName:  rt.Name(),
+				Abbr:        abbr,
+			}
+
+			baseFile, err = os.Create(path.Join(paths, "last.gen.go"))
+			if err != nil {
+				return err
+			}
+			defer baseFile.Close()
+			t, err = template.New(r.genLastTemplate()).Parse(r.genLastTemplate())
+			if err != nil {
+				return err
+			}
+			if err = t.Execute(baseFile, genLastData); err != nil {
+				return err
+			}
+		}
 	}
 
 	return nil
