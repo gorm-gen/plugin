@@ -103,8 +103,6 @@ package {{.Package}}
 
 import (
 	"context"
-	"errors"
-	"sync"
 
 	"go.uber.org/zap"
 	"gorm.io/gen"
@@ -169,7 +167,7 @@ func ({{.Abbr}} *{{.StructName}}) Count(ctx context.Context, cd *CountData) (int
 	if err != nil {
 		if repositories.IsRealErr(err) {
 			errFields = append(errFields, zap.Error(err))
-			c.logger.Error("【{{.StructName}}.Count】失败", errFields...)
+			{{.Abbr}}.logger.Error("【{{.StructName}}.Count】失败", errFields...)
 		}
 		return 0, err
 	}
