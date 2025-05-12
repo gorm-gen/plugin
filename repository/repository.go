@@ -8,7 +8,7 @@ import (
 	"strings"
 )
 
-type Repo struct {
+type Repository struct {
 	module       string
 	repoPath     string
 	repoPkg      string
@@ -20,8 +20,8 @@ type Repo struct {
 	zapVarPkg    string
 }
 
-func New(opts ...Option) *Repo {
-	repo := &Repo{
+func New(opts ...Option) *Repository {
+	repo := &Repository{
 		module:       "demo",
 		repoPath:     "internal/repositories",
 		repoPkgName:  "repositories",
@@ -44,7 +44,7 @@ func New(opts ...Option) *Repo {
 	return repo
 }
 
-func (r *Repo) Generate(models ...interface{}) error {
+func (r *Repository) Generate(models ...interface{}) error {
 	if len(models) == 0 {
 		return nil
 	}
