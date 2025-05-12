@@ -165,7 +165,7 @@ func ({{.Abbr}} *{{.StructName}}) Count(ctx context.Context, cd *CountData) (int
 	}
 	count, err := {{.Abbr}}r.Count()
 	if err != nil {
-		if repositories.IsRealErr(err) {
+		if {{.RepoPkgName}}.IsRealErr(err) {
 			errFields = append(errFields, zap.Error(err))
 			{{.Abbr}}.logger.Error("【{{.StructName}}.Count】失败", errFields...)
 		}
