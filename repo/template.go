@@ -83,6 +83,14 @@ func OrderIDDesc() OrderOption {
 		return {{.Abbr}}.q.{{.StructName}}.ID.Desc()
 	}
 }
+
+type RelationOption func(*{{.StructName}}) field.RelationField
+
+func RelationAll() RelationOption {
+	return func({{.Abbr}} *{{.StructName}}) field.RelationField {
+		return field.Associations
+	}
+}
 `
 }
 
