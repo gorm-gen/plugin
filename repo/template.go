@@ -75,6 +75,14 @@ func WithID(id int64) Option {
 }
 
 type UpdateOption func(*{{.StructName}}) field.AssignExpr
+
+type OrderOption func(*{{.StructName}}) field.Expr
+
+func OrderIDDesc() OrderOption {
+	return func({{.Abbr}} *{{.StructName}}) field.Expr {
+		return {{.Abbr}}.q.{{.StructName}}.ID.Desc()
+	}
+}
 `
 }
 
