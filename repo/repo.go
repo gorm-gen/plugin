@@ -93,35 +93,72 @@ func (r *Repo) Generate(models ...interface{}) error {
 			return err
 		}
 
-		genBaseData := struct {
-			Package     string
-			ZapVarPkg   string
-			GenQueryPkg string
-			RepoPkg     string
-			RepoPkgName string
-			StructName  string
-			Abbr        string
-		}{
-			Package:     filename,
-			ZapVarPkg:   r.zapVarPkg,
-			GenQueryPkg: r.genQueryPkg,
-			RepoPkg:     r.repoPkg,
-			RepoPkgName: r.repoPkgName,
-			StructName:  rt.Name(),
-			Abbr:        abbr,
+		// base.go
+		{
+			genBaseData := struct {
+				Package     string
+				ZapVarPkg   string
+				GenQueryPkg string
+				RepoPkg     string
+				RepoPkgName string
+				StructName  string
+				Abbr        string
+			}{
+				Package:     filename,
+				ZapVarPkg:   r.zapVarPkg,
+				GenQueryPkg: r.genQueryPkg,
+				RepoPkg:     r.repoPkg,
+				RepoPkgName: r.repoPkgName,
+				StructName:  rt.Name(),
+				Abbr:        abbr,
+			}
+
+			baseFile, err = os.Create(path.Join(paths, "base.gen.go"))
+			if err != nil {
+				return err
+			}
+			defer baseFile.Close()
+			t, err = template.New(r.genBaseTemplate()).Parse(r.genBaseTemplate())
+			if err != nil {
+				return err
+			}
+			if err = t.Execute(baseFile, genBaseData); err != nil {
+				return err
+			}
 		}
 
-		baseFile, err = os.Create(path.Join(paths, "base.gen.go"))
-		if err != nil {
-			return err
-		}
-		defer baseFile.Close()
-		t, err = template.New(r.genBaseTemplate()).Parse(r.genBaseTemplate())
-		if err != nil {
-			return err
-		}
-		if err = t.Execute(baseFile, genBaseData); err != nil {
-			return err
+		// count.go
+		{
+			genCountData := struct {
+				Package     string
+				ZapVarPkg   string
+				GenQueryPkg string
+				RepoPkg     string
+				RepoPkgName string
+				StructName  string
+				Abbr        string
+			}{
+				Package:     filename,
+				ZapVarPkg:   r.zapVarPkg,
+				GenQueryPkg: r.genQueryPkg,
+				RepoPkg:     r.repoPkg,
+				RepoPkgName: r.repoPkgName,
+				StructName:  rt.Name(),
+				Abbr:        abbr,
+			}
+
+			baseFile, err = os.Create(path.Join(paths, "count.gen.go"))
+			if err != nil {
+				return err
+			}
+			defer baseFile.Close()
+			t, err = template.New(r.genCountTemplate()).Parse(r.genCountTemplate())
+			if err != nil {
+				return err
+			}
+			if err = t.Execute(baseFile, genCountData); err != nil {
+				return err
+			}
 		}
 	}
 
