@@ -373,6 +373,38 @@ func (r *Repo) Generate(models ...interface{}) error {
 				return err
 			}
 		}
+
+		// update.go
+		{
+			genUpdateData := struct {
+				Package     string
+				GenQueryPkg string
+				RepoPkg     string
+				RepoPkgName string
+				StructName  string
+				Abbr        string
+			}{
+				Package:     filename,
+				GenQueryPkg: r.genQueryPkg,
+				RepoPkg:     r.repoPkg,
+				RepoPkgName: r.repoPkgName,
+				StructName:  rt.Name(),
+				Abbr:        abbr,
+			}
+
+			baseFile, err = os.Create(path.Join(paths, "update.gen.go"))
+			if err != nil {
+				return err
+			}
+			defer baseFile.Close()
+			t, err = template.New(r.genUpdateTemplate()).Parse(r.genUpdateTemplate())
+			if err != nil {
+				return err
+			}
+			if err = t.Execute(baseFile, genUpdateData); err != nil {
+				return err
+			}
+		}
 	}
 
 	return nil
