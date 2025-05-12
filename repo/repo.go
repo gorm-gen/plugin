@@ -93,6 +93,9 @@ func (r *Repo) Generate(models ...interface{}) error {
 			return err
 		}
 
+		modelPkgArr := strings.Split(rt.PkgPath(), "/")
+		modelName := modelPkgArr[len(modelPkgArr)-1]
+
 		// base.go
 		{
 			genBaseData := struct {
@@ -157,6 +160,42 @@ func (r *Repo) Generate(models ...interface{}) error {
 				return err
 			}
 			if err = t.Execute(baseFile, genCountData); err != nil {
+				return err
+			}
+		}
+
+		// create.go
+		{
+			genCreateData := struct {
+				Package     string
+				ZapVarPkg   string
+				RepoPkg     string
+				ModelPkg    string
+				ModelName   string
+				RepoPkgName string
+				StructName  string
+				Abbr        string
+			}{
+				Package:     filename,
+				ZapVarPkg:   r.zapVarPkg,
+				RepoPkg:     r.repoPkg,
+				ModelPkg:    rt.PkgPath(),
+				ModelName:   modelName,
+				RepoPkgName: r.repoPkgName,
+				StructName:  rt.Name(),
+				Abbr:        abbr,
+			}
+
+			baseFile, err = os.Create(path.Join(paths, "create.gen.go"))
+			if err != nil {
+				return err
+			}
+			defer baseFile.Close()
+			t, err = template.New(r.genCreateTemplate()).Parse(r.genCreateTemplate())
+			if err != nil {
+				return err
+			}
+			if err = t.Execute(baseFile, genCreateData); err != nil {
 				return err
 			}
 		}
