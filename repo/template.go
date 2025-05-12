@@ -245,9 +245,9 @@ func ({{.Abbr}} *{{.StructName}}) Create(ctx context.Context, cd *CreateData) (e
 	errFields := make([]zap.Field, 0)
 	if length > 1 && cd.batchSize > 0 {
 		errFields = append(errFields, zap.Int("batchSize", cd.batchSize))
-		err = cr.CreateInBatches(cd.values, cd.batchSize)
+		err = {{.Abbr}}r.CreateInBatches(cd.values, cd.batchSize)
 	} else {
-		err = cr.Create(cd.values...)
+		err = {{.Abbr}}r.Create(cd.values...)
 	}
 	if err != nil {
 		if {{.RepoPkgName}}.IsRealErr(err) {

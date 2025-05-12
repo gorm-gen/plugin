@@ -169,6 +169,7 @@ func (r *Repo) Generate(models ...interface{}) error {
 			genCreateData := struct {
 				Package     string
 				ZapVarPkg   string
+				GenQueryPkg string
 				RepoPkg     string
 				ModelPkg    string
 				ModelName   string
@@ -178,6 +179,7 @@ func (r *Repo) Generate(models ...interface{}) error {
 			}{
 				Package:     filename,
 				ZapVarPkg:   r.zapVarPkg,
+				GenQueryPkg: r.genQueryPkg,
 				RepoPkg:     r.repoPkg,
 				ModelPkg:    rt.PkgPath(),
 				ModelName:   modelName,
