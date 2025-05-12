@@ -134,7 +134,6 @@ func (r *Repo) Generate(models ...interface{}) error {
 		{
 			genCountData := struct {
 				Package     string
-				ZapVarPkg   string
 				GenQueryPkg string
 				RepoPkg     string
 				RepoPkgName string
@@ -142,7 +141,6 @@ func (r *Repo) Generate(models ...interface{}) error {
 				Abbr        string
 			}{
 				Package:     filename,
-				ZapVarPkg:   r.zapVarPkg,
 				GenQueryPkg: r.genQueryPkg,
 				RepoPkg:     r.repoPkg,
 				RepoPkgName: r.repoPkgName,
@@ -168,7 +166,6 @@ func (r *Repo) Generate(models ...interface{}) error {
 		{
 			genCreateData := struct {
 				Package     string
-				ZapVarPkg   string
 				GenQueryPkg string
 				RepoPkg     string
 				ModelPkg    string
@@ -178,7 +175,6 @@ func (r *Repo) Generate(models ...interface{}) error {
 				Abbr        string
 			}{
 				Package:     filename,
-				ZapVarPkg:   r.zapVarPkg,
 				GenQueryPkg: r.genQueryPkg,
 				RepoPkg:     r.repoPkg,
 				ModelPkg:    rt.PkgPath(),
@@ -198,6 +194,38 @@ func (r *Repo) Generate(models ...interface{}) error {
 				return err
 			}
 			if err = t.Execute(baseFile, genCreateData); err != nil {
+				return err
+			}
+		}
+
+		// delete.go
+		{
+			genDeleteData := struct {
+				Package     string
+				GenQueryPkg string
+				RepoPkg     string
+				RepoPkgName string
+				StructName  string
+				Abbr        string
+			}{
+				Package:     filename,
+				GenQueryPkg: r.genQueryPkg,
+				RepoPkg:     r.repoPkg,
+				RepoPkgName: r.repoPkgName,
+				StructName:  rt.Name(),
+				Abbr:        abbr,
+			}
+
+			baseFile, err = os.Create(path.Join(paths, "delete.gen.go"))
+			if err != nil {
+				return err
+			}
+			defer baseFile.Close()
+			t, err = template.New(r.genDeleteTemplate()).Parse(r.genDeleteTemplate())
+			if err != nil {
+				return err
+			}
+			if err = t.Execute(baseFile, genDeleteData); err != nil {
 				return err
 			}
 		}
