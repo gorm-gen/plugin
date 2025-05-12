@@ -132,6 +132,7 @@ func (c *CountData) SetTx(tx *query.Query) *CountData {
 	return c
 }
 
+// SetQueryTx 设置为手动事务
 func (c *CountData) SetQueryTx(tx *query.QueryTx) *CountData {
 	c.qTx = tx
 	c.tx = nil
