@@ -46,15 +46,7 @@ func (r *Repository) genBaseTemplate() string {
 package {{.Package}}
 
 import (
-	"go.uber.org/zap"
-	"gorm.io/gen"
-	"gorm.io/gen/field"
-
-	"{{.ZapVarPkg}}"
-
-	"{{.GenQueryPkg}}"
-
-    "{{.RepoPkg}}"
+{{range .Imports}}{{.}}{{end}}
 )
 
 type {{.StructName}} struct {

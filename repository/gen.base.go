@@ -1,6 +1,7 @@
 package repository
 
 import (
+	"fmt"
 	"html/template"
 	"os"
 	"path"
@@ -14,6 +15,45 @@ type Update string
 type Order string
 
 func (r *Repository) genBase(rt reflect.Type, abbr, filename, paths string) error {
+	var timePkg, decimalPkg, numberDecimalPkg bool
+
+	condition, _timePkg, _decimalPkg, _numberDecimalPkg := r.genConditionOpt(rt, abbr)
+	if _timePkg {
+		timePkg = true
+	}
+	if _decimalPkg {
+		decimalPkg = true
+	}
+	if _numberDecimalPkg {
+		numberDecimalPkg = true
+	}
+
+	var imports []template.HTML
+	if timePkg {
+		imports = append(imports, `    "time"
+
+`)
+	}
+
+	if numberDecimalPkg {
+		imports = append(imports, `    f "github.com/gorm-gen/plugin/field"
+`)
+	}
+	if decimalPkg {
+		imports = append(imports, `    "github.com/shopspring/decimal"
+`)
+	}
+
+	imports = append(imports, template.HTML(fmt.Sprintf(`    "go.uber.org/zap"
+    "gorm.io/gen"
+    "gorm.io/gen/field"
+
+    "%s"
+
+    "%s"
+
+    "%s"`, r.zapVarPkg, r.genQueryPkg, r.repoPkg)))
+
 	data := struct {
 		Package     string
 		ZapVarPkg   string
@@ -22,6 +62,7 @@ func (r *Repository) genBase(rt reflect.Type, abbr, filename, paths string) erro
 		RepoPkgName string
 		StructName  string
 		Abbr        string
+		Imports     []template.HTML
 		Conditions  []Condition
 		Updates     []Update
 		Orders      []Order
@@ -33,7 +74,8 @@ func (r *Repository) genBase(rt reflect.Type, abbr, filename, paths string) erro
 		RepoPkgName: r.repoPkgName,
 		StructName:  rt.Name(),
 		Abbr:        abbr,
-		Conditions:  r.genConditionOpt(rt, abbr),
+		Imports:     imports,
+		Conditions:  condition,
 	}
 
 	file, err := os.Create(path.Join(paths, "base.gen.go"))

@@ -323,8 +323,7 @@ func (r *Repository) isTime(fieldType string) bool {
 	return false
 }
 
-func (r *Repository) genConditionOpt(rt reflect.Type, abbr string) []Condition {
-	var conditions []Condition
+func (r *Repository) genConditionOpt(rt reflect.Type, abbr string) (conditions []Condition, timePkg, decimalPkg, numberDecimalPkg bool) {
 	for i := 0; i < rt.NumField(); i++ {
 		field := rt.Field(i)
 		typ := field.Type.String()
@@ -336,6 +335,7 @@ func (r *Repository) genConditionOpt(rt reflect.Type, abbr string) []Condition {
 			conditions = append(conditions, r.stringCondition(field.Name, fieldType, rt, abbr)...)
 		}
 		if r.isTime(typ) {
+			timePkg = true
 			conditions = append(conditions, r.timeCondition(field.Name, fieldType, rt, abbr)...)
 		}
 
@@ -362,5 +362,5 @@ func Condition%sIsNotNull() ConditionOption {
 		conditions = append(conditions, Condition(condition))
 	}
 
-	return conditions
+	return
 }
