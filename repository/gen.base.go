@@ -7,6 +7,12 @@ import (
 	"reflect"
 )
 
+type Condition string
+
+type Update string
+
+type Order string
+
 func (r *Repository) genBase(rt reflect.Type, abbr, filename, paths string) error {
 	data := struct {
 		Package     string
@@ -16,6 +22,9 @@ func (r *Repository) genBase(rt reflect.Type, abbr, filename, paths string) erro
 		RepoPkgName string
 		StructName  string
 		Abbr        string
+		Conditions  []Condition
+		Updates     []Update
+		Orders      []Order
 	}{
 		Package:     filename,
 		ZapVarPkg:   r.zapVarPkg,
@@ -24,6 +33,7 @@ func (r *Repository) genBase(rt reflect.Type, abbr, filename, paths string) erro
 		RepoPkgName: r.repoPkgName,
 		StructName:  rt.Name(),
 		Abbr:        abbr,
+		Conditions:  r.genConditionOpt(rt, abbr),
 	}
 
 	file, err := os.Create(path.Join(paths, "base.gen.go"))

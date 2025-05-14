@@ -89,11 +89,7 @@ func New(opts ...Option) *{{.StructName}} {
 
 type ConditionOption func(*{{.StructName}}) gen.Condition
 
-func WithID(id int64) ConditionOption {
-	return func({{.Abbr}} *{{.StructName}}) gen.Condition {
-		return {{.Abbr}}.q.{{.StructName}}.ID.Eq(id)
-	}
-}
+{{range .Conditions}}{{.}}` + "\n" + `{{end}}
 
 type UpdateOption func(*{{.StructName}}) field.AssignExpr
 
