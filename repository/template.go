@@ -86,19 +86,11 @@ func Condition(condition gen.Condition) ConditionOption {
 		return condition
 	}
 }
-
 {{range .Conditions}}{{.}}{{end}}
 type UpdateOption func(*{{.StructName}}) field.AssignExpr
-
 {{range .Updates}}{{.}}{{end}}
 type OrderOption func(*{{.StructName}}) field.Expr
-
-func OrderIDDesc() OrderOption {
-	return func({{.Abbr}} *{{.StructName}}) field.Expr {
-		return {{.Abbr}}.q.{{.StructName}}.ID.Desc()
-	}
-}
-
+{{range .Orders}}{{.}}{{end}}
 type RelationOption func(*{{.StructName}}) field.RelationField
 
 func RelationAll() RelationOption {

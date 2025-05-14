@@ -432,6 +432,9 @@ func (r *Repository) allowType(fieldType string) bool {
 	if r.isString(fieldType) {
 		return true
 	}
+	if r.isTime(fieldType) {
+		return true
+	}
 	return false
 }
 

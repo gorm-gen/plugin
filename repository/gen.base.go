@@ -89,6 +89,7 @@ func (r *Repository) genBase(rt reflect.Type, abbr, filename, paths string) erro
 		Imports:     imports,
 		Conditions:  conditions,
 		Updates:     updates,
+		Orders:      r.genOrderOpt(rt, abbr),
 	}
 
 	file, err := os.Create(path.Join(paths, "base.gen.go"))
