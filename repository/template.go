@@ -179,6 +179,9 @@ func ({{.Abbr}} *{{.StructName}}) Count(ctx context.Context, cd *CountData) (int
 		{{.Abbr}}q = cd.qTx.{{.StructName}}
 	}
 	{{.Abbr}}r := {{.Abbr}}q.WithContext(ctx)
+	if cd.unscoped {
+		{{.Abbr}}r = {{.Abbr}}r.Unscoped()
+	}
 	errFields := make([]zap.Field, 0)
 	if len(cd.conditionOpts) > 0 {
 		conditions := make([]gen.Condition, 0, len(cd.conditionOpts))
@@ -276,6 +279,9 @@ func ({{.Abbr}} *{{.StructName}}) Create(ctx context.Context, cd *CreateData) (e
 		{{.Abbr}}q = cd.qTx.{{.StructName}}
 	}
 	{{.Abbr}}r := {{.Abbr}}q.WithContext(ctx)
+	if cd.unscoped {
+		{{.Abbr}}r = {{.Abbr}}r.Unscoped()
+	}
 	errFields := make([]zap.Field, 0)
 	if length > 1 && cd.batchSize > 0 {
 		errFields = append(errFields, zap.Int("batchSize", cd.batchSize))
@@ -360,6 +366,9 @@ func ({{.Abbr}} *{{.StructName}}) Delete(ctx context.Context, dd *DeleteData) (i
 		{{.Abbr}}q = dd.qTx.{{.StructName}}
 	}
 	{{.Abbr}}r := {{.Abbr}}q.WithContext(ctx)
+	if dd.unscoped {
+		{{.Abbr}}r = {{.Abbr}}r.Unscoped()
+	}
 	errFields := make([]zap.Field, 0)
 	if len(dd.conditionOpts) > 0 {
 		conditions := make([]gen.Condition, 0, len(dd.conditionOpts))
@@ -465,6 +474,9 @@ func ({{.Abbr}} *{{.StructName}}) First(ctx context.Context, fd *FirstData) (*{{
 		{{.Abbr}}q = fd.qTx.{{.StructName}}
 	}
 	{{.Abbr}}r := {{.Abbr}}q.WithContext(ctx)
+	if fd.unscoped {
+		{{.Abbr}}r = {{.Abbr}}r.Unscoped()
+	}
 	if (fd.tx != nil || fd.qTx != nil) && fd.forUpdate {
 		{{.Abbr}}r = {{.Abbr}}r.Clauses(clause.Locking{Strength: "UPDATE"})
 	}
@@ -583,6 +595,9 @@ func ({{.Abbr}} *{{.StructName}}) Last(ctx context.Context, ld *LastData) (*{{.M
 		{{.Abbr}}q = ld.qTx.{{.StructName}}
 	}
 	{{.Abbr}}r := {{.Abbr}}q.WithContext(ctx)
+	if ld.unscoped {
+		{{.Abbr}}r = {{.Abbr}}r.Unscoped()
+	}
 	if (ld.tx != nil || ld.qTx != nil) && ld.forUpdate {
 		{{.Abbr}}r = {{.Abbr}}r.Clauses(clause.Locking{Strength: "UPDATE"})
 	}
@@ -717,6 +732,9 @@ func ({{.Abbr}} *{{.StructName}}) List(ctx context.Context, ld *ListData) ([]*{{
 		{{.Abbr}}q = ld.qTx.{{.StructName}}
 	}
 	{{.Abbr}}r := {{.Abbr}}q.WithContext(ctx)
+	if ld.unscoped {
+		{{.Abbr}}r = {{.Abbr}}r.Unscoped()
+	}
 	if (ld.tx != nil || ld.qTx != nil) && ld.forUpdate {
 		{{.Abbr}}r = {{.Abbr}}r.Clauses(clause.Locking{Strength: "UPDATE"})
 	}
@@ -857,6 +875,9 @@ func ({{.Abbr}} *{{.StructName}}) Take(ctx context.Context, td *TakeData) (*{{.M
 		{{.Abbr}}q = td.qTx.{{.StructName}}
 	}
 	{{.Abbr}}r := {{.Abbr}}q.WithContext(ctx)
+	if td.unscoped {
+		{{.Abbr}}r = {{.Abbr}}r.Unscoped()
+	}
 	if (td.tx != nil || td.qTx != nil) && td.forUpdate {
 		{{.Abbr}}r = {{.Abbr}}r.Clauses(clause.Locking{Strength: "UPDATE"})
 	}
@@ -979,6 +1000,9 @@ func ({{.Abbr}} *{{.StructName}}) Update(ctx context.Context, ud *UpdateData) (i
 		{{.Abbr}}q = ud.qTx.{{.StructName}}
 	}
 	{{.Abbr}}r := {{.Abbr}}q.WithContext(ctx)
+	if ud.unscoped {
+		{{.Abbr}}r = {{.Abbr}}r.Unscoped()
+	}
 	errFields := make([]zap.Field, 0)
 	if len(ud.conditionOpts) > 0 {
 		conditions := make([]gen.Condition, 0, len(ud.conditionOpts))
