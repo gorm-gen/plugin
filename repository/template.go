@@ -29,7 +29,7 @@ func GetQuery() *query.Query {
 	return q
 }
 
-// 是否为非超时和查询不到的错误
+// IsRealErr 是否为非超时和查询不到的错误
 func IsRealErr(err error) bool {
 	return !errors.Is(err, gorm.ErrRecordNotFound) &&
 		!errors.Is(err, context.DeadlineExceeded) &&
@@ -62,11 +62,29 @@ type {{.StructName}} struct {
 	logger *zap.Logger
 }
 
-func New() *{{.StructName}} {
-	return &{{.StructName}}{
+type Option func(*{{.StructName}})
+
+func WithQuery(q *query.Query) Option {
+	return func({{.Abbr}} *{{.StructName}}) {
+		{{.Abbr}}.q = q
+	}
+}
+
+func WithLogger(logger *zap.Logger) Option {
+	return func({{.Abbr}} *{{.StructName}}) {
+		{{.Abbr}}.logger = logger
+	}
+}
+
+func New(opts ...Option) *{{.StructName}} {
+	{{.Abbr}} := &{{.StructName}}{
 		q:      {{.RepoPkgName}}.GetQuery(),
 		logger: global.Logger,
 	}
+	for _, opt := range opts {
+		opt({{.Abbr}})
+	}
+	return {{.Abbr}}
 }
 
 type ConditionOption func(*{{.StructName}}) gen.Condition
