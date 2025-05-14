@@ -422,10 +422,26 @@ func (r *Repository) isDecimal(fieldType string) bool {
 	return false
 }
 
+func (r *Repository) allowType(fieldType string) bool {
+	if r.isInt(fieldType) {
+		return true
+	}
+	if r.isDecimal(fieldType) {
+		return true
+	}
+	if r.isString(fieldType) {
+		return true
+	}
+	return false
+}
+
 func (r *Repository) genConditionOpt(rt reflect.Type, abbr string) (conditions []Condition, timePkg, decimalPkg, numberDecimalPkg bool) {
 	for i := 0; i < rt.NumField(); i++ {
 		field := rt.Field(i)
 		typ := field.Type.String()
+		if !r.allowType(typ) {
+			continue
+		}
 		fieldType := strings.Trim(field.Type.String(), "*")
 		if r.isInt(typ) {
 			conditions = append(conditions, r.intCondition(field.Name, fieldType, rt, abbr)...)

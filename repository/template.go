@@ -87,10 +87,10 @@ func Condition(condition gen.Condition) ConditionOption {
 	}
 }
 
-{{range .Conditions}}{{.}}` + "\n" + `{{end}}
-
+{{range .Conditions}}{{.}}{{end}}
 type UpdateOption func(*{{.StructName}}) field.AssignExpr
 
+{{range .Updates}}{{.}}{{end}}
 type OrderOption func(*{{.StructName}}) field.Expr
 
 func OrderIDDesc() OrderOption {

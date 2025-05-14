@@ -17,7 +17,18 @@ type Order string
 func (r *Repository) genBase(rt reflect.Type, abbr, filename, paths string) error {
 	var timePkg, decimalPkg, numberDecimalPkg bool
 
-	condition, _timePkg, _decimalPkg, _numberDecimalPkg := r.genConditionOpt(rt, abbr)
+	conditions, _timePkg, _decimalPkg, _numberDecimalPkg := r.genConditionOpt(rt, abbr)
+	if _timePkg {
+		timePkg = true
+	}
+	if _decimalPkg {
+		decimalPkg = true
+	}
+	if _numberDecimalPkg {
+		numberDecimalPkg = true
+	}
+
+	updates, _timePkg, _decimalPkg, _numberDecimalPkg := r.genUpdateOpt(rt, abbr)
 	if _timePkg {
 		timePkg = true
 	}
@@ -76,7 +87,8 @@ func (r *Repository) genBase(rt reflect.Type, abbr, filename, paths string) erro
 		StructName:  rt.Name(),
 		Abbr:        abbr,
 		Imports:     imports,
-		Conditions:  condition,
+		Conditions:  conditions,
+		Updates:     updates,
 	}
 
 	file, err := os.Create(path.Join(paths, "base.gen.go"))
