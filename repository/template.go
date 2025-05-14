@@ -136,6 +136,7 @@ import (
 type CountData struct {
 	tx            *query.Query
 	qTx           *query.QueryTx
+	unscoped      bool
 	conditionOpts []ConditionOption
 }
 
@@ -155,6 +156,11 @@ func (c *CountData) SetTx(tx *query.Query) *CountData {
 func (c *CountData) SetQueryTx(tx *query.QueryTx) *CountData {
 	c.qTx = tx
 	c.tx = nil
+	return c
+}
+
+func (c *CountData) SetUnscoped(unscoped bool) *CountData {
+	c.unscoped = unscoped
 	return c
 }
 
@@ -219,6 +225,7 @@ import (
 type CreateData struct {
 	tx        *query.Query
 	qTx       *query.QueryTx
+	unscoped  bool
 	values    []*{{.ModelName}}.{{.StructName}}
 	batchSize int
 }
@@ -237,6 +244,11 @@ func (c *CreateData) SetTx(tx *query.Query) *CreateData {
 func (c *CreateData) SetQueryTx(tx *query.QueryTx) *CreateData {
 	c.qTx = tx
 	c.tx = nil
+	return c
+}
+
+func (c *CreateData) SetUnscoped(unscoped bool) *CreateData {
+	c.unscoped = unscoped
 	return c
 }
 
@@ -305,6 +317,7 @@ import (
 type DeleteData struct {
 	tx            *query.Query
 	qTx           *query.QueryTx
+	unscoped      bool
 	conditionOpts []ConditionOption
 }
 
@@ -324,6 +337,11 @@ func (d *DeleteData) SetTx(tx *query.Query) *DeleteData {
 func (d *DeleteData) SetQueryTx(tx *query.QueryTx) *DeleteData {
 	d.qTx = tx
 	d.tx = nil
+	return d
+}
+
+func (d *DeleteData) SetUnscoped(unscoped bool) *DeleteData {
+	d.unscoped = unscoped
 	return d
 }
 
@@ -392,6 +410,7 @@ type FirstData struct {
 	tx            *query.Query
 	qTx           *query.QueryTx
 	forUpdate     bool
+	unscoped      bool
 	relationOpts  []RelationOption
 	conditionOpts []ConditionOption
 }
@@ -418,6 +437,11 @@ func (f *FirstData) SetQueryTx(tx *query.QueryTx) *FirstData {
 
 func (f *FirstData) SetForUpdate(forUpdate bool) *FirstData {
 	f.forUpdate = forUpdate
+	return f
+}
+
+func (f *FirstData) SetUnscoped(unscoped bool) *FirstData {
+	f.unscoped = unscoped
 	return f
 }
 
@@ -504,6 +528,7 @@ type LastData struct {
 	tx            *query.Query
 	qTx           *query.QueryTx
 	forUpdate     bool
+	unscoped      bool
 	relationOpts  []RelationOption
 	conditionOpts []ConditionOption
 }
@@ -530,6 +555,11 @@ func (l *LastData) SetQueryTx(tx *query.QueryTx) *LastData {
 
 func (l *LastData) SetForUpdate(forUpdate bool) *LastData {
 	l.forUpdate = forUpdate
+	return l
+}
+
+func (l *LastData) SetUnscoped(unscoped bool) *LastData {
+	l.unscoped = unscoped
 	return l
 }
 
@@ -619,6 +649,7 @@ type ListData struct {
 	page          int
 	pageSize      int
 	forUpdate     bool
+	unscoped      bool
 	relationOpts  []RelationOption
 	orderOpts     []OrderOption
 	conditionOpts []ConditionOption
@@ -647,6 +678,11 @@ func (l *ListData) SetQueryTx(tx *query.QueryTx) *ListData {
 
 func (l *ListData) SetForUpdate(forUpdate bool) *ListData {
 	l.forUpdate = forUpdate
+	return l
+}
+
+func (l *ListData) SetUnscoped(unscoped bool) *ListData {
+	l.unscoped = unscoped
 	return l
 }
 
@@ -759,6 +795,7 @@ type TakeData struct {
 	tx            *query.Query
 	qTx           *query.QueryTx
 	forUpdate     bool
+	unscoped      bool
 	relationOpts  []RelationOption
 	orderOpts     []OrderOption
 	conditionOpts []ConditionOption
@@ -787,6 +824,11 @@ func (t *TakeData) SetQueryTx(tx *query.QueryTx) *TakeData {
 
 func (t *TakeData) SetForUpdate(forUpdate bool) *TakeData {
 	t.forUpdate = forUpdate
+	return t
+}
+
+func (t *TakeData) SetUnscoped(unscoped bool) *TakeData {
+	t.unscoped = unscoped
 	return t
 }
 
@@ -884,6 +926,7 @@ import (
 type UpdateData struct {
 	tx            *query.Query
 	qTx           *query.QueryTx
+	unscoped      bool
 	updateOpts    []UpdateOption
 	conditionOpts []ConditionOption
 }
@@ -905,6 +948,11 @@ func (u *UpdateData) SetTx(tx *query.Query) *UpdateData {
 func (u *UpdateData) SetQueryTx(tx *query.QueryTx) *UpdateData {
 	u.qTx = tx
 	u.tx = nil
+	return u
+}
+
+func (u *UpdateData) SetUnscoped(unscoped bool) *UpdateData {
+	u.unscoped = unscoped
 	return u
 }
 
