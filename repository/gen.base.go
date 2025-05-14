@@ -28,6 +28,11 @@ func (r *Repository) genBase(rt reflect.Type, abbr, filename, paths string) erro
 		numberDecimalPkg = true
 	}
 
+	_conditions := make([]template.HTML, 0, len(conditions))
+	for _, condition := range conditions {
+		_conditions = append(_conditions, template.HTML(condition))
+	}
+
 	updates, _timePkg, _decimalPkg, _numberDecimalPkg := r.genUpdateOpt(rt, abbr)
 	if _timePkg {
 		timePkg = true
@@ -75,7 +80,7 @@ func (r *Repository) genBase(rt reflect.Type, abbr, filename, paths string) erro
 		StructName  string
 		Abbr        string
 		Imports     []template.HTML
-		Conditions  []Condition
+		Conditions  []template.HTML
 		Updates     []Update
 		Orders      []Order
 	}{
@@ -87,7 +92,7 @@ func (r *Repository) genBase(rt reflect.Type, abbr, filename, paths string) erro
 		StructName:  rt.Name(),
 		Abbr:        abbr,
 		Imports:     imports,
-		Conditions:  conditions,
+		Conditions:  _conditions,
 		Updates:     updates,
 		Orders:      r.genOrderOpt(rt, abbr),
 	}
