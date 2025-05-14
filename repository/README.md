@@ -13,7 +13,7 @@ import (
 func main() {
 	r := repository.New(
 		repository.WithModule("demo"),
-		repository.WithRepoPath("cmd/internal/repositories"),
+		repository.WithRepositoryPath("cmd/internal/repositories"),
 		repository.WithGenQueryPkg("demo/internal/query"),
 		repository.WithGormDBVar("global.DB"),
 		repository.WithGormDBVarPkg("demo/internal/global"),
