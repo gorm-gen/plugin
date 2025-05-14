@@ -18,7 +18,7 @@ func Condition%s(v ...%s) ConditionOption {
         return %s.q.%s.%s.In(v...)
     }
 }
-`, fieldName, strings.Trim(fieldType, "*"), abbr, rt.Name(), abbr, rt.Name(), fieldName, abbr, rt.Name(), fieldName)
+`, fieldName, fieldType, abbr, rt.Name(), abbr, rt.Name(), fieldName, abbr, rt.Name(), fieldName)
 	conditions = append(conditions, Condition(condition))
 
 	condition = fmt.Sprintf(`
@@ -30,7 +30,7 @@ func Condition%sNot(v ...%s) ConditionOption {
         return %s.q.%s.%s.NotIn(v...)
     }
 }
-`, fieldName, strings.Trim(fieldType, "*"), abbr, rt.Name(), abbr, rt.Name(), fieldName, abbr, rt.Name(), fieldName)
+`, fieldName, fieldType, abbr, rt.Name(), abbr, rt.Name(), fieldName, abbr, rt.Name(), fieldName)
 	conditions = append(conditions, Condition(condition))
 
 	condition = fmt.Sprintf(`
@@ -42,7 +42,7 @@ func Condition%sGt(v ...%s) ConditionOption {
         return %s.q.%s.%s.Gt(v[0])
     }
 }
-`, fieldName, strings.Trim(fieldType, "*"), abbr, rt.Name(), abbr, rt.Name(), fieldName, abbr, rt.Name(), fieldName)
+`, fieldName, fieldType, abbr, rt.Name(), abbr, rt.Name(), fieldName, abbr, rt.Name(), fieldName)
 	conditions = append(conditions, Condition(condition))
 
 	condition = fmt.Sprintf(`
@@ -54,7 +54,7 @@ func Condition%sGte(v ...%s) ConditionOption {
         return %s.q.%s.%s.Gte(v[0])
     }
 }
-`, fieldName, strings.Trim(fieldType, "*"), abbr, rt.Name(), abbr, rt.Name(), fieldName, abbr, rt.Name(), fieldName)
+`, fieldName, fieldType, abbr, rt.Name(), abbr, rt.Name(), fieldName, abbr, rt.Name(), fieldName)
 	conditions = append(conditions, Condition(condition))
 
 	condition = fmt.Sprintf(`
@@ -66,7 +66,7 @@ func Condition%sLt(v ...%s) ConditionOption {
         return %s.q.%s.%s.Lt(v[0])
     }
 }
-`, fieldName, strings.Trim(fieldType, "*"), abbr, rt.Name(), abbr, rt.Name(), fieldName, abbr, rt.Name(), fieldName)
+`, fieldName, fieldType, abbr, rt.Name(), abbr, rt.Name(), fieldName, abbr, rt.Name(), fieldName)
 	conditions = append(conditions, Condition(condition))
 
 	condition = fmt.Sprintf(`
@@ -78,7 +78,7 @@ func Condition%sLte(v ...%s) ConditionOption {
         return %s.q.%s.%s.Lte(v[0])
     }
 }
-`, fieldName, strings.Trim(fieldType, "*"), abbr, rt.Name(), abbr, rt.Name(), fieldName, abbr, rt.Name(), fieldName)
+`, fieldName, fieldType, abbr, rt.Name(), abbr, rt.Name(), fieldName, abbr, rt.Name(), fieldName)
 	conditions = append(conditions, Condition(condition))
 
 	condition = fmt.Sprintf(`
@@ -87,7 +87,7 @@ func Condition%sBetween(left, right %s) ConditionOption {
         return %s.q.%s.%s.Between(left, right)
     }
 }
-`, fieldName, strings.Trim(fieldType, "*"), abbr, rt.Name(), abbr, rt.Name(), fieldName)
+`, fieldName, fieldType, abbr, rt.Name(), abbr, rt.Name(), fieldName)
 	conditions = append(conditions, Condition(condition))
 
 	condition = fmt.Sprintf(`
@@ -96,29 +96,7 @@ func Condition%sNotBetween(left, right %s) ConditionOption {
         return %s.q.%s.%s.NotBetween(left, right)
     }
 }
-`, fieldName, strings.Trim(fieldType, "*"), abbr, rt.Name(), abbr, rt.Name(), fieldName)
-	conditions = append(conditions, Condition(condition))
-
-	if !strings.Contains(fieldType, "*") {
-		return conditions
-	}
-
-	condition = fmt.Sprintf(`
-func Condition%sIsNull() ConditionOption {
-	return func(%s *%s) gen.Condition {
-        return %s.q.%s.%s.IsNull()
-    }
-}
-`, fieldName, abbr, rt.Name(), abbr, rt.Name(), fieldName)
-	conditions = append(conditions, Condition(condition))
-
-	condition = fmt.Sprintf(`
-func Condition%sIsNotNull() ConditionOption {
-	return func(%s *%s) gen.Condition {
-        return %s.q.%s.%s.IsNotNull()
-    }
-}
-`, fieldName, abbr, rt.Name(), abbr, rt.Name(), fieldName)
+`, fieldName, fieldType, abbr, rt.Name(), abbr, rt.Name(), fieldName)
 	conditions = append(conditions, Condition(condition))
 
 	return conditions
@@ -188,14 +166,201 @@ func (r *Repository) isInt(fieldType string) bool {
 	return false
 }
 
+func (r *Repository) stringCondition(fieldName string, fieldType string, rt reflect.Type, abbr string) []Condition {
+	var conditions []Condition
+
+	condition := fmt.Sprintf(`
+func Condition%sEq(v %s) ConditionOption {
+	return func(%s *%s) gen.Condition {
+        return %s.q.%s.%s.Eq(v)
+    }
+}
+`, fieldName, fieldType, abbr, rt.Name(), abbr, rt.Name(), fieldName)
+	conditions = append(conditions, Condition(condition))
+
+	condition = fmt.Sprintf(`
+func Condition%sNeq(v %s) ConditionOption {
+	return func(%s *%s) gen.Condition {
+        return %s.q.%s.%s.Neq(v)
+    }
+}
+`, fieldName, fieldType, abbr, rt.Name(), abbr, rt.Name(), fieldName)
+	conditions = append(conditions, Condition(condition))
+
+	condition = fmt.Sprintf(`
+func Condition%sLike(v %s) ConditionOption {
+	return func(%s *%s) gen.Condition {
+        return %s.q.%s.%s.Like(v)
+    }
+}
+`, fieldName, fieldType, abbr, rt.Name(), abbr, rt.Name(), fieldName)
+	conditions = append(conditions, Condition(condition))
+
+	condition = fmt.Sprintf(`
+func Condition%sNotLike(v %s) ConditionOption {
+	return func(%s *%s) gen.Condition {
+        return %s.q.%s.%s.NotLike(v)
+    }
+}
+`, fieldName, fieldType, abbr, rt.Name(), abbr, rt.Name(), fieldName)
+	conditions = append(conditions, Condition(condition))
+
+	return conditions
+}
+
+func (r *Repository) isString(fieldType string) bool {
+	if fieldType == "string" {
+		return true
+	}
+	if fieldType == "*string" {
+		return true
+	}
+	return false
+}
+
+func (r *Repository) timeCondition(fieldName string, fieldType string, rt reflect.Type, abbr string) []Condition {
+	var conditions []Condition
+
+	condition := fmt.Sprintf(`
+func Condition%sEq(v ...%s) ConditionOption {
+	return func(%s *%s) gen.Condition {
+        if len(v) == 0 {
+            return %s.q.%s.%s.Eq(time.Now())
+        }
+        return %s.q.%s.%s.Eq(v[0])
+    }
+}
+`, fieldName, fieldType, abbr, rt.Name(), abbr, rt.Name(), fieldName, abbr, rt.Name(), fieldName)
+	conditions = append(conditions, Condition(condition))
+
+	condition = fmt.Sprintf(`
+func Condition%sNeq(v ...%s) ConditionOption {
+	return func(%s *%s) gen.Condition {
+        if len(v) == 0 {
+            return %s.q.%s.%s.Neq(time.Now())
+        }
+        return %s.q.%s.%s.Neq(v[0])
+    }
+}
+`, fieldName, fieldType, abbr, rt.Name(), abbr, rt.Name(), fieldName, abbr, rt.Name(), fieldName)
+	conditions = append(conditions, Condition(condition))
+
+	condition = fmt.Sprintf(`
+func Condition%sGt(v ...%s) ConditionOption {
+	return func(%s *%s) gen.Condition {
+        if len(v) == 0 {
+            return %s.q.%s.%s.Gt(time.Now())
+        }
+        return %s.q.%s.%s.Gt(v[0])
+    }
+}
+`, fieldName, fieldType, abbr, rt.Name(), abbr, rt.Name(), fieldName, abbr, rt.Name(), fieldName)
+	conditions = append(conditions, Condition(condition))
+
+	condition = fmt.Sprintf(`
+func Condition%sGte(v ...%s) ConditionOption {
+	return func(%s *%s) gen.Condition {
+        if len(v) == 0 {
+            return %s.q.%s.%s.Gte(time.Now())
+        }
+        return %s.q.%s.%s.Gte(v[0])
+    }
+}
+`, fieldName, fieldType, abbr, rt.Name(), abbr, rt.Name(), fieldName, abbr, rt.Name(), fieldName)
+	conditions = append(conditions, Condition(condition))
+
+	condition = fmt.Sprintf(`
+func Condition%sLt(v ...%s) ConditionOption {
+	return func(%s *%s) gen.Condition {
+        if len(v) == 0 {
+            return %s.q.%s.%s.Lt(time.Now())
+        }
+        return %s.q.%s.%s.Lt(v[0])
+    }
+}
+`, fieldName, fieldType, abbr, rt.Name(), abbr, rt.Name(), fieldName, abbr, rt.Name(), fieldName)
+	conditions = append(conditions, Condition(condition))
+
+	condition = fmt.Sprintf(`
+func Condition%sLte(v ...%s) ConditionOption {
+	return func(%s *%s) gen.Condition {
+        if len(v) == 0 {
+            return %s.q.%s.%s.Lte(time.Now())
+        }
+        return %s.q.%s.%s.Lte(v[0])
+    }
+}
+`, fieldName, fieldType, abbr, rt.Name(), abbr, rt.Name(), fieldName, abbr, rt.Name(), fieldName)
+	conditions = append(conditions, Condition(condition))
+
+	condition = fmt.Sprintf(`
+func Condition%sBetween(left, right %s) ConditionOption {
+	return func(%s *%s) gen.Condition {
+        return %s.q.%s.%s.Between(left, right)
+    }
+}
+`, fieldName, fieldType, abbr, rt.Name(), abbr, rt.Name(), fieldName)
+	conditions = append(conditions, Condition(condition))
+
+	condition = fmt.Sprintf(`
+func Condition%sNotBetween(left, right %s) ConditionOption {
+	return func(%s *%s) gen.Condition {
+        return %s.q.%s.%s.NotBetween(left, right)
+    }
+}
+`, fieldName, fieldType, abbr, rt.Name(), abbr, rt.Name(), fieldName)
+	conditions = append(conditions, Condition(condition))
+	return conditions
+}
+
+func (r *Repository) isTime(fieldType string) bool {
+	if fieldType == "time.Time" {
+		return true
+	}
+	if fieldType == "*time.Time" {
+		return true
+	}
+	return false
+}
+
 func (r *Repository) genConditionOpt(rt reflect.Type, abbr string) []Condition {
 	var conditions []Condition
 	for i := 0; i < rt.NumField(); i++ {
 		field := rt.Field(i)
 		typ := field.Type.String()
+		fieldType := strings.Trim(field.Type.String(), "*")
 		if r.isInt(typ) {
-			conditions = append(conditions, r.intCondition(field.Name, typ, rt, abbr)...)
+			conditions = append(conditions, r.intCondition(field.Name, fieldType, rt, abbr)...)
 		}
+		if r.isString(typ) {
+			conditions = append(conditions, r.stringCondition(field.Name, fieldType, rt, abbr)...)
+		}
+		if r.isTime(typ) {
+			conditions = append(conditions, r.timeCondition(field.Name, fieldType, rt, abbr)...)
+		}
+
+		if !strings.Contains(typ, "*") {
+			continue
+		}
+
+		condition := fmt.Sprintf(`
+func Condition%sIsNull() ConditionOption {
+	return func(%s *%s) gen.Condition {
+        return %s.q.%s.%s.IsNull()
+    }
+}
+`, field.Name, abbr, rt.Name(), abbr, rt.Name(), field.Name)
+		conditions = append(conditions, Condition(condition))
+
+		condition = fmt.Sprintf(`
+func Condition%sIsNotNull() ConditionOption {
+	return func(%s *%s) gen.Condition {
+        return %s.q.%s.%s.IsNotNull()
+    }
+}
+`, field.Name, abbr, rt.Name(), abbr, rt.Name(), field.Name)
+		conditions = append(conditions, Condition(condition))
 	}
+
 	return conditions
 }

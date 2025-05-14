@@ -89,6 +89,12 @@ func New(opts ...Option) *{{.StructName}} {
 
 type ConditionOption func(*{{.StructName}}) gen.Condition
 
+func Condition(condition gen.Condition) ConditionOption {
+	return func(*{{.StructName}}) gen.Condition {
+		return condition
+	}
+}
+
 {{range .Conditions}}{{.}}` + "\n" + `{{end}}
 
 type UpdateOption func(*{{.StructName}}) field.AssignExpr
