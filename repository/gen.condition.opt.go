@@ -224,10 +224,10 @@ func (r *Repository) timeCondition(fieldName string, fieldType string, rt reflec
 	condition := fmt.Sprintf(`
 func Condition%sEq(v ...%s) ConditionOption {
 	return func(%s *%s) gen.Condition {
-        if len(v) == 0 {
-            return %s.q.%s.%s.Eq(time.Now())
+        if len(v) > 0 && !time.IsZero(v[0]) {
+            return %s.q.%s.%s.Eq(v[0])
         }
-        return %s.q.%s.%s.Eq(v[0])
+        return %s.q.%s.%s.Eq(time.Now())
     }
 }
 `, fieldName, fieldType, abbr, rt.Name(), abbr, rt.Name(), fieldName, abbr, rt.Name(), fieldName)
@@ -236,10 +236,10 @@ func Condition%sEq(v ...%s) ConditionOption {
 	condition = fmt.Sprintf(`
 func Condition%sNeq(v ...%s) ConditionOption {
 	return func(%s *%s) gen.Condition {
-        if len(v) == 0 {
-            return %s.q.%s.%s.Neq(time.Now())
+        if len(v) > 0 && !time.IsZero(v[0]) {
+            return %s.q.%s.%s.Neq(v[0])
         }
-        return %s.q.%s.%s.Neq(v[0])
+        return %s.q.%s.%s.Neq(time.Now())
     }
 }
 `, fieldName, fieldType, abbr, rt.Name(), abbr, rt.Name(), fieldName, abbr, rt.Name(), fieldName)
@@ -248,10 +248,10 @@ func Condition%sNeq(v ...%s) ConditionOption {
 	condition = fmt.Sprintf(`
 func Condition%sGt(v ...%s) ConditionOption {
 	return func(%s *%s) gen.Condition {
-        if len(v) == 0 {
-            return %s.q.%s.%s.Gt(time.Now())
+        if len(v) > 0 && !time.IsZero(v[0]) {
+            return %s.q.%s.%s.Gt(v[0])
         }
-        return %s.q.%s.%s.Gt(v[0])
+        return %s.q.%s.%s.Gt(time.Now())
     }
 }
 `, fieldName, fieldType, abbr, rt.Name(), abbr, rt.Name(), fieldName, abbr, rt.Name(), fieldName)
@@ -260,10 +260,10 @@ func Condition%sGt(v ...%s) ConditionOption {
 	condition = fmt.Sprintf(`
 func Condition%sGte(v ...%s) ConditionOption {
 	return func(%s *%s) gen.Condition {
-        if len(v) == 0 {
-            return %s.q.%s.%s.Gte(time.Now())
+        if len(v) > 0 && !time.IsZero(v[0]) {
+            return %s.q.%s.%s.Gte(v[0])
         }
-        return %s.q.%s.%s.Gte(v[0])
+        return %s.q.%s.%s.Gte(time.Now())
     }
 }
 `, fieldName, fieldType, abbr, rt.Name(), abbr, rt.Name(), fieldName, abbr, rt.Name(), fieldName)
@@ -272,10 +272,10 @@ func Condition%sGte(v ...%s) ConditionOption {
 	condition = fmt.Sprintf(`
 func Condition%sLt(v ...%s) ConditionOption {
 	return func(%s *%s) gen.Condition {
-        if len(v) == 0 {
-            return %s.q.%s.%s.Lt(time.Now())
+        if len(v) > 0 && !time.IsZero(v[0]) {
+            return %s.q.%s.%s.Lt(v[0])
         }
-        return %s.q.%s.%s.Lt(v[0])
+        return %s.q.%s.%s.Lt(time.Now())
     }
 }
 `, fieldName, fieldType, abbr, rt.Name(), abbr, rt.Name(), fieldName, abbr, rt.Name(), fieldName)
@@ -284,10 +284,10 @@ func Condition%sLt(v ...%s) ConditionOption {
 	condition = fmt.Sprintf(`
 func Condition%sLte(v ...%s) ConditionOption {
 	return func(%s *%s) gen.Condition {
-        if len(v) == 0 {
-            return %s.q.%s.%s.Lte(time.Now())
+        if len(v) > 0 && !time.IsZero(v[0]) {
+            return %s.q.%s.%s.Lte(v[0])
         }
-        return %s.q.%s.%s.Lte(v[0])
+        return %s.q.%s.%s.Lte(time.Now())
     }
 }
 `, fieldName, fieldType, abbr, rt.Name(), abbr, rt.Name(), fieldName, abbr, rt.Name(), fieldName)
