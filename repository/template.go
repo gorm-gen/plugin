@@ -29,6 +29,7 @@ func GetQuery() *query.Query {
 	return q
 }
 
+// 是否为非超时和查询不到的错误
 func IsRealErr(err error) bool {
 	return !errors.Is(err, gorm.ErrRecordNotFound) &&
 		!errors.Is(err, context.DeadlineExceeded) &&
@@ -68,9 +69,9 @@ func New() *{{.StructName}} {
 	}
 }
 
-type Option func(*{{.StructName}}) gen.Condition
+type ConditionOption func(*{{.StructName}}) gen.Condition
 
-func WithID(id int64) Option {
+func WithID(id int64) ConditionOption {
 	return func({{.Abbr}} *{{.StructName}}) gen.Condition {
 		return {{.Abbr}}.q.{{.StructName}}.ID.Eq(id)
 	}
@@ -117,12 +118,12 @@ import (
 type CountData struct {
 	tx            *query.Query
 	qTx           *query.QueryTx
-	conditionOpts []Option
+	conditionOpts []ConditionOption
 }
 
 func NewCountData() *CountData {
 	return &CountData{
-		conditionOpts: make([]Option, 0),
+		conditionOpts: make([]ConditionOption, 0),
 	}
 }
 
@@ -139,7 +140,7 @@ func (c *CountData) SetQueryTx(tx *query.QueryTx) *CountData {
 	return c
 }
 
-func (c *CountData) SetConditionOpts(opts ...Option) *CountData {
+func (c *CountData) SetConditionOpts(opts ...ConditionOption) *CountData {
 	c.conditionOpts = opts
 	return c
 }
@@ -286,12 +287,12 @@ import (
 type DeleteData struct {
 	tx            *query.Query
 	qTx           *query.QueryTx
-	conditionOpts []Option
+	conditionOpts []ConditionOption
 }
 
 func NewDeleteData() *DeleteData {
 	return &DeleteData{
-		conditionOpts: make([]Option, 0),
+		conditionOpts: make([]ConditionOption, 0),
 	}
 }
 
@@ -308,7 +309,7 @@ func (d *DeleteData) SetQueryTx(tx *query.QueryTx) *DeleteData {
 	return d
 }
 
-func (d *DeleteData) SetConditionOpts(opts ...Option) *DeleteData {
+func (d *DeleteData) SetConditionOpts(opts ...ConditionOption) *DeleteData {
 	d.conditionOpts = opts
 	return d
 }
@@ -374,13 +375,13 @@ type FirstData struct {
 	qTx           *query.QueryTx
 	forUpdate     bool
 	relationOpts  []RelationOption
-	conditionOpts []Option
+	conditionOpts []ConditionOption
 }
 
 func NewFirstData() *FirstData {
 	return &FirstData{
 		relationOpts:  make([]RelationOption, 0),
-		conditionOpts: make([]Option, 0),
+		conditionOpts: make([]ConditionOption, 0),
 	}
 }
 
@@ -407,7 +408,7 @@ func (f *FirstData) SetRelationOpts(opts ...RelationOption) *FirstData {
 	return f
 }
 
-func (f *FirstData) SetConditionOpts(opts ...Option) *FirstData {
+func (f *FirstData) SetConditionOpts(opts ...ConditionOption) *FirstData {
 	f.conditionOpts = opts
 	return f
 }
@@ -486,13 +487,13 @@ type LastData struct {
 	qTx           *query.QueryTx
 	forUpdate     bool
 	relationOpts  []RelationOption
-	conditionOpts []Option
+	conditionOpts []ConditionOption
 }
 
 func NewLastData() *LastData {
 	return &LastData{
 		relationOpts:  make([]RelationOption, 0),
-		conditionOpts: make([]Option, 0),
+		conditionOpts: make([]ConditionOption, 0),
 	}
 }
 
@@ -519,7 +520,7 @@ func (l *LastData) SetRelationOpts(opts ...RelationOption) *LastData {
 	return l
 }
 
-func (l *LastData) SetConditionOpts(opts ...Option) *LastData {
+func (l *LastData) SetConditionOpts(opts ...ConditionOption) *LastData {
 	l.conditionOpts = opts
 	return l
 }
@@ -602,14 +603,14 @@ type ListData struct {
 	forUpdate     bool
 	relationOpts  []RelationOption
 	orderOpts     []OrderOption
-	conditionOpts []Option
+	conditionOpts []ConditionOption
 }
 
 func NewListData() *ListData {
 	return &ListData{
 		relationOpts:  make([]RelationOption, 0),
 		orderOpts:     make([]OrderOption, 0),
-		conditionOpts: make([]Option, 0),
+		conditionOpts: make([]ConditionOption, 0),
 	}
 }
 
@@ -641,7 +642,7 @@ func (l *ListData) SetOrderOpts(opts ...OrderOption) *ListData {
 	return l
 }
 
-func (l *ListData) SetConditionOpts(opts ...Option) *ListData {
+func (l *ListData) SetConditionOpts(opts ...ConditionOption) *ListData {
 	l.conditionOpts = opts
 	return l
 }
@@ -742,14 +743,14 @@ type TakeData struct {
 	forUpdate     bool
 	relationOpts  []RelationOption
 	orderOpts     []OrderOption
-	conditionOpts []Option
+	conditionOpts []ConditionOption
 }
 
 func NewTakeData() *TakeData {
 	return &TakeData{
 		relationOpts:  make([]RelationOption, 0),
 		orderOpts:     make([]OrderOption, 0),
-		conditionOpts: make([]Option, 0),
+		conditionOpts: make([]ConditionOption, 0),
 	}
 }
 
@@ -781,7 +782,7 @@ func (t *TakeData) SetOrderOpts(opts ...OrderOption) *TakeData {
 	return t
 }
 
-func (t *TakeData) SetConditionOpts(opts ...Option) *TakeData {
+func (t *TakeData) SetConditionOpts(opts ...ConditionOption) *TakeData {
 	t.conditionOpts = opts
 	return t
 }
@@ -866,13 +867,13 @@ type UpdateData struct {
 	tx            *query.Query
 	qTx           *query.QueryTx
 	updateOpts    []UpdateOption
-	conditionOpts []Option
+	conditionOpts []ConditionOption
 }
 
 func NewUpdateData() *UpdateData {
 	return &UpdateData{
 		updateOpts:    make([]UpdateOption, 0),
-		conditionOpts: make([]Option, 0),
+		conditionOpts: make([]ConditionOption, 0),
 	}
 }
 
@@ -894,7 +895,7 @@ func (u *UpdateData) SetUpdateOpts(opts ...UpdateOption) *UpdateData {
 	return u
 }
 
-func (u *UpdateData) SetConditionOpts(opts ...Option) *UpdateData {
+func (u *UpdateData) SetConditionOpts(opts ...ConditionOption) *UpdateData {
 	u.conditionOpts = opts
 	return u
 }
