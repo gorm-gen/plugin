@@ -323,6 +323,105 @@ func (r *Repository) isTime(fieldType string) bool {
 	return false
 }
 
+func (r *Repository) decimalCondition(fieldName string, fieldType string, rt reflect.Type, abbr string) []Condition {
+	var conditions []Condition
+
+	condition := fmt.Sprintf(`
+func Condition%sEq(v %s) ConditionOption {
+	return func(%s *%s) gen.Condition {
+        return %s.q.%s.%s.Eq(value.NewDecimal(v))
+    }
+}
+`, fieldName, fieldType, abbr, rt.Name(), abbr, rt.Name(), fieldName)
+	conditions = append(conditions, Condition(condition))
+
+	condition = fmt.Sprintf(`
+func Condition%sNeq(v %s) ConditionOption {
+	return func(%s *%s) gen.Condition {
+        return %s.q.%s.%s.Neq(value.NewDecimal(v))
+    }
+}
+`, fieldName, fieldType, abbr, rt.Name(), abbr, rt.Name(), fieldName)
+	conditions = append(conditions, Condition(condition))
+
+	condition = fmt.Sprintf(`
+func Condition%sGt(v ...%s) ConditionOption {
+	return func(%s *%s) gen.Condition {
+        if len(v) == 0 {
+            return %s.q.%s.%s.Gt(value.NewDecimal(decimal.Zero))
+        }
+        return %s.q.%s.%s.Gt(value.NewDecimal(v[0]))
+    }
+}
+`, fieldName, fieldType, abbr, rt.Name(), abbr, rt.Name(), fieldName, abbr, rt.Name(), fieldName)
+	conditions = append(conditions, Condition(condition))
+
+	condition = fmt.Sprintf(`
+func Condition%sGte(v ...%s) ConditionOption {
+	return func(%s *%s) gen.Condition {
+        if len(v) == 0 {
+            return %s.q.%s.%s.Gte(value.NewDecimal(decimal.Zero))
+        }
+        return %s.q.%s.%s.Gte(value.NewDecimal(v[0]))
+    }
+}
+`, fieldName, fieldType, abbr, rt.Name(), abbr, rt.Name(), fieldName, abbr, rt.Name(), fieldName)
+	conditions = append(conditions, Condition(condition))
+
+	condition = fmt.Sprintf(`
+func Condition%sLt(v ...%s) ConditionOption {
+	return func(%s *%s) gen.Condition {
+        if len(v) == 0 {
+            return %s.q.%s.%s.Lt(value.NewDecimal(decimal.Zero))
+        }
+        return %s.q.%s.%s.Lt(value.NewDecimal(v[0]))
+    }
+}
+`, fieldName, fieldType, abbr, rt.Name(), abbr, rt.Name(), fieldName, abbr, rt.Name(), fieldName)
+	conditions = append(conditions, Condition(condition))
+
+	condition = fmt.Sprintf(`
+func Condition%sLte(v ...%s) ConditionOption {
+	return func(%s *%s) gen.Condition {
+        if len(v) == 0 {
+            return %s.q.%s.%s.Lte(value.NewDecimal(decimal.Zero))
+        }
+        return %s.q.%s.%s.Lte(value.NewDecimal(v[0]))
+    }
+}
+`, fieldName, fieldType, abbr, rt.Name(), abbr, rt.Name(), fieldName, abbr, rt.Name(), fieldName)
+	conditions = append(conditions, Condition(condition))
+
+	condition = fmt.Sprintf(`
+func Condition%sBetween(left, right %s) ConditionOption {
+	return func(%s *%s) gen.Condition {
+        return f.NewDecimal(%s.q.%s.%s).Between(left, right)
+    }
+}
+`, fieldName, fieldType, abbr, rt.Name(), abbr, rt.Name(), fieldName)
+	conditions = append(conditions, Condition(condition))
+
+	condition = fmt.Sprintf(`
+func Condition%sNotBetween(left, right %s) ConditionOption {
+	return func(%s *%s) gen.Condition {
+        return f.NewDecimal(%s.q.%s.%s).NotBetween(left, right)
+    }
+}
+`, fieldName, fieldType, abbr, rt.Name(), abbr, rt.Name(), fieldName)
+	conditions = append(conditions, Condition(condition))
+	return conditions
+}
+
+func (r *Repository) isDecimal(fieldType string) bool {
+	if fieldType == "decimal.Decimal" {
+		return true
+	}
+	if fieldType == "*decimal.Decimal" {
+		return true
+	}
+	return false
+}
+
 func (r *Repository) genConditionOpt(rt reflect.Type, abbr string) (conditions []Condition, timePkg, decimalPkg, numberDecimalPkg bool) {
 	for i := 0; i < rt.NumField(); i++ {
 		field := rt.Field(i)
@@ -337,6 +436,11 @@ func (r *Repository) genConditionOpt(rt reflect.Type, abbr string) (conditions [
 		if r.isTime(typ) {
 			timePkg = true
 			conditions = append(conditions, r.timeCondition(field.Name, fieldType, rt, abbr)...)
+		}
+		if r.isDecimal(typ) {
+			decimalPkg = true
+			numberDecimalPkg = true
+			conditions = append(conditions, r.decimalCondition(field.Name, fieldType, rt, abbr)...)
 		}
 
 		if !strings.Contains(typ, "*") {
