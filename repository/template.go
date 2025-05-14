@@ -159,8 +159,8 @@ func (c *CountData) SetQueryTx(tx *query.QueryTx) *CountData {
 	return c
 }
 
-func (c *CountData) SetUnscoped(unscoped bool) *CountData {
-	c.unscoped = unscoped
+func (c *CountData) SetUnscoped() *CountData {
+	c.unscoped = true
 	return c
 }
 
@@ -250,8 +250,8 @@ func (c *CreateData) SetQueryTx(tx *query.QueryTx) *CreateData {
 	return c
 }
 
-func (c *CreateData) SetUnscoped(unscoped bool) *CreateData {
-	c.unscoped = unscoped
+func (c *CreateData) SetUnscoped() *CreateData {
+	c.unscoped = true
 	return c
 }
 
@@ -346,8 +346,8 @@ func (d *DeleteData) SetQueryTx(tx *query.QueryTx) *DeleteData {
 	return d
 }
 
-func (d *DeleteData) SetUnscoped(unscoped bool) *DeleteData {
-	d.unscoped = unscoped
+func (d *DeleteData) SetUnscoped() *DeleteData {
+	d.unscoped = true
 	return d
 }
 
@@ -449,8 +449,8 @@ func (f *FirstData) SetForUpdate(forUpdate bool) *FirstData {
 	return f
 }
 
-func (f *FirstData) SetUnscoped(unscoped bool) *FirstData {
-	f.unscoped = unscoped
+func (f *FirstData) SetUnscoped() *FirstData {
+	f.unscoped = true
 	return f
 }
 
@@ -570,8 +570,8 @@ func (l *LastData) SetForUpdate(forUpdate bool) *LastData {
 	return l
 }
 
-func (l *LastData) SetUnscoped(unscoped bool) *LastData {
-	l.unscoped = unscoped
+func (l *LastData) SetUnscoped() *LastData {
+	l.unscoped = true
 	return l
 }
 
@@ -696,8 +696,8 @@ func (l *ListData) SetForUpdate(forUpdate bool) *ListData {
 	return l
 }
 
-func (l *ListData) SetUnscoped(unscoped bool) *ListData {
-	l.unscoped = unscoped
+func (l *ListData) SetUnscoped() *ListData {
+	l.unscoped = true
 	return l
 }
 
@@ -845,8 +845,8 @@ func (t *TakeData) SetForUpdate(forUpdate bool) *TakeData {
 	return t
 }
 
-func (t *TakeData) SetUnscoped(unscoped bool) *TakeData {
-	t.unscoped = unscoped
+func (t *TakeData) SetUnscoped() *TakeData {
+	t.unscoped = true
 	return t
 }
 
@@ -972,8 +972,8 @@ func (u *UpdateData) SetQueryTx(tx *query.QueryTx) *UpdateData {
 	return u
 }
 
-func (u *UpdateData) SetUnscoped(unscoped bool) *UpdateData {
-	u.unscoped = unscoped
+func (u *UpdateData) SetUnscoped() *UpdateData {
+	u.unscoped = true
 	return u
 }
 
