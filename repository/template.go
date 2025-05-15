@@ -49,11 +49,13 @@ import (
 {{range .Imports}}{{.}}{{end}}
 )
 
+// {{.StructName}} 仓库/Repository
 type {{.StructName}} struct {
 	q      *query.Query
 	logger *zap.Logger
 }
 
+// Option {{.StructName}}仓库初始化选项
 type Option func(*{{.StructName}})
 
 func WithQuery(q *query.Query) Option {
@@ -68,6 +70,7 @@ func WithLogger(logger *zap.Logger) Option {
 	}
 }
 
+// New {{.StructName}}仓库初始化
 func New(opts ...Option) *{{.StructName}} {
 	{{.Abbr}} := &{{.StructName}}{
 		q:      {{.RepoPkgName}}.GetQuery(),
@@ -79,32 +82,40 @@ func New(opts ...Option) *{{.StructName}} {
 	return {{.Abbr}}
 }
 
+// ConditionOption 字段条件筛选选项
 type ConditionOption func(*{{.StructName}}) gen.Condition
 
+// Condition 自定义字段条件筛选
 func Condition(condition gen.Condition) ConditionOption {
 	return func(*{{.StructName}}) gen.Condition {
 		return condition
 	}
 }
 {{range .Conditions}}{{.}}{{end}}
+// UpdateOption 数据更新选项
 type UpdateOption func(*{{.StructName}}) field.AssignExpr
 
+// Update 自定义数据更新
 func Update(update field.AssignExpr) UpdateOption {
     return func(*{{.StructName}}) field.AssignExpr {
         return update
     }
 }
 {{range .Updates}}{{.}}{{end}}
+// OrderOption 数据排序选项
 type OrderOption func(*{{.StructName}}) field.Expr
 
+// Order 自定义数据排序
 func Order(order field.Expr) OrderOption {
     return func(*{{.StructName}}) field.Expr {
         return order
     }
 }
 {{range .Orders}}{{.}}{{end}}
+// RelationOption 关联模型预加载选项
 type RelationOption func(*{{.StructName}}) field.RelationField
 
+// Relation 自定义关联模型预加载
 func Relation(relation field.RelationField) RelationOption {
 	return func(*{{.StructName}}) field.RelationField {
 		return relation
