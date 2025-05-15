@@ -161,6 +161,7 @@ func NewCountData() *CountData {
 	}
 }
 
+// SetTx 设置为事务
 func (c *CountData) SetTx(tx *query.Query) *CountData {
 	c.tx = tx
 	c.qTx = nil
@@ -252,6 +253,7 @@ func NewCreateData() *CreateData {
 	return &CreateData{}
 }
 
+// SetTx 设置为事务
 func (c *CreateData) SetTx(tx *query.Query) *CreateData {
 	c.tx = tx
 	c.qTx = nil
@@ -275,6 +277,7 @@ func (c *CreateData) SetValues(values ...*{{.ModelName}}.{{.StructName}}) *Creat
 	return c
 }
 
+// SetBatchSize 设置当批量插入时指定创建的数量
 func (c *CreateData) SetBatchSize(batchSize uint) *CreateData {
 	c.batchSize = int(batchSize)
 	return c
@@ -348,6 +351,7 @@ func NewDeleteData() *DeleteData {
 	}
 }
 
+// SetTx 设置为事务
 func (d *DeleteData) SetTx(tx *query.Query) *DeleteData {
 	d.tx = tx
 	d.qTx = nil
@@ -446,6 +450,7 @@ func NewFirstData() *FirstData {
 	}
 }
 
+// SetTx 设置为事务
 func (f *FirstData) SetTx(tx *query.Query) *FirstData {
 	f.tx = tx
 	f.qTx = nil
@@ -567,6 +572,7 @@ func NewLastData() *LastData {
 	}
 }
 
+// SetTx 设置为事务
 func (l *LastData) SetTx(tx *query.Query) *LastData {
 	l.tx = tx
 	l.qTx = nil
@@ -693,6 +699,7 @@ func NewListData() *ListData {
 	}
 }
 
+// SetTx 设置为事务
 func (l *ListData) SetTx(tx *query.Query) *ListData {
 	l.tx = tx
 	l.qTx = nil
@@ -842,6 +849,7 @@ func NewTakeData() *TakeData {
 	}
 }
 
+// SetTx 设置为事务
 func (t *TakeData) SetTx(tx *query.Query) *TakeData {
 	t.tx = tx
 	t.qTx = nil
