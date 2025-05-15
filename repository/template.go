@@ -88,13 +88,31 @@ func Condition(condition gen.Condition) ConditionOption {
 }
 {{range .Conditions}}{{.}}{{end}}
 type UpdateOption func(*{{.StructName}}) field.AssignExpr
+
+func Update(update field.AssignExpr) UpdateOption {
+    return func(*{{.StructName}}) field.AssignExpr {
+        return update
+    }
+}
 {{range .Updates}}{{.}}{{end}}
 type OrderOption func(*{{.StructName}}) field.Expr
+
+func Order(order field.Expr) OrderOption {
+    return func(*{{.StructName}}) field.Expr {
+        return order
+    }
+}
 {{range .Orders}}{{.}}{{end}}
 type RelationOption func(*{{.StructName}}) field.RelationField
 
+func Relation(relation field.RelationField) RelationOption {
+	return func(*{{.StructName}}) field.RelationField {
+		return relation
+	}
+}
+
 func RelationAll() RelationOption {
-	return func({{.Abbr}} *{{.StructName}}) field.RelationField {
+	return func(*{{.StructName}}) field.RelationField {
 		return field.Associations
 	}
 }
