@@ -522,7 +522,7 @@ func Condition%[1]sLte(v ...%[2]s) ConditionOption {
 func Condition%[1]sBetween(left, right %[2]s) ConditionOption {
 	return func(%[3]s *%[4]s) gen.Condition {
         if %[3]s.newTableName != nil {
-            return f.NewDecimal(%[3]s.q.%[4]s.%[1]s).Between(left, right)
+            return f.NewDecimal(%[3]s.q.%[4]s.%[1]s, f.WithTableName(*%[3]s.newTableName)).Between(left, right)
         }
         return f.NewDecimal(%[3]s.q.%[4]s.%[1]s).Between(left, right)
     }
@@ -534,7 +534,7 @@ func Condition%[1]sBetween(left, right %[2]s) ConditionOption {
 func Condition%[1]sNotBetween(left, right %[2]s) ConditionOption {
 	return func(%[3]s *%[4]s) gen.Condition {
         if %[3]s.newTableName != nil {
-            return f.NewDecimal(%[3]s.q.%[4]s.%[1]s).NotBetween(left, right)
+            return f.NewDecimal(%[3]s.q.%[4]s.%[1]s, f.WithTableName(*%[3]s.newTableName)).NotBetween(left, right)
         }
         return f.NewDecimal(%[3]s.q.%[4]s.%[1]s).NotBetween(left, right)
     }
