@@ -30,6 +30,12 @@ func Condition%[1]s(v ...%[2]s) ConditionOption {
 	condition = fmt.Sprintf(`
 func Condition%[1]sNot(v ...%[2]s) ConditionOption {
 	return func(%[3]s *%[4]s) gen.Condition {
+        if %[3]s.newTableName != nil {
+            if len(v) == 1 {
+                return %[3]s.q.%[4]s.Table(*%[3]s.newTableName).%[1]s.Neq(v[0])
+            }
+            return %[3]s.q.%[4]s.Table(*%[3]s.newTableName).%[1]s.NotIn(v...)
+        }
         if len(v) == 1 {
             return %[3]s.q.%[4]s.%[1]s.Neq(v[0])
         }
@@ -42,6 +48,12 @@ func Condition%[1]sNot(v ...%[2]s) ConditionOption {
 	condition = fmt.Sprintf(`
 func Condition%[1]sGt(v ...%[2]s) ConditionOption {
 	return func(%[3]s *%[4]s) gen.Condition {
+        if %[3]s.newTableName != nil {
+            if len(v) == 0 {
+                return %[3]s.q.%[4]s.Table(*%[3]s.newTableName).%[1]s.Gt(0)
+            }
+            return %[3]s.q.%[4]s.Table(*%[3]s.newTableName).%[1]s.Gt(v[0])
+        }
         if len(v) == 0 {
             return %[3]s.q.%[4]s.%[1]s.Gt(0)
         }
@@ -54,6 +66,12 @@ func Condition%[1]sGt(v ...%[2]s) ConditionOption {
 	condition = fmt.Sprintf(`
 func Condition%[1]sGte(v ...%[2]s) ConditionOption {
 	return func(%[3]s *%[4]s) gen.Condition {
+        if %[3]s.newTableName != nil {
+            if len(v) == 0 {
+                return %[3]s.q.%[4]s.Table(*%[3]s.newTableName).%[1]s.Gte(0)
+            }
+            return %[3]s.q.%[4]s.Table(*%[3]s.newTableName).%[1]s.Gte(v[0])
+        }
         if len(v) == 0 {
             return %[3]s.q.%[4]s.%[1]s.Gte(0)
         }
@@ -66,6 +84,12 @@ func Condition%[1]sGte(v ...%[2]s) ConditionOption {
 	condition = fmt.Sprintf(`
 func Condition%[1]sLt(v ...%[2]s) ConditionOption {
 	return func(%[3]s *%[4]s) gen.Condition {
+        if %[3]s.newTableName != nil {
+            if len(v) == 0 {
+                return %[3]s.q.%[4]s.Table(*%[3]s.newTableName).%[1]s.Lt(0)
+            }
+            return %[3]s.q.%[4]s.Table(*%[3]s.newTableName).%[1]s.Lt(v[0])
+        }
         if len(v) == 0 {
             return %[3]s.q.%[4]s.%[1]s.Lt(0)
         }
@@ -78,6 +102,12 @@ func Condition%[1]sLt(v ...%[2]s) ConditionOption {
 	condition = fmt.Sprintf(`
 func Condition%[1]sLte(v ...%[2]s) ConditionOption {
 	return func(%[3]s *%[4]s) gen.Condition {
+        if %[3]s.newTableName != nil {
+            if len(v) == 0 {
+                return %[3]s.q.%[4]s.Table(*%[3]s.newTableName).%[1]s.Lte(0)
+            }
+            return %[3]s.q.%[4]s.Table(*%[3]s.newTableName).%[1]s.Lte(v[0])
+        }
         if len(v) == 0 {
             return %[3]s.q.%[4]s.%[1]s.Lte(0)
         }
@@ -90,6 +120,9 @@ func Condition%[1]sLte(v ...%[2]s) ConditionOption {
 	condition = fmt.Sprintf(`
 func Condition%[1]sBetween(left, right %[2]s) ConditionOption {
 	return func(%[3]s *%[4]s) gen.Condition {
+        if %[3]s.newTableName != nil {
+            return %[3]s.q.%[4]s.Table(*%[3]s.newTableName).%[1]s.Between(left, right)
+        }
         return %[3]s.q.%[4]s.%[1]s.Between(left, right)
     }
 }
@@ -99,6 +132,9 @@ func Condition%[1]sBetween(left, right %[2]s) ConditionOption {
 	condition = fmt.Sprintf(`
 func Condition%[1]sNotBetween(left, right %[2]s) ConditionOption {
 	return func(%[3]s *%[4]s) gen.Condition {
+        if %[3]s.newTableName != nil {
+            return %[3]s.q.%[4]s.Table(*%[3]s.newTableName).%[1]s.NotBetween(left, right)
+        }
         return %[3]s.q.%[4]s.%[1]s.NotBetween(left, right)
     }
 }
@@ -178,6 +214,9 @@ func (r *Repository) stringCondition(fieldName string, fieldType string, rt refl
 	condition := fmt.Sprintf(`
 func Condition%[1]sEq(v %[2]s) ConditionOption {
 	return func(%[3]s *%[4]s) gen.Condition {
+        if %[3]s.newTableName != nil {
+            return %[3]s.q.%[4]s.Table(*%[3]s.newTableName).%[1]s.Eq(v)
+        }
         return %[3]s.q.%[4]s.%[1]s.Eq(v)
     }
 }
@@ -187,6 +226,9 @@ func Condition%[1]sEq(v %[2]s) ConditionOption {
 	condition = fmt.Sprintf(`
 func Condition%[1]sNeq(v %[2]s) ConditionOption {
 	return func(%[3]s *%[4]s) gen.Condition {
+        if %[3]s.newTableName != nil {
+            return %[3]s.q.%[4]s.Table(*%[3]s.newTableName).%[1]s.Neq(v)
+        }
         return %[3]s.q.%[4]s.%[1]s.Neq(v)
     }
 }
@@ -196,6 +238,9 @@ func Condition%[1]sNeq(v %[2]s) ConditionOption {
 	condition = fmt.Sprintf(`
 func Condition%[1]sLike(v %[2]s) ConditionOption {
 	return func(%[3]s *%[4]s) gen.Condition {
+        if %[3]s.newTableName != nil {
+            return %[3]s.q.%[4]s.Table(*%[3]s.newTableName).%[1]s.Like(v)
+        }
         return %[3]s.q.%[4]s.%[1]s.Like(v)
     }
 }
@@ -205,6 +250,9 @@ func Condition%[1]sLike(v %[2]s) ConditionOption {
 	condition = fmt.Sprintf(`
 func Condition%[1]sNotLike(v %[2]s) ConditionOption {
 	return func(%[3]s *%[4]s) gen.Condition {
+        if %[3]s.newTableName != nil {
+            return %[3]s.q.%[4]s.Table(*%[3]s.newTableName).%[1]s.NotLike(v)
+        }
         return %[3]s.q.%[4]s.%[1]s.NotLike(v)
     }
 }
@@ -230,6 +278,12 @@ func (r *Repository) timeCondition(fieldName string, fieldType string, rt reflec
 	condition := fmt.Sprintf(`
 func Condition%[1]sEq(v ...%[2]s) ConditionOption {
 	return func(%[3]s *%[4]s) gen.Condition {
+        if %[3]s.newTableName != nil {
+            if len(v) > 0 && !v[0].IsZero() {
+                return %[3]s.q.%[4]s.Table(*%[3]s.newTableName).%[1]s.Eq(v[0])
+            }
+            return %[3]s.q.%[4]s.Table(*%[3]s.newTableName).%[1]s.Eq(time.Now())
+        }
         if len(v) > 0 && !v[0].IsZero() {
             return %[3]s.q.%[4]s.%[1]s.Eq(v[0])
         }
@@ -242,6 +296,12 @@ func Condition%[1]sEq(v ...%[2]s) ConditionOption {
 	condition = fmt.Sprintf(`
 func Condition%[1]sNeq(v ...%[2]s) ConditionOption {
 	return func(%[3]s *%[4]s) gen.Condition {
+        if %[3]s.newTableName != nil {
+            if len(v) > 0 && !v[0].IsZero() {
+                return %[3]s.q.%[4]s.Table(*%[3]s.newTableName).%[1]s.Neq(v[0])
+            }
+            return %[3]s.q.%[4]s.Table(*%[3]s.newTableName).%[1]s.Neq(time.Now())
+        }
         if len(v) > 0 && !v[0].IsZero() {
             return %[3]s.q.%[4]s.%[1]s.Neq(v[0])
         }
@@ -254,6 +314,12 @@ func Condition%[1]sNeq(v ...%[2]s) ConditionOption {
 	condition = fmt.Sprintf(`
 func Condition%[1]sGt(v ...%[2]s) ConditionOption {
 	return func(%[3]s *%[4]s) gen.Condition {
+        if %[3]s.newTableName != nil {
+            if len(v) > 0 && !v[0].IsZero() {
+                return %[3]s.q.%[4]s.Table(*%[3]s.newTableName).%[1]s.Gt(v[0])
+            }
+            return %[3]s.q.%[4]s.Table(*%[3]s.newTableName).%[1]s.Gt(time.Now())
+        }
         if len(v) > 0 && !v[0].IsZero() {
             return %[3]s.q.%[4]s.%[1]s.Gt(v[0])
         }
@@ -266,6 +332,12 @@ func Condition%[1]sGt(v ...%[2]s) ConditionOption {
 	condition = fmt.Sprintf(`
 func Condition%[1]sGte(v ...%[2]s) ConditionOption {
 	return func(%[3]s *%[4]s) gen.Condition {
+        if %[3]s.newTableName != nil {
+            if len(v) > 0 && !v[0].IsZero() {
+                return %[3]s.q.%[4]s.Table(*%[3]s.newTableName).%[1]s.Gte(v[0])
+            }
+            return %[3]s.q.%[4]s.Table(*%[3]s.newTableName).%[1]s.Gte(time.Now())
+        }
         if len(v) > 0 && !v[0].IsZero() {
             return %[3]s.q.%[4]s.%[1]s.Gte(v[0])
         }
@@ -278,6 +350,12 @@ func Condition%[1]sGte(v ...%[2]s) ConditionOption {
 	condition = fmt.Sprintf(`
 func Condition%[1]sLt(v ...%[2]s) ConditionOption {
 	return func(%[3]s *%[4]s) gen.Condition {
+        if %[3]s.newTableName != nil {
+            if len(v) > 0 && !v[0].IsZero() {
+                return %[3]s.q.%[4]s.Table(*%[3]s.newTableName).%[1]s.Lt(v[0])
+            }
+            return %[3]s.q.%[4]s.Table(*%[3]s.newTableName).%[1]s.Lt(time.Now())
+        }
         if len(v) > 0 && !v[0].IsZero() {
             return %[3]s.q.%[4]s.%[1]s.Lt(v[0])
         }
@@ -290,6 +368,12 @@ func Condition%[1]sLt(v ...%[2]s) ConditionOption {
 	condition = fmt.Sprintf(`
 func Condition%[1]sLte(v ...%[2]s) ConditionOption {
 	return func(%[3]s *%[4]s) gen.Condition {
+        if %[3]s.newTableName != nil {
+            if len(v) > 0 && !v[0].IsZero() {
+                return %[3]s.q.%[4]s.Table(*%[3]s.newTableName).%[1]s.Lte(v[0])
+            }
+            return %[3]s.q.%[4]s.Table(*%[3]s.newTableName).%[1]s.Lte(time.Now())
+        }
         if len(v) > 0 && !v[0].IsZero() {
             return %[3]s.q.%[4]s.%[1]s.Lte(v[0])
         }
@@ -302,6 +386,9 @@ func Condition%[1]sLte(v ...%[2]s) ConditionOption {
 	condition = fmt.Sprintf(`
 func Condition%[1]sBetween(left, right %[2]s) ConditionOption {
 	return func(%[3]s *%[4]s) gen.Condition {
+        if %[3]s.newTableName != nil {
+            return %[3]s.q.%[4]s.Table(*%[3]s.newTableName).%[1]s.Between(left, right)
+        }
         return %[3]s.q.%[4]s.%[1]s.Between(left, right)
     }
 }
@@ -311,6 +398,9 @@ func Condition%[1]sBetween(left, right %[2]s) ConditionOption {
 	condition = fmt.Sprintf(`
 func Condition%[1]sNotBetween(left, right %[2]s) ConditionOption {
 	return func(%[3]s *%[4]s) gen.Condition {
+        if %[3]s.newTableName != nil {
+            return %[3]s.q.%[4]s.Table(*%[3]s.newTableName).%[1]s.NotBetween(left, right)
+        }
         return %[3]s.q.%[4]s.%[1]s.NotBetween(left, right)
     }
 }
@@ -335,6 +425,9 @@ func (r *Repository) decimalCondition(fieldName string, fieldType string, rt ref
 	condition := fmt.Sprintf(`
 func Condition%[1]sEq(v %[2]s) ConditionOption {
 	return func(%[3]s *%[4]s) gen.Condition {
+        if %[3]s.newTableName != nil {
+            return %[3]s.q.%[4]s.Table(*%[3]s.newTableName).%[1]s.Eq(value.NewDecimal(v))
+        }
         return %[3]s.q.%[4]s.%[1]s.Eq(value.NewDecimal(v))
     }
 }
@@ -344,6 +437,9 @@ func Condition%[1]sEq(v %[2]s) ConditionOption {
 	condition = fmt.Sprintf(`
 func Condition%[1]sNeq(v %[2]s) ConditionOption {
 	return func(%[3]s *%[4]s) gen.Condition {
+        if %[3]s.newTableName != nil {
+            return %[3]s.q.%[4]s.Table(*%[3]s.newTableName).%[1]s.Neq(value.NewDecimal(v))
+        }
         return %[3]s.q.%[4]s.%[1]s.Neq(value.NewDecimal(v))
     }
 }
@@ -353,6 +449,12 @@ func Condition%[1]sNeq(v %[2]s) ConditionOption {
 	condition = fmt.Sprintf(`
 func Condition%[1]sGt(v ...%[2]s) ConditionOption {
 	return func(%[3]s *%[4]s) gen.Condition {
+        if %[3]s.newTableName != nil {
+            if len(v) == 0 {
+                return %[3]s.q.%[4]s.Table(*%[3]s.newTableName).%[1]s.Gt(value.NewDecimal(decimal.Zero))
+            }
+            return %[3]s.q.%[4]s.Table(*%[3]s.newTableName).%[1]s.Gt(value.NewDecimal(v[0]))
+        }
         if len(v) == 0 {
             return %[3]s.q.%[4]s.%[1]s.Gt(value.NewDecimal(decimal.Zero))
         }
@@ -365,6 +467,12 @@ func Condition%[1]sGt(v ...%[2]s) ConditionOption {
 	condition = fmt.Sprintf(`
 func Condition%[1]sGte(v ...%[2]s) ConditionOption {
 	return func(%[3]s *%[4]s) gen.Condition {
+        if %[3]s.newTableName != nil {
+            if len(v) == 0 {
+                return %[3]s.q.%[4]s.Table(*%[3]s.newTableName).%[1]s.Gte(value.NewDecimal(decimal.Zero))
+            }
+            return %[3]s.q.%[4]s.Table(*%[3]s.newTableName).%[1]s.Gte(value.NewDecimal(v[0]))
+        }
         if len(v) == 0 {
             return %[3]s.q.%[4]s.%[1]s.Gte(value.NewDecimal(decimal.Zero))
         }
@@ -377,6 +485,12 @@ func Condition%[1]sGte(v ...%[2]s) ConditionOption {
 	condition = fmt.Sprintf(`
 func Condition%[1]sLt(v ...%[2]s) ConditionOption {
 	return func(%[3]s *%[4]s) gen.Condition {
+        if %[3]s.newTableName != nil {
+            if len(v) == 0 {
+                return %[3]s.q.%[4]s.Table(*%[3]s.newTableName).%[1]s.Lt(value.NewDecimal(decimal.Zero))
+            }
+            return %[3]s.q.%[4]s.Table(*%[3]s.newTableName).%[1]s.Lt(value.NewDecimal(v[0]))
+        }
         if len(v) == 0 {
             return %[3]s.q.%[4]s.%[1]s.Lt(value.NewDecimal(decimal.Zero))
         }
@@ -389,6 +503,12 @@ func Condition%[1]sLt(v ...%[2]s) ConditionOption {
 	condition = fmt.Sprintf(`
 func Condition%[1]sLte(v ...%[2]s) ConditionOption {
 	return func(%[3]s *%[4]s) gen.Condition {
+        if %[3]s.newTableName != nil {
+            if len(v) == 0 {
+                return %[3]s.q.%[4]s.Table(*%[3]s.newTableName).%[1]s.Lte(value.NewDecimal(decimal.Zero))
+            }
+            return %[3]s.q.%[4]s.Table(*%[3]s.newTableName).%[1]s.Lte(value.NewDecimal(v[0]))
+        }
         if len(v) == 0 {
             return %[3]s.q.%[4]s.%[1]s.Lte(value.NewDecimal(decimal.Zero))
         }
@@ -401,6 +521,9 @@ func Condition%[1]sLte(v ...%[2]s) ConditionOption {
 	condition = fmt.Sprintf(`
 func Condition%[1]sBetween(left, right %[2]s) ConditionOption {
 	return func(%[3]s *%[4]s) gen.Condition {
+        if %[3]s.newTableName != nil {
+            return f.NewDecimal(%[3]s.q.%[4]s.%[1]s).Between(left, right)
+        }
         return f.NewDecimal(%[3]s.q.%[4]s.%[1]s).Between(left, right)
     }
 }
@@ -410,6 +533,9 @@ func Condition%[1]sBetween(left, right %[2]s) ConditionOption {
 	condition = fmt.Sprintf(`
 func Condition%[1]sNotBetween(left, right %[2]s) ConditionOption {
 	return func(%[3]s *%[4]s) gen.Condition {
+        if %[3]s.newTableName != nil {
+            return f.NewDecimal(%[3]s.q.%[4]s.%[1]s).NotBetween(left, right)
+        }
         return f.NewDecimal(%[3]s.q.%[4]s.%[1]s).NotBetween(left, right)
     }
 }
@@ -475,6 +601,9 @@ func (r *Repository) genConditionOpt(rt reflect.Type, abbr string) (conditions [
 		condition := fmt.Sprintf(`
 func Condition%[1]sIsNull() ConditionOption {
 	return func(%[2]s *%[3]s) gen.Condition {
+        if %[2]s.newTableName != nil {
+            return %[2]s.q.%[3]s.Table(*%[2]s.newTableName).%[1]s.IsNull()
+        }
         return %[2]s.q.%[3]s.%[1]s.IsNull()
     }
 }
@@ -484,6 +613,9 @@ func Condition%[1]sIsNull() ConditionOption {
 		condition = fmt.Sprintf(`
 func Condition%[1]sIsNotNull() ConditionOption {
 	return func(%[2]s *%[3]s) gen.Condition {
+        if %[2]s.newTableName != nil {
+            return %[2]s.q.%[3]s.Table(*%[2]s.newTableName).%[1]s.IsNotNull()
+        }
         return %[2]s.q.%[3]s.%[1]s.IsNotNull()
     }
 }
