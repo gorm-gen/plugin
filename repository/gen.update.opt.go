@@ -12,6 +12,9 @@ func (r *Repository) intUpdate(fieldName string, fieldType string, rt reflect.Ty
 	update := fmt.Sprintf(`
 func Update%[1]sAdd(v %[2]s) UpdateOption {
 	return func(%[3]s *%[4]s) field.AssignExpr {
+        if %[3]s.newTableName != nil {
+            return %[3]s.q.%[4]s.Table(*%[3]s.newTableName).%[1]s.Add(v)
+        }
         return %[3]s.q.%[4]s.%[1]s.Add(v)
     }
 }
@@ -21,6 +24,9 @@ func Update%[1]sAdd(v %[2]s) UpdateOption {
 	update = fmt.Sprintf(`
 func Update%[1]sSub(v %[2]s) UpdateOption {
 	return func(%[3]s *%[4]s) field.AssignExpr {
+        if %[3]s.newTableName != nil {
+            return %[3]s.q.%[4]s.Table(*%[3]s.newTableName).%[1]s.Sub(v)
+        }
         return %[3]s.q.%[4]s.%[1]s.Sub(v)
     }
 }
@@ -30,6 +36,9 @@ func Update%[1]sSub(v %[2]s) UpdateOption {
 	update = fmt.Sprintf(`
 func Update%[1]sMul(v %[2]s) UpdateOption {
 	return func(%[3]s *%[4]s) field.AssignExpr {
+        if %[3]s.newTableName != nil {
+            return %[3]s.q.%[4]s.Table(*%[3]s.newTableName).%[1]s.Mul(v)
+        }
         return %[3]s.q.%[4]s.%[1]s.Mul(v)
     }
 }
@@ -39,6 +48,9 @@ func Update%[1]sMul(v %[2]s) UpdateOption {
 	update = fmt.Sprintf(`
 func Update%[1]sDiv(v %[2]s) UpdateOption {
 	return func(%[3]s *%[4]s) field.AssignExpr {
+        if %[3]s.newTableName != nil {
+            return %[3]s.q.%[4]s.Table(*%[3]s.newTableName).%[1]s.Div(v)
+        }
         return %[3]s.q.%[4]s.%[1]s.Div(v)
     }
 }
@@ -54,6 +66,9 @@ func (r *Repository) decimalUpdate(fieldName string, fieldType string, rt reflec
 	update := fmt.Sprintf(`
 func Update%[1]s(v %[2]s) UpdateOption {
 	return func(%[3]s *%[4]s) field.AssignExpr {
+        if %[3]s.newTableName != nil {
+            return f.NewDecimal(%[3]s.q.%[4]s.%[1]s, f.WithTableName(*%[3]s.newTableName)).Value(v)
+        }
         return f.NewDecimal(%[3]s.q.%[4]s.%[1]s).Value(v)
     }
 }
@@ -63,6 +78,9 @@ func Update%[1]s(v %[2]s) UpdateOption {
 	update = fmt.Sprintf(`
 func Update%[1]sAdd(v %[2]s) UpdateOption {
 	return func(%[3]s *%[4]s) field.AssignExpr {
+        if %[3]s.newTableName != nil {
+            return f.NewDecimal(%[3]s.q.%[4]s.%[1]s, f.WithTableName(*%[3]s.newTableName)).Add(v)
+        }
         return f.NewDecimal(%[3]s.q.%[4]s.%[1]s).Add(v)
     }
 }
@@ -72,6 +90,9 @@ func Update%[1]sAdd(v %[2]s) UpdateOption {
 	update = fmt.Sprintf(`
 func Update%[1]sSub(v %[2]s) UpdateOption {
 	return func(%[3]s *%[4]s) field.AssignExpr {
+        if %[3]s.newTableName != nil {
+            return f.NewDecimal(%[3]s.q.%[4]s.%[1]s, f.WithTableName(*%[3]s.newTableName)).Sub(v)
+        }
         return f.NewDecimal(%[3]s.q.%[4]s.%[1]s).Sub(v)
     }
 }
@@ -81,6 +102,9 @@ func Update%[1]sSub(v %[2]s) UpdateOption {
 	update = fmt.Sprintf(`
 func Update%[1]sMul(v %[2]s) UpdateOption {
 	return func(%[3]s *%[4]s) field.AssignExpr {
+        if %[3]s.newTableName != nil {
+            return f.NewDecimal(%[3]s.q.%[4]s.%[1]s, f.WithTableName(*%[3]s.newTableName)).Mul(v)
+        }
         return f.NewDecimal(%[3]s.q.%[4]s.%[1]s).Mul(v)
     }
 }
@@ -90,6 +114,9 @@ func Update%[1]sMul(v %[2]s) UpdateOption {
 	update = fmt.Sprintf(`
 func Update%[1]sDiv(v %[2]s) UpdateOption {
 	return func(%[3]s *%[4]s) field.AssignExpr {
+        if %[3]s.newTableName != nil {
+            return f.NewDecimal(%[3]s.q.%[4]s.%[1]s, f.WithTableName(*%[3]s.newTableName)).Div(v)
+        }
         return f.NewDecimal(%[3]s.q.%[4]s.%[1]s).Div(v)
     }
 }
@@ -115,6 +142,9 @@ func (r *Repository) genUpdateOpt(rt reflect.Type, abbr string) (updates []Updat
 			update := fmt.Sprintf(`
 func Update%[1]s(v %[2]s) UpdateOption {
 	return func(%[3]s *%[4]s) field.AssignExpr {
+        if %[3]s.newTableName != nil {
+            return %[3]s.q.%[4]s.Table(*%[3]s.newTableName).%[1]s.Value(v)
+        }
         return %[3]s.q.%[4]s.%[1]s.Value(v)
     }
 }
@@ -138,6 +168,9 @@ func Update%[1]s(v %[2]s) UpdateOption {
 		update := fmt.Sprintf(`
 func Update%[1]sNull() UpdateOption {
 	return func(%[2]s *%[3]s) field.AssignExpr {
+        if %[2]s.newTableName != nil {
+            return %[2]s.q.%[3]s.Table(*%[2]s.newTableName).%[1]s.Null()
+        }
         return %[2]s.q.%[3]s.%[1]s.Null()
     }
 }
