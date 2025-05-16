@@ -28,81 +28,81 @@ func Condition%[1]s(v ...%[2]s) ConditionOption {
 	conditions = append(conditions, Condition(condition))
 
 	condition = fmt.Sprintf(`
-func Condition%sNot(v ...%s) ConditionOption {
-	return func(%s *%s) gen.Condition {
+func Condition%[1]sNot(v ...%[2]s) ConditionOption {
+	return func(%[3]s *%[4]s) gen.Condition {
         if len(v) == 1 {
-            return %s.q.%s.%s.Neq(v[0])
+            return %[3]s.q.%[4]s.%[1]s.Neq(v[0])
         }
-        return %s.q.%s.%s.NotIn(v...)
+        return %[3]s.q.%[4]s.%[1]s.NotIn(v...)
     }
 }
-`, fieldName, fieldType, abbr, rt.Name(), abbr, rt.Name(), fieldName, abbr, rt.Name(), fieldName)
+`, fieldName, fieldType, abbr, rt.Name())
 	conditions = append(conditions, Condition(condition))
 
 	condition = fmt.Sprintf(`
-func Condition%sGt(v ...%s) ConditionOption {
-	return func(%s *%s) gen.Condition {
+func Condition%[1]sGt(v ...%[2]s) ConditionOption {
+	return func(%[3]s *%[4]s) gen.Condition {
         if len(v) == 0 {
-            return %s.q.%s.%s.Gt(0)
+            return %[3]s.q.%[4]s.%[1]s.Gt(0)
         }
-        return %s.q.%s.%s.Gt(v[0])
+        return %[3]s.q.%[4]s.%[1]s.Gt(v[0])
     }
 }
-`, fieldName, fieldType, abbr, rt.Name(), abbr, rt.Name(), fieldName, abbr, rt.Name(), fieldName)
+`, fieldName, fieldType, abbr, rt.Name())
 	conditions = append(conditions, Condition(condition))
 
 	condition = fmt.Sprintf(`
-func Condition%sGte(v ...%s) ConditionOption {
-	return func(%s *%s) gen.Condition {
+func Condition%[1]sGte(v ...%[2]s) ConditionOption {
+	return func(%[3]s *%[4]s) gen.Condition {
         if len(v) == 0 {
-            return %s.q.%s.%s.Gte(0)
+            return %[3]s.q.%[4]s.%[1]s.Gte(0)
         }
-        return %s.q.%s.%s.Gte(v[0])
+        return %[3]s.q.%[4]s.%[1]s.Gte(v[0])
     }
 }
-`, fieldName, fieldType, abbr, rt.Name(), abbr, rt.Name(), fieldName, abbr, rt.Name(), fieldName)
+`, fieldName, fieldType, abbr, rt.Name())
 	conditions = append(conditions, Condition(condition))
 
 	condition = fmt.Sprintf(`
-func Condition%sLt(v ...%s) ConditionOption {
-	return func(%s *%s) gen.Condition {
+func Condition%[1]sLt(v ...%[2]s) ConditionOption {
+	return func(%[3]s *%[4]s) gen.Condition {
         if len(v) == 0 {
-            return %s.q.%s.%s.Lt(0)
+            return %[3]s.q.%[4]s.%[1]s.Lt(0)
         }
-        return %s.q.%s.%s.Lt(v[0])
+        return %[3]s.q.%[4]s.%[1]s.Lt(v[0])
     }
 }
-`, fieldName, fieldType, abbr, rt.Name(), abbr, rt.Name(), fieldName, abbr, rt.Name(), fieldName)
+`, fieldName, fieldType, abbr, rt.Name())
 	conditions = append(conditions, Condition(condition))
 
 	condition = fmt.Sprintf(`
-func Condition%sLte(v ...%s) ConditionOption {
-	return func(%s *%s) gen.Condition {
+func Condition%[1]sLte(v ...%[2]s) ConditionOption {
+	return func(%[3]s *%[4]s) gen.Condition {
         if len(v) == 0 {
-            return %s.q.%s.%s.Lte(0)
+            return %[3]s.q.%[4]s.%[1]s.Lte(0)
         }
-        return %s.q.%s.%s.Lte(v[0])
+        return %[3]s.q.%[4]s.%[1]s.Lte(v[0])
     }
 }
-`, fieldName, fieldType, abbr, rt.Name(), abbr, rt.Name(), fieldName, abbr, rt.Name(), fieldName)
+`, fieldName, fieldType, abbr, rt.Name())
 	conditions = append(conditions, Condition(condition))
 
 	condition = fmt.Sprintf(`
-func Condition%sBetween(left, right %s) ConditionOption {
-	return func(%s *%s) gen.Condition {
-        return %s.q.%s.%s.Between(left, right)
+func Condition%[1]sBetween(left, right %[2]s) ConditionOption {
+	return func(%[3]s *%[4]s) gen.Condition {
+        return %[3]s.q.%[4]s.%[1]s.Between(left, right)
     }
 }
-`, fieldName, fieldType, abbr, rt.Name(), abbr, rt.Name(), fieldName)
+`, fieldName, fieldType, abbr, rt.Name())
 	conditions = append(conditions, Condition(condition))
 
 	condition = fmt.Sprintf(`
-func Condition%sNotBetween(left, right %s) ConditionOption {
-	return func(%s *%s) gen.Condition {
-        return %s.q.%s.%s.NotBetween(left, right)
+func Condition%[1]sNotBetween(left, right %[2]s) ConditionOption {
+	return func(%[3]s *%[4]s) gen.Condition {
+        return %[3]s.q.%[4]s.%[1]s.NotBetween(left, right)
     }
 }
-`, fieldName, fieldType, abbr, rt.Name(), abbr, rt.Name(), fieldName)
+`, fieldName, fieldType, abbr, rt.Name())
 	conditions = append(conditions, Condition(condition))
 
 	return conditions
@@ -176,39 +176,39 @@ func (r *Repository) stringCondition(fieldName string, fieldType string, rt refl
 	var conditions []Condition
 
 	condition := fmt.Sprintf(`
-func Condition%sEq(v %s) ConditionOption {
-	return func(%s *%s) gen.Condition {
-        return %s.q.%s.%s.Eq(v)
+func Condition%[1]sEq(v %[2]s) ConditionOption {
+	return func(%[3]s *%[4]s) gen.Condition {
+        return %[3]s.q.%[4]s.%[1]s.Eq(v)
     }
 }
-`, fieldName, fieldType, abbr, rt.Name(), abbr, rt.Name(), fieldName)
+`, fieldName, fieldType, abbr, rt.Name())
 	conditions = append(conditions, Condition(condition))
 
 	condition = fmt.Sprintf(`
-func Condition%sNeq(v %s) ConditionOption {
-	return func(%s *%s) gen.Condition {
-        return %s.q.%s.%s.Neq(v)
+func Condition%[1]sNeq(v %[2]s) ConditionOption {
+	return func(%[3]s *%[4]s) gen.Condition {
+        return %[3]s.q.%[4]s.%[1]s.Neq(v)
     }
 }
-`, fieldName, fieldType, abbr, rt.Name(), abbr, rt.Name(), fieldName)
+`, fieldName, fieldType, abbr, rt.Name())
 	conditions = append(conditions, Condition(condition))
 
 	condition = fmt.Sprintf(`
-func Condition%sLike(v %s) ConditionOption {
-	return func(%s *%s) gen.Condition {
-        return %s.q.%s.%s.Like(v)
+func Condition%[1]sLike(v %[2]s) ConditionOption {
+	return func(%[3]s *%[4]s) gen.Condition {
+        return %[3]s.q.%[4]s.%[1]s.Like(v)
     }
 }
-`, fieldName, fieldType, abbr, rt.Name(), abbr, rt.Name(), fieldName)
+`, fieldName, fieldType, abbr, rt.Name())
 	conditions = append(conditions, Condition(condition))
 
 	condition = fmt.Sprintf(`
-func Condition%sNotLike(v %s) ConditionOption {
-	return func(%s *%s) gen.Condition {
-        return %s.q.%s.%s.NotLike(v)
+func Condition%[1]sNotLike(v %[2]s) ConditionOption {
+	return func(%[3]s *%[4]s) gen.Condition {
+        return %[3]s.q.%[4]s.%[1]s.NotLike(v)
     }
 }
-`, fieldName, fieldType, abbr, rt.Name(), abbr, rt.Name(), fieldName)
+`, fieldName, fieldType, abbr, rt.Name())
 	conditions = append(conditions, Condition(condition))
 
 	return conditions
@@ -228,93 +228,93 @@ func (r *Repository) timeCondition(fieldName string, fieldType string, rt reflec
 	var conditions []Condition
 
 	condition := fmt.Sprintf(`
-func Condition%sEq(v ...%s) ConditionOption {
-	return func(%s *%s) gen.Condition {
+func Condition%[1]sEq(v ...%[2]s) ConditionOption {
+	return func(%[3]s *%[4]s) gen.Condition {
         if len(v) > 0 && !v[0].IsZero() {
-            return %s.q.%s.%s.Eq(v[0])
+            return %[3]s.q.%[4]s.%[1]s.Eq(v[0])
         }
-        return %s.q.%s.%s.Eq(time.Now())
+        return %[3]s.q.%[4]s.%[1]s.Eq(time.Now())
     }
 }
-`, fieldName, fieldType, abbr, rt.Name(), abbr, rt.Name(), fieldName, abbr, rt.Name(), fieldName)
+`, fieldName, fieldType, abbr, rt.Name())
 	conditions = append(conditions, Condition(condition))
 
 	condition = fmt.Sprintf(`
-func Condition%sNeq(v ...%s) ConditionOption {
-	return func(%s *%s) gen.Condition {
+func Condition%[1]sNeq(v ...%[2]s) ConditionOption {
+	return func(%[3]s *%[4]s) gen.Condition {
         if len(v) > 0 && !v[0].IsZero() {
-            return %s.q.%s.%s.Neq(v[0])
+            return %[3]s.q.%[4]s.%[1]s.Neq(v[0])
         }
-        return %s.q.%s.%s.Neq(time.Now())
+        return %[3]s.q.%[4]s.%[1]s.Neq(time.Now())
     }
 }
-`, fieldName, fieldType, abbr, rt.Name(), abbr, rt.Name(), fieldName, abbr, rt.Name(), fieldName)
+`, fieldName, fieldType, abbr, rt.Name())
 	conditions = append(conditions, Condition(condition))
 
 	condition = fmt.Sprintf(`
-func Condition%sGt(v ...%s) ConditionOption {
-	return func(%s *%s) gen.Condition {
+func Condition%[1]sGt(v ...%[2]s) ConditionOption {
+	return func(%[3]s *%[4]s) gen.Condition {
         if len(v) > 0 && !v[0].IsZero() {
-            return %s.q.%s.%s.Gt(v[0])
+            return %[3]s.q.%[4]s.%[1]s.Gt(v[0])
         }
-        return %s.q.%s.%s.Gt(time.Now())
+        return %[3]s.q.%[4]s.%[1]s.Gt(time.Now())
     }
 }
-`, fieldName, fieldType, abbr, rt.Name(), abbr, rt.Name(), fieldName, abbr, rt.Name(), fieldName)
+`, fieldName, fieldType, abbr, rt.Name())
 	conditions = append(conditions, Condition(condition))
 
 	condition = fmt.Sprintf(`
-func Condition%sGte(v ...%s) ConditionOption {
-	return func(%s *%s) gen.Condition {
+func Condition%[1]sGte(v ...%[2]s) ConditionOption {
+	return func(%[3]s *%[4]s) gen.Condition {
         if len(v) > 0 && !v[0].IsZero() {
-            return %s.q.%s.%s.Gte(v[0])
+            return %[3]s.q.%[4]s.%[1]s.Gte(v[0])
         }
-        return %s.q.%s.%s.Gte(time.Now())
+        return %[3]s.q.%[4]s.%[1]s.Gte(time.Now())
     }
 }
-`, fieldName, fieldType, abbr, rt.Name(), abbr, rt.Name(), fieldName, abbr, rt.Name(), fieldName)
+`, fieldName, fieldType, abbr, rt.Name())
 	conditions = append(conditions, Condition(condition))
 
 	condition = fmt.Sprintf(`
-func Condition%sLt(v ...%s) ConditionOption {
-	return func(%s *%s) gen.Condition {
+func Condition%[1]sLt(v ...%[2]s) ConditionOption {
+	return func(%[3]s *%[4]s) gen.Condition {
         if len(v) > 0 && !v[0].IsZero() {
-            return %s.q.%s.%s.Lt(v[0])
+            return %[3]s.q.%[4]s.%[1]s.Lt(v[0])
         }
-        return %s.q.%s.%s.Lt(time.Now())
+        return %[3]s.q.%[4]s.%[1]s.Lt(time.Now())
     }
 }
-`, fieldName, fieldType, abbr, rt.Name(), abbr, rt.Name(), fieldName, abbr, rt.Name(), fieldName)
+`, fieldName, fieldType, abbr, rt.Name())
 	conditions = append(conditions, Condition(condition))
 
 	condition = fmt.Sprintf(`
-func Condition%sLte(v ...%s) ConditionOption {
-	return func(%s *%s) gen.Condition {
+func Condition%[1]sLte(v ...%[2]s) ConditionOption {
+	return func(%[3]s *%[4]s) gen.Condition {
         if len(v) > 0 && !v[0].IsZero() {
-            return %s.q.%s.%s.Lte(v[0])
+            return %[3]s.q.%[4]s.%[1]s.Lte(v[0])
         }
-        return %s.q.%s.%s.Lte(time.Now())
+        return %[3]s.q.%[4]s.%[1]s.Lte(time.Now())
     }
 }
-`, fieldName, fieldType, abbr, rt.Name(), abbr, rt.Name(), fieldName, abbr, rt.Name(), fieldName)
+`, fieldName, fieldType, abbr, rt.Name())
 	conditions = append(conditions, Condition(condition))
 
 	condition = fmt.Sprintf(`
-func Condition%sBetween(left, right %s) ConditionOption {
-	return func(%s *%s) gen.Condition {
-        return %s.q.%s.%s.Between(left, right)
+func Condition%[1]sBetween(left, right %[2]s) ConditionOption {
+	return func(%[3]s *%[4]s) gen.Condition {
+        return %[3]s.q.%[4]s.%[1]s.Between(left, right)
     }
 }
-`, fieldName, fieldType, abbr, rt.Name(), abbr, rt.Name(), fieldName)
+`, fieldName, fieldType, abbr, rt.Name())
 	conditions = append(conditions, Condition(condition))
 
 	condition = fmt.Sprintf(`
-func Condition%sNotBetween(left, right %s) ConditionOption {
-	return func(%s *%s) gen.Condition {
-        return %s.q.%s.%s.NotBetween(left, right)
+func Condition%[1]sNotBetween(left, right %[2]s) ConditionOption {
+	return func(%[3]s *%[4]s) gen.Condition {
+        return %[3]s.q.%[4]s.%[1]s.NotBetween(left, right)
     }
 }
-`, fieldName, fieldType, abbr, rt.Name(), abbr, rt.Name(), fieldName)
+`, fieldName, fieldType, abbr, rt.Name())
 	conditions = append(conditions, Condition(condition))
 	return conditions
 }
@@ -333,87 +333,87 @@ func (r *Repository) decimalCondition(fieldName string, fieldType string, rt ref
 	var conditions []Condition
 
 	condition := fmt.Sprintf(`
-func Condition%sEq(v %s) ConditionOption {
-	return func(%s *%s) gen.Condition {
-        return %s.q.%s.%s.Eq(value.NewDecimal(v))
+func Condition%[1]sEq(v %[2]s) ConditionOption {
+	return func(%[3]s *%[4]s) gen.Condition {
+        return %[3]s.q.%[4]s.%[1]s.Eq(value.NewDecimal(v))
     }
 }
-`, fieldName, fieldType, abbr, rt.Name(), abbr, rt.Name(), fieldName)
+`, fieldName, fieldType, abbr, rt.Name())
 	conditions = append(conditions, Condition(condition))
 
 	condition = fmt.Sprintf(`
-func Condition%sNeq(v %s) ConditionOption {
-	return func(%s *%s) gen.Condition {
-        return %s.q.%s.%s.Neq(value.NewDecimal(v))
+func Condition%[1]sNeq(v %[2]s) ConditionOption {
+	return func(%[3]s *%[4]s) gen.Condition {
+        return %[3]s.q.%[4]s.%[1]s.Neq(value.NewDecimal(v))
     }
 }
-`, fieldName, fieldType, abbr, rt.Name(), abbr, rt.Name(), fieldName)
+`, fieldName, fieldType, abbr, rt.Name())
 	conditions = append(conditions, Condition(condition))
 
 	condition = fmt.Sprintf(`
-func Condition%sGt(v ...%s) ConditionOption {
-	return func(%s *%s) gen.Condition {
+func Condition%[1]sGt(v ...%[2]s) ConditionOption {
+	return func(%[3]s *%[4]s) gen.Condition {
         if len(v) == 0 {
-            return %s.q.%s.%s.Gt(value.NewDecimal(decimal.Zero))
+            return %[3]s.q.%[4]s.%[1]s.Gt(value.NewDecimal(decimal.Zero))
         }
-        return %s.q.%s.%s.Gt(value.NewDecimal(v[0]))
+        return %[3]s.q.%[4]s.%[1]s.Gt(value.NewDecimal(v[0]))
     }
 }
-`, fieldName, fieldType, abbr, rt.Name(), abbr, rt.Name(), fieldName, abbr, rt.Name(), fieldName)
+`, fieldName, fieldType, abbr, rt.Name())
 	conditions = append(conditions, Condition(condition))
 
 	condition = fmt.Sprintf(`
-func Condition%sGte(v ...%s) ConditionOption {
-	return func(%s *%s) gen.Condition {
+func Condition%[1]sGte(v ...%[2]s) ConditionOption {
+	return func(%[3]s *%[4]s) gen.Condition {
         if len(v) == 0 {
-            return %s.q.%s.%s.Gte(value.NewDecimal(decimal.Zero))
+            return %[3]s.q.%[4]s.%[1]s.Gte(value.NewDecimal(decimal.Zero))
         }
-        return %s.q.%s.%s.Gte(value.NewDecimal(v[0]))
+        return %[3]s.q.%[4]s.%[1]s.Gte(value.NewDecimal(v[0]))
     }
 }
-`, fieldName, fieldType, abbr, rt.Name(), abbr, rt.Name(), fieldName, abbr, rt.Name(), fieldName)
+`, fieldName, fieldType, abbr, rt.Name())
 	conditions = append(conditions, Condition(condition))
 
 	condition = fmt.Sprintf(`
-func Condition%sLt(v ...%s) ConditionOption {
-	return func(%s *%s) gen.Condition {
+func Condition%[1]sLt(v ...%[2]s) ConditionOption {
+	return func(%[3]s *%[4]s) gen.Condition {
         if len(v) == 0 {
-            return %s.q.%s.%s.Lt(value.NewDecimal(decimal.Zero))
+            return %[3]s.q.%[4]s.%[1]s.Lt(value.NewDecimal(decimal.Zero))
         }
-        return %s.q.%s.%s.Lt(value.NewDecimal(v[0]))
+        return %[3]s.q.%[4]s.%[1]s.Lt(value.NewDecimal(v[0]))
     }
 }
-`, fieldName, fieldType, abbr, rt.Name(), abbr, rt.Name(), fieldName, abbr, rt.Name(), fieldName)
+`, fieldName, fieldType, abbr, rt.Name())
 	conditions = append(conditions, Condition(condition))
 
 	condition = fmt.Sprintf(`
-func Condition%sLte(v ...%s) ConditionOption {
-	return func(%s *%s) gen.Condition {
+func Condition%[1]sLte(v ...%[2]s) ConditionOption {
+	return func(%[3]s *%[4]s) gen.Condition {
         if len(v) == 0 {
-            return %s.q.%s.%s.Lte(value.NewDecimal(decimal.Zero))
+            return %[3]s.q.%[4]s.%[1]s.Lte(value.NewDecimal(decimal.Zero))
         }
-        return %s.q.%s.%s.Lte(value.NewDecimal(v[0]))
+        return %[3]s.q.%[4]s.%[1]s.Lte(value.NewDecimal(v[0]))
     }
 }
-`, fieldName, fieldType, abbr, rt.Name(), abbr, rt.Name(), fieldName, abbr, rt.Name(), fieldName)
+`, fieldName, fieldType, abbr, rt.Name())
 	conditions = append(conditions, Condition(condition))
 
 	condition = fmt.Sprintf(`
-func Condition%sBetween(left, right %s) ConditionOption {
-	return func(%s *%s) gen.Condition {
-        return f.NewDecimal(%s.q.%s.%s).Between(left, right)
+func Condition%[1]sBetween(left, right %[2]s) ConditionOption {
+	return func(%[3]s *%[4]s) gen.Condition {
+        return f.NewDecimal(%[3]s.q.%[4]s.%[1]s).Between(left, right)
     }
 }
-`, fieldName, fieldType, abbr, rt.Name(), abbr, rt.Name(), fieldName)
+`, fieldName, fieldType, abbr, rt.Name())
 	conditions = append(conditions, Condition(condition))
 
 	condition = fmt.Sprintf(`
-func Condition%sNotBetween(left, right %s) ConditionOption {
-	return func(%s *%s) gen.Condition {
-        return f.NewDecimal(%s.q.%s.%s).NotBetween(left, right)
+func Condition%[1]sNotBetween(left, right %[2]s) ConditionOption {
+	return func(%[3]s *%[4]s) gen.Condition {
+        return f.NewDecimal(%[3]s.q.%[4]s.%[1]s).NotBetween(left, right)
     }
 }
-`, fieldName, fieldType, abbr, rt.Name(), abbr, rt.Name(), fieldName)
+`, fieldName, fieldType, abbr, rt.Name())
 	conditions = append(conditions, Condition(condition))
 	return conditions
 }
@@ -473,21 +473,21 @@ func (r *Repository) genConditionOpt(rt reflect.Type, abbr string) (conditions [
 		}
 
 		condition := fmt.Sprintf(`
-func Condition%sIsNull() ConditionOption {
-	return func(%s *%s) gen.Condition {
-        return %s.q.%s.%s.IsNull()
+func Condition%[1]sIsNull() ConditionOption {
+	return func(%[2]s *%[3]s) gen.Condition {
+        return %[2]s.q.%[3]s.%[1]s.IsNull()
     }
 }
-`, field.Name, abbr, rt.Name(), abbr, rt.Name(), field.Name)
+`, field.Name, abbr, rt.Name())
 		conditions = append(conditions, Condition(condition))
 
 		condition = fmt.Sprintf(`
-func Condition%sIsNotNull() ConditionOption {
-	return func(%s *%s) gen.Condition {
-        return %s.q.%s.%s.IsNotNull()
+func Condition%[1]sIsNotNull() ConditionOption {
+	return func(%[2]s *%[3]s) gen.Condition {
+        return %[2]s.q.%[3]s.%[1]s.IsNotNull()
     }
 }
-`, field.Name, abbr, rt.Name(), abbr, rt.Name(), field.Name)
+`, field.Name, abbr, rt.Name())
 		conditions = append(conditions, Condition(condition))
 	}
 
