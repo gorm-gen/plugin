@@ -36,21 +36,27 @@ func (r *Repository) genOrderOpt(rt reflect.Type, abbr string) []Order {
 		}
 
 		order := fmt.Sprintf(`
-func Order%sAsc() OrderOption {
-	return func(%s *%s) field.Expr {
-        return %s.q.%s.%s.Asc()
+func Order%[1]sAsc() OrderOption {
+	return func(%[2]s *%[3]s) field.Expr {
+        if %[2]s.newTableName != nil {
+            return %[2]s.q.%[3]s.Table(*%[2]s.newTableName).%[1]s.Asc()
+        }
+        return %[2]s.q.%[3]s.%[1]s.Asc()
     }
 }
-`, field.Name, abbr, rt.Name(), abbr, rt.Name(), field.Name)
+`, field.Name, abbr, rt.Name())
 		orders = append(orders, Order(order))
 
 		order = fmt.Sprintf(`
-func Order%sDesc() OrderOption {
-	return func(%s *%s) field.Expr {
-        return %s.q.%s.%s.Desc()
+func Order%[1]sDesc() OrderOption {
+	return func(%[2]s *%[3]s) field.Expr {
+        if %[2]s.newTableName != nil {
+            return %[2]s.q.%[3]s.Table(*%[2]s.newTableName).%[1]s.Desc()
+        }
+        return %[2]s.q.%[3]s.%[1]s.Desc()
     }
 }
-`, field.Name, abbr, rt.Name(), abbr, rt.Name(), field.Name)
+`, field.Name, abbr, rt.Name())
 		orders = append(orders, Order(order))
 	}
 
