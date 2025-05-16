@@ -6,19 +6,25 @@ import (
 	"strings"
 )
 
-func (r *Repository) intCondition(fieldName string, fieldType string, rt reflect.Type, abbr string) []Condition {
+func (r *Repository) intCondition(fieldName, fieldType string, rt reflect.Type, abbr string) []Condition {
 	var conditions []Condition
 
 	condition := fmt.Sprintf(`
-func Condition%s(v ...%s) ConditionOption {
-	return func(%s *%s) gen.Condition {
-        if len(v) == 1 {
-            return %s.q.%s.%s.Eq(v[0])
+func Condition%[1]s(v ...%[2]s) ConditionOption {
+	return func(%[3]s *%[4]s) gen.Condition {
+        if %[3]s.newTableName != nil {
+            if len(v) == 1 {
+                return %[3]s.q.%[4]s.Table(*%[3]s.newTableName).%[1]s.Eq(v[0])
+            }
+            return %[3]s.q.%[4]s.Table(*%[3]s.newTableName).%[1]s.In(v...)
         }
-        return %s.q.%s.%s.In(v...)
+        if len(v) == 1 {
+            return %[3]s.q.%[4]s.%[1]s.Eq(v[0])
+        }
+        return %[3]s.q.%[4]s.%[1]s.In(v...)
     }
 }
-`, fieldName, fieldType, abbr, rt.Name(), abbr, rt.Name(), fieldName, abbr, rt.Name(), fieldName)
+`, fieldName, fieldType, abbr, rt.Name())
 	conditions = append(conditions, Condition(condition))
 
 	condition = fmt.Sprintf(`
