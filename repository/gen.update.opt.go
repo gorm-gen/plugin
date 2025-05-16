@@ -10,39 +10,39 @@ func (r *Repository) intUpdate(fieldName string, fieldType string, rt reflect.Ty
 	var updates []Update
 
 	update := fmt.Sprintf(`
-func Update%sAdd(v %s) UpdateOption {
-	return func(%s *%s) field.AssignExpr {
-        return %s.q.%s.%s.Add(v)
+func Update%[1]sAdd(v %[2]s) UpdateOption {
+	return func(%[3]s *%[4]s) field.AssignExpr {
+        return %[3]s.q.%[4]s.%[1]s.Add(v)
     }
 }
-`, fieldName, fieldType, abbr, rt.Name(), abbr, rt.Name(), fieldName)
+`, fieldName, fieldType, abbr, rt.Name())
 	updates = append(updates, Update(update))
 
 	update = fmt.Sprintf(`
-func Update%sSub(v %s) UpdateOption {
-	return func(%s *%s) field.AssignExpr {
-        return %s.q.%s.%s.Sub(v)
+func Update%[1]sSub(v %[2]s) UpdateOption {
+	return func(%[3]s *%[4]s) field.AssignExpr {
+        return %[3]s.q.%[4]s.%[1]s.Sub(v)
     }
 }
-`, fieldName, fieldType, abbr, rt.Name(), abbr, rt.Name(), fieldName)
+`, fieldName, fieldType, abbr, rt.Name())
 	updates = append(updates, Update(update))
 
 	update = fmt.Sprintf(`
-func Update%sMul(v %s) UpdateOption {
-	return func(%s *%s) field.AssignExpr {
-        return %s.q.%s.%s.Mul(v)
+func Update%[1]sMul(v %[2]s) UpdateOption {
+	return func(%[3]s *%[4]s) field.AssignExpr {
+        return %[3]s.q.%[4]s.%[1]s.Mul(v)
     }
 }
-`, fieldName, fieldType, abbr, rt.Name(), abbr, rt.Name(), fieldName)
+`, fieldName, fieldType, abbr, rt.Name())
 	updates = append(updates, Update(update))
 
 	update = fmt.Sprintf(`
-func Update%sDiv(v %s) UpdateOption {
-	return func(%s *%s) field.AssignExpr {
-        return %s.q.%s.%s.Div(v)
+func Update%[1]sDiv(v %[2]s) UpdateOption {
+	return func(%[3]s *%[4]s) field.AssignExpr {
+        return %[3]s.q.%[4]s.%[1]s.Div(v)
     }
 }
-`, fieldName, fieldType, abbr, rt.Name(), abbr, rt.Name(), fieldName)
+`, fieldName, fieldType, abbr, rt.Name())
 	updates = append(updates, Update(update))
 
 	return updates
@@ -52,48 +52,48 @@ func (r *Repository) decimalUpdate(fieldName string, fieldType string, rt reflec
 	var updates []Update
 
 	update := fmt.Sprintf(`
-func Update%s(v %s) UpdateOption {
-	return func(%s *%s) field.AssignExpr {
-        return f.NewDecimal(%s.q.%s.%s).Value(v)
+func Update%[1]s(v %[2]s) UpdateOption {
+	return func(%[3]s *%[4]s) field.AssignExpr {
+        return f.NewDecimal(%[3]s.q.%[4]s.%[1]s).Value(v)
     }
 }
-`, fieldName, fieldType, abbr, rt.Name(), abbr, rt.Name(), fieldName)
+`, fieldName, fieldType, abbr, rt.Name())
 	updates = append(updates, Update(update))
 
 	update = fmt.Sprintf(`
-func Update%sAdd(v %s) UpdateOption {
-	return func(%s *%s) field.AssignExpr {
-        return f.NewDecimal(%s.q.%s.%s).Add(v)
+func Update%[1]sAdd(v %[2]s) UpdateOption {
+	return func(%[3]s *%[4]s) field.AssignExpr {
+        return f.NewDecimal(%[3]s.q.%[4]s.%[1]s).Add(v)
     }
 }
-`, fieldName, fieldType, abbr, rt.Name(), abbr, rt.Name(), fieldName)
+`, fieldName, fieldType, abbr, rt.Name())
 	updates = append(updates, Update(update))
 
 	update = fmt.Sprintf(`
-func Update%sSub(v %s) UpdateOption {
-	return func(%s *%s) field.AssignExpr {
-        return f.NewDecimal(%s.q.%s.%s).Sub(v)
+func Update%[1]sSub(v %[2]s) UpdateOption {
+	return func(%[3]s *%[4]s) field.AssignExpr {
+        return f.NewDecimal(%[3]s.q.%[4]s.%[1]s).Sub(v)
     }
 }
-`, fieldName, fieldType, abbr, rt.Name(), abbr, rt.Name(), fieldName)
+`, fieldName, fieldType, abbr, rt.Name())
 	updates = append(updates, Update(update))
 
 	update = fmt.Sprintf(`
-func Update%sMul(v %s) UpdateOption {
-	return func(%s *%s) field.AssignExpr {
-        return f.NewDecimal(%s.q.%s.%s).Mul(v)
+func Update%[1]sMul(v %[2]s) UpdateOption {
+	return func(%[3]s *%[4]s) field.AssignExpr {
+        return f.NewDecimal(%[3]s.q.%[4]s.%[1]s).Mul(v)
     }
 }
-`, fieldName, fieldType, abbr, rt.Name(), abbr, rt.Name(), fieldName)
+`, fieldName, fieldType, abbr, rt.Name())
 	updates = append(updates, Update(update))
 
 	update = fmt.Sprintf(`
-func Update%sDiv(v %s) UpdateOption {
-	return func(%s *%s) field.AssignExpr {
-        return f.NewDecimal(%s.q.%s.%s).Div(v)
+func Update%[1]sDiv(v %[2]s) UpdateOption {
+	return func(%[3]s *%[4]s) field.AssignExpr {
+        return f.NewDecimal(%[3]s.q.%[4]s.%[1]s).Div(v)
     }
 }
-`, fieldName, fieldType, abbr, rt.Name(), abbr, rt.Name(), fieldName)
+`, fieldName, fieldType, abbr, rt.Name())
 	updates = append(updates, Update(update))
 
 	return updates
@@ -113,12 +113,12 @@ func (r *Repository) genUpdateOpt(rt reflect.Type, abbr string) (updates []Updat
 
 		if !r.isDecimal(typ) {
 			update := fmt.Sprintf(`
-func Update%s(v %s) UpdateOption {
-	return func(%s *%s) field.AssignExpr {
-        return %s.q.%s.%s.Value(v)
+func Update%[1]s(v %[2]s) UpdateOption {
+	return func(%[3]s *%[4]s) field.AssignExpr {
+        return %[3]s.q.%[4]s.%[1]s.Value(v)
     }
 }
-`, field.Name, fieldType, abbr, rt.Name(), abbr, rt.Name(), field.Name)
+`, field.Name, fieldType, abbr, rt.Name())
 			updates = append(updates, Update(update))
 		}
 
@@ -136,12 +136,12 @@ func Update%s(v %s) UpdateOption {
 		}
 
 		update := fmt.Sprintf(`
-func Update%sNull() UpdateOption {
-	return func(%s *%s) field.AssignExpr {
-        return %s.q.%s.%s.Null()
+func Update%[1]sNull() UpdateOption {
+	return func(%[2]s *%[3]s) field.AssignExpr {
+        return %[2]s.q.%[3]s.%[1]s.Null()
     }
 }
-`, field.Name, abbr, rt.Name(), abbr, rt.Name(), field.Name)
+`, field.Name, abbr, rt.Name())
 		updates = append(updates, Update(update))
 	}
 
