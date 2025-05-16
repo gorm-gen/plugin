@@ -51,8 +51,9 @@ import (
 
 // {{.StructName}} 仓库/Repository
 type {{.StructName}} struct {
-	q      *query.Query
-	logger *zap.Logger
+	q            *query.Query
+	logger       *zap.Logger
+	newTableName *string
 }
 
 // Option {{.StructName}}仓库初始化选项
@@ -67,6 +68,12 @@ func WithQuery(q *query.Query) Option {
 func WithLogger(logger *zap.Logger) Option {
 	return func({{.Abbr}} *{{.StructName}}) {
 		{{.Abbr}}.logger = logger
+	}
+}
+
+func WithNewTableName(newTableName string) Option {
+	return func({{.Abbr}} *{{.StructName}}) {
+		{{.Abbr}}.newTableName = &newTableName
 	}
 }
 
