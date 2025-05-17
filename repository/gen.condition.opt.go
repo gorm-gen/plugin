@@ -222,7 +222,7 @@ func (r *Repository) isInt(fieldType string) bool {
 	return false
 }
 
-func (r *Repository) stringCondition(fieldName string, fieldType string, rt reflect.Type, abbr string) []Condition {
+func (r *Repository) stringCondition(fieldName, fieldType string, rt reflect.Type, abbr string) []Condition {
 	var conditions []Condition
 
 	condition := fmt.Sprintf(`
@@ -286,7 +286,7 @@ func (r *Repository) isString(fieldType string) bool {
 	return false
 }
 
-func (r *Repository) timeCondition(fieldName string, fieldType string, rt reflect.Type, abbr string) []Condition {
+func (r *Repository) timeCondition(fieldName, fieldType string, rt reflect.Type, abbr string) []Condition {
 	var conditions []Condition
 
 	condition := fmt.Sprintf(`
@@ -433,7 +433,7 @@ func (r *Repository) isTime(fieldType string) bool {
 	return false
 }
 
-func (r *Repository) decimalCondition(fieldName string, fieldType string, rt reflect.Type, abbr string) []Condition {
+func (r *Repository) decimalCondition(fieldName, fieldType string, rt reflect.Type, abbr string) []Condition {
 	var conditions []Condition
 
 	condition := fmt.Sprintf(`

@@ -6,7 +6,7 @@ import (
 	"strings"
 )
 
-func (r *Repository) intUpdate(fieldName string, fieldType string, rt reflect.Type, abbr string) []Update {
+func (r *Repository) intUpdate(fieldName, fieldType string, rt reflect.Type, abbr string) []Update {
 	var updates []Update
 
 	update := fmt.Sprintf(`
@@ -60,7 +60,7 @@ func Update%[1]sDiv(v %[2]s) UpdateOption {
 	return updates
 }
 
-func (r *Repository) decimalUpdate(fieldName string, fieldType string, rt reflect.Type, abbr string) []Update {
+func (r *Repository) decimalUpdate(fieldName, fieldType string, rt reflect.Type, abbr string) []Update {
 	var updates []Update
 
 	update := fmt.Sprintf(`
