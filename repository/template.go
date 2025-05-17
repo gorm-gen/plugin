@@ -202,9 +202,9 @@ func ({{.Abbr}} *{{.StructName}}) Count(ctx context.Context, cd *CountData) (int
 		{{.Abbr}}q = cd.qTx.{{.StructName}}
 	}
 	{{.Abbr}}r := {{.Abbr}}q.WithContext(ctx)
-    if {{.Abbr}}.newTableName != nil && *{{.Abbr}}.newTableName != "" {
-        {{.Abbr}}r = {{.Abbr}}q.Table(*{{.Abbr}}.newTableName).WithContext(ctx)
-    }
+	if {{.Abbr}}.newTableName != nil && *{{.Abbr}}.newTableName != "" {
+		{{.Abbr}}r = {{.Abbr}}q.Table(*{{.Abbr}}.newTableName).WithContext(ctx)
+	}
 	if cd.unscoped {
 		{{.Abbr}}r = {{.Abbr}}r.Unscoped()
 	}
@@ -307,9 +307,9 @@ func ({{.Abbr}} *{{.StructName}}) Create(ctx context.Context, cd *CreateData) (e
 		{{.Abbr}}q = cd.qTx.{{.StructName}}
 	}
 	{{.Abbr}}r := {{.Abbr}}q.WithContext(ctx)
-    if {{.Abbr}}.newTableName != nil && *{{.Abbr}}.newTableName != "" {
-        {{.Abbr}}r = {{.Abbr}}q.Table(*{{.Abbr}}.newTableName).WithContext(ctx)
-    }
+	if {{.Abbr}}.newTableName != nil && *{{.Abbr}}.newTableName != "" {
+		{{.Abbr}}r = {{.Abbr}}q.Table(*{{.Abbr}}.newTableName).WithContext(ctx)
+	}
 	if cd.unscoped {
 		{{.Abbr}}r = {{.Abbr}}r.Unscoped()
 	}
@@ -398,9 +398,9 @@ func ({{.Abbr}} *{{.StructName}}) Delete(ctx context.Context, dd *DeleteData) (i
 		{{.Abbr}}q = dd.qTx.{{.StructName}}
 	}
 	{{.Abbr}}r := {{.Abbr}}q.WithContext(ctx)
-    if {{.Abbr}}.newTableName != nil && *{{.Abbr}}.newTableName != "" {
-        {{.Abbr}}r = {{.Abbr}}q.Table(*{{.Abbr}}.newTableName).WithContext(ctx)
-    }
+	if {{.Abbr}}.newTableName != nil && *{{.Abbr}}.newTableName != "" {
+		{{.Abbr}}r = {{.Abbr}}q.Table(*{{.Abbr}}.newTableName).WithContext(ctx)
+	}
 	if dd.unscoped {
 		{{.Abbr}}r = {{.Abbr}}r.Unscoped()
 	}
@@ -510,9 +510,9 @@ func ({{.Abbr}} *{{.StructName}}) First(ctx context.Context, fd *FirstData) (*{{
 		{{.Abbr}}q = fd.qTx.{{.StructName}}
 	}
 	{{.Abbr}}r := {{.Abbr}}q.WithContext(ctx)
-    if {{.Abbr}}.newTableName != nil && *{{.Abbr}}.newTableName != "" {
-        {{.Abbr}}r = {{.Abbr}}q.Table(*{{.Abbr}}.newTableName).WithContext(ctx)
-    }
+	if {{.Abbr}}.newTableName != nil && *{{.Abbr}}.newTableName != "" {
+		{{.Abbr}}r = {{.Abbr}}q.Table(*{{.Abbr}}.newTableName).WithContext(ctx)
+	}
 	if fd.unscoped {
 		{{.Abbr}}r = {{.Abbr}}r.Unscoped()
 	}
@@ -635,9 +635,9 @@ func ({{.Abbr}} *{{.StructName}}) Last(ctx context.Context, ld *LastData) (*{{.M
 		{{.Abbr}}q = ld.qTx.{{.StructName}}
 	}
 	{{.Abbr}}r := {{.Abbr}}q.WithContext(ctx)
-    if {{.Abbr}}.newTableName != nil && *{{.Abbr}}.newTableName != "" {
-        {{.Abbr}}r = {{.Abbr}}q.Table(*{{.Abbr}}.newTableName).WithContext(ctx)
-    }
+	if {{.Abbr}}.newTableName != nil && *{{.Abbr}}.newTableName != "" {
+		{{.Abbr}}r = {{.Abbr}}q.Table(*{{.Abbr}}.newTableName).WithContext(ctx)
+	}
 	if ld.unscoped {
 		{{.Abbr}}r = {{.Abbr}}r.Unscoped()
 	}
@@ -776,9 +776,9 @@ func ({{.Abbr}} *{{.StructName}}) List(ctx context.Context, ld *ListData) ([]*{{
 		{{.Abbr}}q = ld.qTx.{{.StructName}}
 	}
 	{{.Abbr}}r := {{.Abbr}}q.WithContext(ctx)
-    if {{.Abbr}}.newTableName != nil && *{{.Abbr}}.newTableName != "" {
-        {{.Abbr}}r = {{.Abbr}}q.Table(*{{.Abbr}}.newTableName).WithContext(ctx)
-    }
+	if {{.Abbr}}.newTableName != nil && *{{.Abbr}}.newTableName != "" {
+		{{.Abbr}}r = {{.Abbr}}q.Table(*{{.Abbr}}.newTableName).WithContext(ctx)
+	}
 	if ld.unscoped {
 		{{.Abbr}}r = {{.Abbr}}r.Unscoped()
 	}
@@ -923,9 +923,9 @@ func ({{.Abbr}} *{{.StructName}}) Take(ctx context.Context, td *TakeData) (*{{.M
 		{{.Abbr}}q = td.qTx.{{.StructName}}
 	}
 	{{.Abbr}}r := {{.Abbr}}q.WithContext(ctx)
-    if {{.Abbr}}.newTableName != nil && *{{.Abbr}}.newTableName != "" {
-        {{.Abbr}}r = {{.Abbr}}q.Table(*{{.Abbr}}.newTableName).WithContext(ctx)
-    }
+	if {{.Abbr}}.newTableName != nil && *{{.Abbr}}.newTableName != "" {
+		{{.Abbr}}r = {{.Abbr}}q.Table(*{{.Abbr}}.newTableName).WithContext(ctx)
+	}
 	if td.unscoped {
 		{{.Abbr}}r = {{.Abbr}}r.Unscoped()
 	}
@@ -1051,9 +1051,9 @@ func ({{.Abbr}} *{{.StructName}}) Update(ctx context.Context, ud *UpdateData) (i
 		{{.Abbr}}q = ud.qTx.{{.StructName}}
 	}
 	{{.Abbr}}r := {{.Abbr}}q.WithContext(ctx)
-    if {{.Abbr}}.newTableName != nil && *{{.Abbr}}.newTableName != "" {
-        {{.Abbr}}r = {{.Abbr}}q.Table(*{{.Abbr}}.newTableName).WithContext(ctx)
-    }
+	if {{.Abbr}}.newTableName != nil && *{{.Abbr}}.newTableName != "" {
+		{{.Abbr}}r = {{.Abbr}}q.Table(*{{.Abbr}}.newTableName).WithContext(ctx)
+	}
 	if ud.unscoped {
 		{{.Abbr}}r = {{.Abbr}}r.Unscoped()
 	}
