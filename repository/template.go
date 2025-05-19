@@ -465,7 +465,8 @@ import (
     "{{.ModelPkg}}"
 )
 
-type FirstData struct {
+type First struct {
+	core          *{{.StructName}}
 	tx            *query.Query
 	qTx           *query.QueryTx
 	forUpdate     bool
@@ -474,92 +475,93 @@ type FirstData struct {
 	conditionOpts []ConditionOption
 }
 
-func NewFirstData() *FirstData {
-	return &FirstData{
+func ({{.Abbr}} *{{.StructName}}) First() *First {
+	return &First{
+		core:          {{.Abbr}},
 		relationOpts:  make([]RelationOption, 0),
 		conditionOpts: make([]ConditionOption, 0),
 	}
 }
 
 // SetTx 设置为事务
-func (f *FirstData) SetTx(tx *query.Query) *FirstData {
+func (f *First) SetTx(tx *query.Query) *First {
 	f.tx = tx
 	f.qTx = nil
 	return f
 }
 
 // SetQueryTx 设置为手动事务
-func (f *FirstData) SetQueryTx(tx *query.QueryTx) *FirstData {
+func (f *First) SetQueryTx(tx *query.QueryTx) *First {
 	f.qTx = tx
 	f.tx = nil
 	return f
 }
 
-func (f *FirstData) SetForUpdate(forUpdate bool) *FirstData {
+func (f *First) SetForUpdate(forUpdate bool) *First {
 	f.forUpdate = forUpdate
 	return f
 }
 
-func (f *FirstData) SetUnscoped() *FirstData {
+func (f *First) SetUnscoped() *First {
 	f.unscoped = true
 	return f
 }
 
-func (f *FirstData) SetRelationOpts(opts ...RelationOption) *FirstData {
+func (f *First) SetRelationOpts(opts ...RelationOption) *First {
 	f.relationOpts = append(f.relationOpts, opts...)
 	return f
 }
 
-func (f *FirstData) SetConditionOpts(opts ...ConditionOption) *FirstData {
+func (f *First) SetConditionOpts(opts ...ConditionOption) *First {
 	f.conditionOpts = append(f.conditionOpts, opts...)
 	return f
 }
 
-// First 获取首条数据
-func ({{.Abbr}} *{{.StructName}}) First(ctx context.Context, fd *FirstData) (*{{.ModelName}}.{{.StructName}}, error) {
-	{{.Abbr}}q := {{.Abbr}}.q.{{.StructName}}
-	if fd.tx != nil {
-		{{.Abbr}}q = fd.tx.{{.StructName}}
+// Do 获取首条数据
+func (f *First) Do(ctx context.Context) (*{{.ModelName}}.{{.StructName}}, error) {
+	fq := f.core.q.{{.StructName}}
+	if f.tx != nil {
+		fq = f.tx.{{.StructName}}
 	}
-	if fd.qTx != nil {
-		{{.Abbr}}q = fd.qTx.{{.StructName}}
+	if f.qTx != nil {
+		fq = f.qTx.{{.StructName}}
 	}
-	{{.Abbr}}r := {{.Abbr}}q.WithContext(ctx)
-	if {{.Abbr}}.newTableName != nil && *{{.Abbr}}.newTableName != "" {
-		{{.Abbr}}r = {{.Abbr}}q.Table(*{{.Abbr}}.newTableName).WithContext(ctx)
+	fr := fq.WithContext(ctx)
+	if f.core.newTableName != nil && *f.core.newTableName != "" {
+		fr = fq.Table(*f.core.newTableName).WithContext(ctx)
 	}
-	if fd.unscoped {
-		{{.Abbr}}r = {{.Abbr}}r.Unscoped()
+	if f.unscoped {
+		fr = fr.Unscoped()
 	}
-	if (fd.tx != nil || fd.qTx != nil) && fd.forUpdate {
-		{{.Abbr}}r = {{.Abbr}}r.Clauses(clause.Locking{Strength: "UPDATE"})
+	if (f.tx != nil || f.qTx != nil) && f.forUpdate {
+		fr = fr.Clauses(clause.Locking{Strength: "UPDATE"})
 	}
 	errFields := make([]zap.Field, 0)
-	if len(fd.conditionOpts) > 0 {
-		conditions := make([]gen.Condition, 0, len(fd.conditionOpts))
-		for _, opt := range fd.conditionOpts {
-			conditions = append(conditions, opt({{.Abbr}}))
+	if len(f.conditionOpts) > 0 {
+		conditions := make([]gen.Condition, 0, len(f.conditionOpts))
+		for _, opt := range f.conditionOpts {
+			conditions = append(conditions, opt(f.core))
 		}
 		if len(conditions) > 0 {
 			errFields = append(errFields, zap.Any("conditions", conditions))
-			{{.Abbr}}r = {{.Abbr}}r.Where(conditions...)
+			fr = fr.Where(conditions...)
 		}
 	}
-	if len(fd.relationOpts) > 0 {
-		relations := make([]field.RelationField, 0, len(fd.relationOpts))
-		for _, opt := range fd.relationOpts {
-			relations = append(relations, opt({{.Abbr}}))
+	if len(f.relationOpts) > 0 {
+		relations := make([]field.RelationField, 0, len(f.relationOpts))
+		for _, opt := range f.relationOpts {
+			relations = append(relations, opt(f.core))
 		}
 		if len(relations) > 0 {
 			errFields = append(errFields, zap.Any("relations", relations))
-			{{.Abbr}}r = {{.Abbr}}r.Preload(relations...)
+			fr = fr.Preload(relations...)
 		}
 	}
-	res, err := {{.Abbr}}r.First()
+	res, err := fr.First()
 	if err != nil {
 		if {{.RepoPkgName}}.IsRealErr(err) {
 			errFields = append(errFields, zap.Error(err))
-			{{.Abbr}}.logger.Error("【{{.StructName}}.First】失败", errFields...)
+			f.core.logger.Error("【{{.StructName}}.First】失败", errFields...)
 		}
 		return nil, err
 	}
