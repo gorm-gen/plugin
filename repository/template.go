@@ -110,8 +110,8 @@ func Condition(condition gen.Condition) ConditionOption {
 // UpdateOption 数据更新选项
 type UpdateOption func(*{{.StructName}}) field.AssignExpr
 
-// Update 自定义数据更新
-func Update(update field.AssignExpr) UpdateOption {
+// Updates 自定义数据更新
+func Updates(update field.AssignExpr) UpdateOption {
     return func(*{{.StructName}}) field.AssignExpr {
         return update
     }
