@@ -229,7 +229,7 @@ func (c *count) Do(ctx context.Context) (int64, error) {
 			cr = cr.Where(conditions...)
 		}
 	}
-	counts, err := cr.Count()
+	count, err := cr.Count()
 	if err != nil {
 		if {{.RepoPkgName}}.IsRealErr(err) {
 			errFields = append(errFields, zap.Error(err))
@@ -237,7 +237,7 @@ func (c *count) Do(ctx context.Context) (int64, error) {
 		}
 		return 0, err
 	}
-	return counts, nil
+	return count, nil
 }
 `
 }
