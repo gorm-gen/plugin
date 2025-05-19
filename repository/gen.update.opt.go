@@ -10,6 +10,7 @@ func (r *Repository) intUpdate(fieldName, fieldType string, rt reflect.Type, abb
 	var updates []Update
 
 	update := fmt.Sprintf(`
+// Update%[1]sAdd +=
 func Update%[1]sAdd(v %[2]s) UpdateOption {
 	return func(%[3]s *%[4]s) field.AssignExpr {
         if %[3]s.newTableName != nil {
@@ -22,6 +23,7 @@ func Update%[1]sAdd(v %[2]s) UpdateOption {
 	updates = append(updates, Update(update))
 
 	update = fmt.Sprintf(`
+// Update%[1]sSub -=
 func Update%[1]sSub(v %[2]s) UpdateOption {
 	return func(%[3]s *%[4]s) field.AssignExpr {
         if %[3]s.newTableName != nil {
@@ -34,6 +36,7 @@ func Update%[1]sSub(v %[2]s) UpdateOption {
 	updates = append(updates, Update(update))
 
 	update = fmt.Sprintf(`
+// Update%[1]sMul *=
 func Update%[1]sMul(v %[2]s) UpdateOption {
 	return func(%[3]s *%[4]s) field.AssignExpr {
         if %[3]s.newTableName != nil {
@@ -46,6 +49,7 @@ func Update%[1]sMul(v %[2]s) UpdateOption {
 	updates = append(updates, Update(update))
 
 	update = fmt.Sprintf(`
+// Update%[1]sDiv /=
 func Update%[1]sDiv(v %[2]s) UpdateOption {
 	return func(%[3]s *%[4]s) field.AssignExpr {
         if %[3]s.newTableName != nil {
@@ -76,6 +80,7 @@ func Update%[1]s(v %[2]s) UpdateOption {
 	updates = append(updates, Update(update))
 
 	update = fmt.Sprintf(`
+// Update%[1]sAdd +=
 func Update%[1]sAdd(v %[2]s) UpdateOption {
 	return func(%[3]s *%[4]s) field.AssignExpr {
         if %[3]s.newTableName != nil {
@@ -88,6 +93,7 @@ func Update%[1]sAdd(v %[2]s) UpdateOption {
 	updates = append(updates, Update(update))
 
 	update = fmt.Sprintf(`
+// Update%[1]sSub -=
 func Update%[1]sSub(v %[2]s) UpdateOption {
 	return func(%[3]s *%[4]s) field.AssignExpr {
         if %[3]s.newTableName != nil {
@@ -100,6 +106,7 @@ func Update%[1]sSub(v %[2]s) UpdateOption {
 	updates = append(updates, Update(update))
 
 	update = fmt.Sprintf(`
+// Update%[1]sMul *=
 func Update%[1]sMul(v %[2]s) UpdateOption {
 	return func(%[3]s *%[4]s) field.AssignExpr {
         if %[3]s.newTableName != nil {
@@ -112,6 +119,7 @@ func Update%[1]sMul(v %[2]s) UpdateOption {
 	updates = append(updates, Update(update))
 
 	update = fmt.Sprintf(`
+// Update%[1]sDiv /=
 func Update%[1]sDiv(v %[2]s) UpdateOption {
 	return func(%[3]s *%[4]s) field.AssignExpr {
         if %[3]s.newTableName != nil {
@@ -166,6 +174,7 @@ func Update%[1]s(v %[2]s) UpdateOption {
 		}
 
 		update := fmt.Sprintf(`
+// Update%[1]sNull set null
 func Update%[1]sNull() UpdateOption {
 	return func(%[2]s *%[3]s) field.AssignExpr {
         if %[2]s.newTableName != nil {
