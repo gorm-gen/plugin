@@ -61,15 +61,33 @@ func (r *Repository) genBase(rt reflect.Type, abbr, filename, paths string) erro
 `)
 	}
 
-	imports = append(imports, template.HTML(fmt.Sprintf(`    "go.uber.org/zap"
+	if r.zapVarPkg == r.gormDBVarPkg {
+		imports = append(imports, template.HTML(fmt.Sprintf(`    "go.uber.org/zap"
     "gorm.io/gen"
     "gorm.io/gen/field"
+    "gorm.io/gorm"
 
     "%s"
 
     "%s"
 
     "%s"`, r.zapVarPkg, r.genQueryPkg, r.repoPkg)))
+	}
+
+	if r.zapVarPkg != r.gormDBVarPkg {
+		imports = append(imports, template.HTML(fmt.Sprintf(`    "go.uber.org/zap"
+    "gorm.io/gen"
+    "gorm.io/gen/field"
+    "gorm.io/gorm"
+
+    "%s"
+
+    "%s"
+
+    "%s"
+
+    "%s"`, r.zapVarPkg, r.gormDBVarPkg, r.genQueryPkg, r.repoPkg)))
+	}
 
 	data := struct {
 		Package     string
@@ -79,6 +97,8 @@ func (r *Repository) genBase(rt reflect.Type, abbr, filename, paths string) erro
 		RepoPkgName string
 		StructName  string
 		Abbr        string
+		GormDBVar   string
+		ZapVar      string
 		Imports     []template.HTML
 		Conditions  []template.HTML
 		Updates     []Update
@@ -91,6 +111,8 @@ func (r *Repository) genBase(rt reflect.Type, abbr, filename, paths string) erro
 		RepoPkgName: r.repoPkgName,
 		StructName:  rt.Name(),
 		Abbr:        abbr,
+		GormDBVar:   r.gormDBVar,
+		ZapVar:      r.zapVar,
 		Imports:     imports,
 		Conditions:  _conditions,
 		Updates:     updates,

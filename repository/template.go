@@ -52,6 +52,7 @@ import (
 // {{.StructName}} 仓库/Repository
 type {{.StructName}} struct {
 	q            *query.Query
+	db           *gorm.DB
 	logger       *zap.Logger
 	newTableName *string
 }
@@ -71,6 +72,12 @@ func WithLogger(logger *zap.Logger) Option {
 	}
 }
 
+func WithDB(db *gorm.DB) Option {
+	return func({{.Abbr}} *{{.StructName}}) {
+		{{.Abbr}}.db = db
+	}
+}
+
 func WithNewTableName(newTableName string) Option {
 	return func({{.Abbr}} *{{.StructName}}) {
 		{{.Abbr}}.newTableName = &newTableName
@@ -81,7 +88,8 @@ func WithNewTableName(newTableName string) Option {
 func New(opts ...Option) *{{.StructName}} {
 	{{.Abbr}} := &{{.StructName}}{
 		q:      {{.RepoPkgName}}.GetQuery(),
-		logger: global.Logger,
+		db:     {{.GormDBVar}},
+		logger: {{.ZapVar}},
 	}
 	for _, opt := range opts {
 		opt({{.Abbr}})
