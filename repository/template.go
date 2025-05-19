@@ -592,7 +592,8 @@ import (
     "{{.ModelPkg}}"
 )
 
-type LastData struct {
+type Last struct {
+	core          *{{.StructName}}
 	tx            *query.Query
 	qTx           *query.QueryTx
 	forUpdate     bool
@@ -601,92 +602,93 @@ type LastData struct {
 	conditionOpts []ConditionOption
 }
 
-func NewLastData() *LastData {
-	return &LastData{
+func ({{.Abbr}} *{{.StructName}}) Last() *Last {
+	return &Last{
+		core:          {{.Abbr}},
 		relationOpts:  make([]RelationOption, 0),
 		conditionOpts: make([]ConditionOption, 0),
 	}
 }
 
 // SetTx 设置为事务
-func (l *LastData) SetTx(tx *query.Query) *LastData {
+func (l *Last) SetTx(tx *query.Query) *Last {
 	l.tx = tx
 	l.qTx = nil
 	return l
 }
 
 // SetQueryTx 设置为手动事务
-func (l *LastData) SetQueryTx(tx *query.QueryTx) *LastData {
+func (l *Last) SetQueryTx(tx *query.QueryTx) *Last {
 	l.qTx = tx
 	l.tx = nil
 	return l
 }
 
-func (l *LastData) SetForUpdate(forUpdate bool) *LastData {
+func (l *Last) SetForUpdate(forUpdate bool) *Last {
 	l.forUpdate = forUpdate
 	return l
 }
 
-func (l *LastData) SetUnscoped() *LastData {
+func (l *Last) SetUnscoped() *Last {
 	l.unscoped = true
 	return l
 }
 
-func (l *LastData) SetRelationOpts(opts ...RelationOption) *LastData {
+func (l *Last) SetRelationOpts(opts ...RelationOption) *Last {
 	l.relationOpts = append(l.relationOpts, opts...)
 	return l
 }
 
-func (l *LastData) SetConditionOpts(opts ...ConditionOption) *LastData {
+func (l *Last) SetConditionOpts(opts ...ConditionOption) *Last {
 	l.conditionOpts = append(l.conditionOpts, opts...)
 	return l
 }
 
-// Last 获取最后一条数据
-func ({{.Abbr}} *{{.StructName}}) Last(ctx context.Context, ld *LastData) (*{{.ModelName}}.{{.StructName}}, error) {
-	{{.Abbr}}q := {{.Abbr}}.q.{{.StructName}}
-	if ld.tx != nil {
-		{{.Abbr}}q = ld.tx.{{.StructName}}
+// Do 获取最后一条数据
+func (l *Last) Do(ctx context.Context) (*{{.ModelName}}.{{.StructName}}, error) {
+	lq := l.core.q.{{.StructName}}
+	if l.tx != nil {
+		lq = l.tx.{{.StructName}}
 	}
-	if ld.qTx != nil {
-		{{.Abbr}}q = ld.qTx.{{.StructName}}
+	if l.qTx != nil {
+		lq = l.qTx.{{.StructName}}
 	}
-	{{.Abbr}}r := {{.Abbr}}q.WithContext(ctx)
-	if {{.Abbr}}.newTableName != nil && *{{.Abbr}}.newTableName != "" {
-		{{.Abbr}}r = {{.Abbr}}q.Table(*{{.Abbr}}.newTableName).WithContext(ctx)
+	lr := lq.WithContext(ctx)
+	if l.core.newTableName != nil && *l.core.newTableName != "" {
+		lr = lq.Table(*l.core.newTableName).WithContext(ctx)
 	}
-	if ld.unscoped {
-		{{.Abbr}}r = {{.Abbr}}r.Unscoped()
+	if l.unscoped {
+		lr = lr.Unscoped()
 	}
-	if (ld.tx != nil || ld.qTx != nil) && ld.forUpdate {
-		{{.Abbr}}r = {{.Abbr}}r.Clauses(clause.Locking{Strength: "UPDATE"})
+	if (l.tx != nil || l.qTx != nil) && l.forUpdate {
+		lr = lr.Clauses(clause.Locking{Strength: "UPDATE"})
 	}
 	errFields := make([]zap.Field, 0)
-	if len(ld.conditionOpts) > 0 {
-		conditions := make([]gen.Condition, 0, len(ld.conditionOpts))
-		for _, opt := range ld.conditionOpts {
-			conditions = append(conditions, opt({{.Abbr}}))
+	if len(l.conditionOpts) > 0 {
+		conditions := make([]gen.Condition, 0, len(l.conditionOpts))
+		for _, opt := range l.conditionOpts {
+			conditions = append(conditions, opt(l.core))
 		}
 		if len(conditions) > 0 {
 			errFields = append(errFields, zap.Any("conditions", conditions))
-			{{.Abbr}}r = {{.Abbr}}r.Where(conditions...)
+			lr = lr.Where(conditions...)
 		}
 	}
-	if len(ld.relationOpts) > 0 {
-		relations := make([]field.RelationField, 0, len(ld.relationOpts))
-		for _, opt := range ld.relationOpts {
-			relations = append(relations, opt({{.Abbr}}))
+	if len(l.relationOpts) > 0 {
+		relations := make([]field.RelationField, 0, len(l.relationOpts))
+		for _, opt := range l.relationOpts {
+			relations = append(relations, opt(l.core))
 		}
 		if len(relations) > 0 {
 			errFields = append(errFields, zap.Any("relations", relations))
-			{{.Abbr}}r = {{.Abbr}}r.Preload(relations...)
+			lr = lr.Preload(relations...)
 		}
 	}
-	res, err := {{.Abbr}}r.Last()
+	res, err := lr.Last()
 	if err != nil {
 		if {{.RepoPkgName}}.IsRealErr(err) {
 			errFields = append(errFields, zap.Error(err))
-			{{.Abbr}}.logger.Error("【{{.StructName}}.Last】失败", errFields...)
+			l.core.logger.Error("【{{.StructName}}.Last】失败", errFields...)
 		}
 		return nil, err
 	}
