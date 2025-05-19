@@ -196,7 +196,7 @@ func (c *CountData) SetUnscoped() *CountData {
 }
 
 func (c *CountData) SetConditionOpts(opts ...ConditionOption) *CountData {
-	c.conditionOpts = opts
+	c.conditionOpts = append(c.conditionOpts, opts...)
 	return c
 }
 
@@ -291,7 +291,7 @@ func (c *CreateData) SetUnscoped() *CreateData {
 }
 
 func (c *CreateData) SetValues(values ...*{{.ModelName}}.{{.StructName}}) *CreateData {
-	c.values = values
+	c.values = append(c.values, values...)
 	return c
 }
 
@@ -392,7 +392,7 @@ func (d *DeleteData) SetUnscoped() *DeleteData {
 }
 
 func (d *DeleteData) SetConditionOpts(opts ...ConditionOption) *DeleteData {
-	d.conditionOpts = opts
+	d.conditionOpts = append(d.conditionOpts, opts...)
 	return d
 }
 
@@ -499,12 +499,12 @@ func (f *FirstData) SetUnscoped() *FirstData {
 }
 
 func (f *FirstData) SetRelationOpts(opts ...RelationOption) *FirstData {
-	f.relationOpts = opts
+	f.relationOpts = append(f.relationOpts, opts...)
 	return f
 }
 
 func (f *FirstData) SetConditionOpts(opts ...ConditionOption) *FirstData {
-	f.conditionOpts = opts
+	f.conditionOpts = append(f.conditionOpts, opts...)
 	return f
 }
 
@@ -624,12 +624,12 @@ func (l *LastData) SetUnscoped() *LastData {
 }
 
 func (l *LastData) SetRelationOpts(opts ...RelationOption) *LastData {
-	l.relationOpts = opts
+	l.relationOpts = append(l.relationOpts, opts...)
 	return l
 }
 
 func (l *LastData) SetConditionOpts(opts ...ConditionOption) *LastData {
-	l.conditionOpts = opts
+	l.conditionOpts = append(l.conditionOpts, opts...)
 	return l
 }
 
@@ -754,17 +754,17 @@ func (l *ListData) SetUnscoped() *ListData {
 }
 
 func (l *ListData) SetRelationOpts(opts ...RelationOption) *ListData {
-	l.relationOpts = opts
+	l.relationOpts = append(l.relationOpts, opts...)
 	return l
 }
 
 func (l *ListData) SetOrderOpts(opts ...OrderOption) *ListData {
-	l.orderOpts = opts
+	l.orderOpts = append(l.orderOpts, opts...)
 	return l
 }
 
 func (l *ListData) SetConditionOpts(opts ...ConditionOption) *ListData {
-	l.conditionOpts = opts
+	l.conditionOpts = append(l.conditionOpts, opts...)
 	return l
 }
 
@@ -907,17 +907,17 @@ func (t *TakeData) SetUnscoped() *TakeData {
 }
 
 func (t *TakeData) SetRelationOpts(opts ...RelationOption) *TakeData {
-	t.relationOpts = opts
+	t.relationOpts = append(t.relationOpts, opts...)
 	return t
 }
 
 func (t *TakeData) SetOrderOpts(opts ...OrderOption) *TakeData {
-	t.orderOpts = opts
+	t.orderOpts = append(t.orderOpts, opts...)
 	return t
 }
 
 func (t *TakeData) SetConditionOpts(opts ...ConditionOption) *TakeData {
-	t.conditionOpts = opts
+	t.conditionOpts = append(t.conditionOpts, opts...)
 	return t
 }
 
@@ -1037,12 +1037,12 @@ func (u *UpdateData) SetUnscoped() *UpdateData {
 }
 
 func (u *UpdateData) SetUpdateOpts(opts ...UpdateOption) *UpdateData {
-	u.updateOpts = opts
+	u.updateOpts = append(u.updateOpts, opts...)
 	return u
 }
 
 func (u *UpdateData) SetConditionOpts(opts ...ConditionOption) *UpdateData {
-	u.conditionOpts = opts
+	u.conditionOpts = append(u.conditionOpts, opts...)
 	return u
 }
 
@@ -1152,7 +1152,7 @@ func (s *SumData) SetUnscoped() *SumData {
 }
 
 func (s *SumData) SetConditionOpts(opts ...ConditionOption) *SumData {
-	s.conditionOpts = opts
+	s.conditionOpts = append(s.conditionOpts, opts...)
 	return s
 }
 ` + "\ntype Sum struct {\n    Sum decimal.Decimal `json:\"sum\"`\n}\n\n" + `// Update SUM数据
