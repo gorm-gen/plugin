@@ -261,7 +261,8 @@ import (
     "{{.ModelPkg}}"
 )
 
-type CreateData struct {
+type Create struct {
+	core      *{{.StructName}}
 	tx        *query.Query
 	qTx       *query.QueryTx
 	unscoped  bool
@@ -269,72 +270,74 @@ type CreateData struct {
 	batchSize int
 }
 
-func NewCreateData() *CreateData {
-	return &CreateData{}
+func ({{.Abbr}} *{{.StructName}}) Create() *Create {
+	return &Create{
+		core: {{.Abbr}},
+	}
 }
 
 // SetTx 设置为事务
-func (c *CreateData) SetTx(tx *query.Query) *CreateData {
+func (c *Create) SetTx(tx *query.Query) *Create {
 	c.tx = tx
 	c.qTx = nil
 	return c
 }
 
 // SetQueryTx 设置为手动事务
-func (c *CreateData) SetQueryTx(tx *query.QueryTx) *CreateData {
+func (c *Create) SetQueryTx(tx *query.QueryTx) *Create {
 	c.qTx = tx
 	c.tx = nil
 	return c
 }
 
-func (c *CreateData) SetUnscoped() *CreateData {
+func (c *Create) SetUnscoped() *Create {
 	c.unscoped = true
 	return c
 }
 
-func (c *CreateData) SetValues(values ...*{{.ModelName}}.{{.StructName}}) *CreateData {
+func (c *Create) SetValues(values ...*{{.ModelName}}.{{.StructName}}) *Create {
 	c.values = append(c.values, values...)
 	return c
 }
 
 // SetBatchSize 设置当批量插入时指定创建的数量
-func (c *CreateData) SetBatchSize(batchSize uint) *CreateData {
+func (c *Create) SetBatchSize(batchSize uint) *Create {
 	c.batchSize = int(batchSize)
 	return c
 }
 
-// Create 添加数据
-func ({{.Abbr}} *{{.StructName}}) Create(ctx context.Context, cd *CreateData) (err error) {
-	length := len(cd.values)
+// Do 添加数据
+func (c *Create) Do(ctx context.Context) (err error) {
+	length := len(c.values)
 	if length == 0 {
 		return nil
 	}
-	{{.Abbr}}q := {{.Abbr}}.q.{{.StructName}}
-	if cd.tx != nil {
-		{{.Abbr}}q = cd.tx.{{.StructName}}
+	cq := c.core.q.{{.StructName}}
+	if c.tx != nil {
+		cq = c.tx.{{.StructName}}
 	}
-	if cd.qTx != nil {
-		{{.Abbr}}q = cd.qTx.{{.StructName}}
+	if c.qTx != nil {
+		cq = c.qTx.{{.StructName}}
 	}
-	{{.Abbr}}r := {{.Abbr}}q.WithContext(ctx)
-	if {{.Abbr}}.newTableName != nil && *{{.Abbr}}.newTableName != "" {
-		{{.Abbr}}r = {{.Abbr}}q.Table(*{{.Abbr}}.newTableName).WithContext(ctx)
+	cr := cq.WithContext(ctx)
+	if c.core.newTableName != nil && *c.core.newTableName != "" {
+		cr = cq.Table(*c.core.newTableName).WithContext(ctx)
 	}
-	if cd.unscoped {
-		{{.Abbr}}r = {{.Abbr}}r.Unscoped()
+	if c.unscoped {
+		cr = cr.Unscoped()
 	}
 	errFields := make([]zap.Field, 0)
-	if length > 1 && cd.batchSize > 0 {
-		errFields = append(errFields, zap.Int("batchSize", cd.batchSize))
-		err = {{.Abbr}}r.CreateInBatches(cd.values, cd.batchSize)
+	if length > 1 && c.batchSize > 0 {
+		errFields = append(errFields, zap.Int("batchSize", c.batchSize))
+		err = cr.CreateInBatches(c.values, c.batchSize)
 	} else {
-		err = {{.Abbr}}r.Create(cd.values...)
+		err = cr.Create(c.values...)
 	}
 	if err != nil {
 		if {{.RepoPkgName}}.IsRealErr(err) {
-			errFields = append(errFields, zap.Any("values", cd.values))
+			errFields = append(errFields, zap.Any("values", c.values))
 			errFields = append(errFields, zap.Error(err))
-			{{.Abbr}}.logger.Error("【{{.StructName}}.Create】失败", errFields...)
+			c.core.logger.Error("【{{.StructName}}.Create】失败", errFields...)
 		}
 		return err
 	}
