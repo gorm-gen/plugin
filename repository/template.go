@@ -877,7 +877,8 @@ import (
     "{{.ModelPkg}}"
 )
 
-type TakeData struct {
+type Take struct {
+	core          *{{.StructName}}
 	tx            *query.Query
 	qTx           *query.QueryTx
 	forUpdate     bool
@@ -887,8 +888,9 @@ type TakeData struct {
 	conditionOpts []ConditionOption
 }
 
-func NewTakeData() *TakeData {
-	return &TakeData{
+func ({{.Abbr}} *{{.StructName}}) Take() *Take {
+	return &Take{
+		core:          {{.Abbr}},
 		relationOpts:  make([]RelationOption, 0),
 		orderOpts:     make([]OrderOption, 0),
 		conditionOpts: make([]ConditionOption, 0),
@@ -896,99 +898,99 @@ func NewTakeData() *TakeData {
 }
 
 // SetTx 设置为事务
-func (t *TakeData) SetTx(tx *query.Query) *TakeData {
+func (t *Take) SetTx(tx *query.Query) *Take {
 	t.tx = tx
 	t.qTx = nil
 	return t
 }
 
 // SetQueryTx 设置为手动事务
-func (t *TakeData) SetQueryTx(tx *query.QueryTx) *TakeData {
+func (t *Take) SetQueryTx(tx *query.QueryTx) *Take {
 	t.qTx = tx
 	t.tx = nil
 	return t
 }
 
-func (t *TakeData) SetForUpdate(forUpdate bool) *TakeData {
+func (t *Take) SetForUpdate(forUpdate bool) *Take {
 	t.forUpdate = forUpdate
 	return t
 }
 
-func (t *TakeData) SetUnscoped() *TakeData {
+func (t *Take) SetUnscoped() *Take {
 	t.unscoped = true
 	return t
 }
 
-func (t *TakeData) SetRelationOpts(opts ...RelationOption) *TakeData {
+func (t *Take) SetRelationOpts(opts ...RelationOption) *Take {
 	t.relationOpts = append(t.relationOpts, opts...)
 	return t
 }
 
-func (t *TakeData) SetOrderOpts(opts ...OrderOption) *TakeData {
+func (t *Take) SetOrderOpts(opts ...OrderOption) *Take {
 	t.orderOpts = append(t.orderOpts, opts...)
 	return t
 }
 
-func (t *TakeData) SetConditionOpts(opts ...ConditionOption) *TakeData {
+func (t *Take) SetConditionOpts(opts ...ConditionOption) *Take {
 	t.conditionOpts = append(t.conditionOpts, opts...)
 	return t
 }
 
-// Take 获取一条数据
-func ({{.Abbr}} *{{.StructName}}) Take(ctx context.Context, td *TakeData) (*{{.ModelName}}.{{.StructName}}, error) {
-	{{.Abbr}}q := {{.Abbr}}.q.{{.StructName}}
-	if td.tx != nil {
-		{{.Abbr}}q = td.tx.{{.StructName}}
+// Do 获取一条数据
+func (t *Take) Do(ctx context.Context) (*{{.ModelName}}.{{.StructName}}, error) {
+	tq := t.core.q.{{.StructName}}
+	if t.tx != nil {
+		tq = t.tx.{{.StructName}}
 	}
-	if td.qTx != nil {
-		{{.Abbr}}q = td.qTx.{{.StructName}}
+	if t.qTx != nil {
+		tq = t.qTx.{{.StructName}}
 	}
-	{{.Abbr}}r := {{.Abbr}}q.WithContext(ctx)
-	if {{.Abbr}}.newTableName != nil && *{{.Abbr}}.newTableName != "" {
-		{{.Abbr}}r = {{.Abbr}}q.Table(*{{.Abbr}}.newTableName).WithContext(ctx)
+	tr := tq.WithContext(ctx)
+	if t.core.newTableName != nil && *t.core.newTableName != "" {
+		tr = tq.Table(*t.core.newTableName).WithContext(ctx)
 	}
-	if td.unscoped {
-		{{.Abbr}}r = {{.Abbr}}r.Unscoped()
+	if t.unscoped {
+		tr = tr.Unscoped()
 	}
-	if (td.tx != nil || td.qTx != nil) && td.forUpdate {
-		{{.Abbr}}r = {{.Abbr}}r.Clauses(clause.Locking{Strength: "UPDATE"})
+	if (t.tx != nil || t.qTx != nil) && t.forUpdate {
+		tr = tr.Clauses(clause.Locking{Strength: "UPDATE"})
 	}
 	errFields := make([]zap.Field, 0)
-	if len(td.conditionOpts) > 0 {
-		conditions := make([]gen.Condition, 0, len(td.conditionOpts))
-		for _, opt := range td.conditionOpts {
-			conditions = append(conditions, opt({{.Abbr}}))
+	if len(t.conditionOpts) > 0 {
+		conditions := make([]gen.Condition, 0, len(t.conditionOpts))
+		for _, opt := range t.conditionOpts {
+			conditions = append(conditions, opt(t.core))
 		}
 		if len(conditions) > 0 {
 			errFields = append(errFields, zap.Any("conditions", conditions))
-			{{.Abbr}}r = {{.Abbr}}r.Where(conditions...)
+			tr = tr.Where(conditions...)
 		}
 	}
-	if len(td.orderOpts) > 0 {
-		orders := make([]field.Expr, 0, len(td.orderOpts))
-		for _, opt := range td.orderOpts {
-			orders = append(orders, opt({{.Abbr}}))
+	if len(t.orderOpts) > 0 {
+		orders := make([]field.Expr, 0, len(t.orderOpts))
+		for _, opt := range t.orderOpts {
+			orders = append(orders, opt(t.core))
 		}
 		if len(orders) > 0 {
 			errFields = append(errFields, zap.Any("orders", orders))
-			{{.Abbr}}r = {{.Abbr}}r.Order(orders...)
+			tr = tr.Order(orders...)
 		}
 	}
-	if len(td.relationOpts) > 0 {
-		relations := make([]field.RelationField, 0, len(td.relationOpts))
-		for _, opt := range td.relationOpts {
-			relations = append(relations, opt({{.Abbr}}))
+	if len(t.relationOpts) > 0 {
+		relations := make([]field.RelationField, 0, len(t.relationOpts))
+		for _, opt := range t.relationOpts {
+			relations = append(relations, opt(t.core))
 		}
 		if len(relations) > 0 {
 			errFields = append(errFields, zap.Any("relations", relations))
-			{{.Abbr}}r = {{.Abbr}}r.Preload(relations...)
+			tr = tr.Preload(relations...)
 		}
 	}
-	res, err := {{.Abbr}}r.Take()
+	res, err := tr.Take()
 	if err != nil {
 		if {{.RepoPkgName}}.IsRealErr(err) {
 			errFields = append(errFields, zap.Error(err))
-			{{.Abbr}}.logger.Error("【{{.StructName}}.Take】失败", errFields...)
+			t.core.logger.Error("【{{.StructName}}.Take】失败", errFields...)
 		}
 		return nil, err
 	}
