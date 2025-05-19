@@ -720,7 +720,8 @@ import (
     "{{.ModelPkg}}"
 )
 
-type ListData struct {
+type List struct {
+	core          *{{.StructName}}
 	tx            *query.Query
 	qTx           *query.QueryTx
 	page          int
@@ -732,8 +733,9 @@ type ListData struct {
 	conditionOpts []ConditionOption
 }
 
-func NewListData() *ListData {
-	return &ListData{
+func ({{.Abbr}} *{{.StructName}}) List() *List {
+	return &List{
+		core:          {{.Abbr}},
 		relationOpts:  make([]RelationOption, 0),
 		orderOpts:     make([]OrderOption, 0),
 		conditionOpts: make([]ConditionOption, 0),
@@ -741,110 +743,110 @@ func NewListData() *ListData {
 }
 
 // SetTx 设置为事务
-func (l *ListData) SetTx(tx *query.Query) *ListData {
+func (l *List) SetTx(tx *query.Query) *List {
 	l.tx = tx
 	l.qTx = nil
 	return l
 }
 
 // SetQueryTx 设置为手动事务
-func (l *ListData) SetQueryTx(tx *query.QueryTx) *ListData {
+func (l *List) SetQueryTx(tx *query.QueryTx) *List {
 	l.qTx = tx
 	l.tx = nil
 	return l
 }
 
-func (l *ListData) SetForUpdate(forUpdate bool) *ListData {
+func (l *List) SetForUpdate(forUpdate bool) *List {
 	l.forUpdate = forUpdate
 	return l
 }
 
-func (l *ListData) SetUnscoped() *ListData {
+func (l *List) SetUnscoped() *List {
 	l.unscoped = true
 	return l
 }
 
-func (l *ListData) SetRelationOpts(opts ...RelationOption) *ListData {
+func (l *List) SetRelationOpts(opts ...RelationOption) *List {
 	l.relationOpts = append(l.relationOpts, opts...)
 	return l
 }
 
-func (l *ListData) SetOrderOpts(opts ...OrderOption) *ListData {
+func (l *List) SetOrderOpts(opts ...OrderOption) *List {
 	l.orderOpts = append(l.orderOpts, opts...)
 	return l
 }
 
-func (l *ListData) SetConditionOpts(opts ...ConditionOption) *ListData {
+func (l *List) SetConditionOpts(opts ...ConditionOption) *List {
 	l.conditionOpts = append(l.conditionOpts, opts...)
 	return l
 }
 
-func (l *ListData) SetPage(page, pageSize uint) *ListData {
+func (l *List) SetPage(page, pageSize uint) *List {
 	l.page = int(page)
 	l.pageSize = int(pageSize)
 	return l
 }
 
-// List 获取数据列表
-func ({{.Abbr}} *{{.StructName}}) List(ctx context.Context, ld *ListData) ([]*{{.ModelName}}.{{.StructName}}, error) {
-	{{.Abbr}}q := {{.Abbr}}.q.{{.StructName}}
-	if ld.tx != nil {
-		{{.Abbr}}q = ld.tx.{{.StructName}}
+// Do 获取数据列表
+func (l *List) Do(ctx context.Context) ([]*{{.ModelName}}.{{.StructName}}, error) {
+	lq := l.core.q.{{.StructName}}
+	if l.tx != nil {
+		lq = l.tx.{{.StructName}}
 	}
-	if ld.qTx != nil {
-		{{.Abbr}}q = ld.qTx.{{.StructName}}
+	if l.qTx != nil {
+		lq = l.qTx.{{.StructName}}
 	}
-	{{.Abbr}}r := {{.Abbr}}q.WithContext(ctx)
-	if {{.Abbr}}.newTableName != nil && *{{.Abbr}}.newTableName != "" {
-		{{.Abbr}}r = {{.Abbr}}q.Table(*{{.Abbr}}.newTableName).WithContext(ctx)
+	lr := lq.WithContext(ctx)
+	if l.core.newTableName != nil && *l.core.newTableName != "" {
+		lr = lq.Table(*l.core.newTableName).WithContext(ctx)
 	}
-	if ld.unscoped {
-		{{.Abbr}}r = {{.Abbr}}r.Unscoped()
+	if l.unscoped {
+		lr = lr.Unscoped()
 	}
-	if (ld.tx != nil || ld.qTx != nil) && ld.forUpdate {
-		{{.Abbr}}r = {{.Abbr}}r.Clauses(clause.Locking{Strength: "UPDATE"})
+	if (l.tx != nil || l.qTx != nil) && l.forUpdate {
+		lr = lr.Clauses(clause.Locking{Strength: "UPDATE"})
 	}
 	errFields := make([]zap.Field, 0)
-	if len(ld.conditionOpts) > 0 {
-		conditions := make([]gen.Condition, 0, len(ld.conditionOpts))
-		for _, opt := range ld.conditionOpts {
-			conditions = append(conditions, opt({{.Abbr}}))
+	if len(l.conditionOpts) > 0 {
+		conditions := make([]gen.Condition, 0, len(l.conditionOpts))
+		for _, opt := range l.conditionOpts {
+			conditions = append(conditions, opt(l.core))
 		}
 		if len(conditions) > 0 {
 			errFields = append(errFields, zap.Any("conditions", conditions))
-			{{.Abbr}}r = {{.Abbr}}r.Where(conditions...)
+			lr = lr.Where(conditions...)
 		}
 	}
-	if len(ld.orderOpts) > 0 {
-		orders := make([]field.Expr, 0, len(ld.orderOpts))
-		for _, opt := range ld.orderOpts {
-			orders = append(orders, opt({{.Abbr}}))
+	if len(l.orderOpts) > 0 {
+		orders := make([]field.Expr, 0, len(l.orderOpts))
+		for _, opt := range l.orderOpts {
+			orders = append(orders, opt(l.core))
 		}
 		if len(orders) > 0 {
 			errFields = append(errFields, zap.Any("orders", orders))
-			{{.Abbr}}r = {{.Abbr}}r.Order(orders...)
+			lr = lr.Order(orders...)
 		}
 	}
-	if ld.page > 0 && ld.pageSize > 0 {
-		errFields = append(errFields, zap.Int("page", ld.page))
-		errFields = append(errFields, zap.Int("pageSize", ld.pageSize))
-		{{.Abbr}}r = {{.Abbr}}r.Scopes(paginate.Gen(ld.page, ld.pageSize))
+	if l.page > 0 && l.pageSize > 0 {
+		errFields = append(errFields, zap.Int("page", l.page))
+		errFields = append(errFields, zap.Int("pageSize", l.pageSize))
+		lr = lr.Scopes(paginate.Gen(l.page, l.pageSize))
 	}
-	if len(ld.relationOpts) > 0 {
-		relations := make([]field.RelationField, 0, len(ld.relationOpts))
-		for _, opt := range ld.relationOpts {
-			relations = append(relations, opt({{.Abbr}}))
+	if len(l.relationOpts) > 0 {
+		relations := make([]field.RelationField, 0, len(l.relationOpts))
+		for _, opt := range l.relationOpts {
+			relations = append(relations, opt(l.core))
 		}
 		if len(relations) > 0 {
 			errFields = append(errFields, zap.Any("relations", relations))
-			{{.Abbr}}r = {{.Abbr}}r.Preload(relations...)
+			lr = lr.Preload(relations...)
 		}
 	}
-	list, err := {{.Abbr}}r.Find()
+	list, err := lr.Find()
 	if err != nil {
 		if {{.RepoPkgName}}.IsRealErr(err) {
 			errFields = append(errFields, zap.Error(err))
-			{{.Abbr}}.logger.Error("【{{.StructName}}.List】失败", errFields...)
+			l.core.logger.Error("【{{.StructName}}.List】失败", errFields...)
 		}
 		return nil, err
 	}
