@@ -163,7 +163,7 @@ import (
     "{{.RepoPkg}}"
 )
 
-type Count struct {
+type count struct {
 	core          *{{.StructName}}
 	tx            *query.Query
 	qTx           *query.QueryTx
@@ -171,39 +171,39 @@ type Count struct {
 	conditionOpts []ConditionOption
 }
 
-func ({{.Abbr}} *{{.StructName}}) Count() *Count {
-	return &Count{
+func ({{.Abbr}} *{{.StructName}}) Count() *count {
+	return &count{
 		core:          {{.Abbr}},
 		conditionOpts: make([]ConditionOption, 0),
 	}
 }
 
 // SetTx 设置为事务
-func (c *Count) SetTx(tx *query.Query) *Count {
+func (c *count) SetTx(tx *query.Query) *count {
 	c.tx = tx
 	c.qTx = nil
 	return c
 }
 
 // SetQueryTx 设置为手动事务
-func (c *Count) SetQueryTx(tx *query.QueryTx) *Count {
+func (c *count) SetQueryTx(tx *query.QueryTx) *count {
 	c.qTx = tx
 	c.tx = nil
 	return c
 }
 
-func (c *Count) SetUnscoped() *Count {
+func (c *count) SetUnscoped() *count {
 	c.unscoped = true
 	return c
 }
 
-func (c *Count) SetConditionOpts(opts ...ConditionOption) *Count {
+func (c *count) SetConditionOpts(opts ...ConditionOption) *count {
 	c.conditionOpts = append(c.conditionOpts, opts...)
 	return c
 }
 
 // Do 获取数据总条数
-func (c *Count) Do(ctx context.Context) (int64, error) {
+func (c *count) Do(ctx context.Context) (int64, error) {
 	cq := c.core.q.{{.StructName}}
 	if c.tx != nil {
 		cq = c.tx.{{.StructName}}
@@ -229,7 +229,7 @@ func (c *Count) Do(ctx context.Context) (int64, error) {
 			cr = cr.Where(conditions...)
 		}
 	}
-	count, err := cr.Count()
+	counts, err := cr.Count()
 	if err != nil {
 		if {{.RepoPkgName}}.IsRealErr(err) {
 			errFields = append(errFields, zap.Error(err))
@@ -237,7 +237,7 @@ func (c *Count) Do(ctx context.Context) (int64, error) {
 		}
 		return 0, err
 	}
-	return count, nil
+	return counts, nil
 }
 `
 }
@@ -261,7 +261,7 @@ import (
     "{{.ModelPkg}}"
 )
 
-type Create struct {
+type create struct {
 	core      *{{.StructName}}
 	tx        *query.Query
 	qTx       *query.QueryTx
@@ -270,44 +270,44 @@ type Create struct {
 	batchSize int
 }
 
-func ({{.Abbr}} *{{.StructName}}) Create() *Create {
-	return &Create{
+func ({{.Abbr}} *{{.StructName}}) Create() *create {
+	return &create{
 		core: {{.Abbr}},
 	}
 }
 
 // SetTx 设置为事务
-func (c *Create) SetTx(tx *query.Query) *Create {
+func (c *create) SetTx(tx *query.Query) *create {
 	c.tx = tx
 	c.qTx = nil
 	return c
 }
 
 // SetQueryTx 设置为手动事务
-func (c *Create) SetQueryTx(tx *query.QueryTx) *Create {
+func (c *create) SetQueryTx(tx *query.QueryTx) *create {
 	c.qTx = tx
 	c.tx = nil
 	return c
 }
 
-func (c *Create) SetUnscoped() *Create {
+func (c *create) SetUnscoped() *create {
 	c.unscoped = true
 	return c
 }
 
-func (c *Create) SetValues(values ...*{{.ModelName}}.{{.StructName}}) *Create {
+func (c *create) SetValues(values ...*{{.ModelName}}.{{.StructName}}) *create {
 	c.values = append(c.values, values...)
 	return c
 }
 
 // SetBatchSize 设置当批量插入时指定创建的数量
-func (c *Create) SetBatchSize(batchSize uint) *Create {
+func (c *create) SetBatchSize(batchSize uint) *create {
 	c.batchSize = int(batchSize)
 	return c
 }
 
 // Do 添加数据
-func (c *Create) Do(ctx context.Context) (err error) {
+func (c *create) Do(ctx context.Context) (err error) {
 	length := len(c.values)
 	if length == 0 {
 		return nil
@@ -364,7 +364,7 @@ import (
     "{{.RepoPkg}}"
 )
 
-type Delete struct {
+type delete struct {
 	core          *{{.StructName}}
 	tx            *query.Query
 	qTx           *query.QueryTx
@@ -372,39 +372,39 @@ type Delete struct {
 	conditionOpts []ConditionOption
 }
 
-func ({{.Abbr}} *{{.StructName}}) Delete() *Delete {
-	return &Delete{
+func ({{.Abbr}} *{{.StructName}}) Delete() *delete {
+	return &delete{
 		core:          {{.Abbr}},
 		conditionOpts: make([]ConditionOption, 0),
 	}
 }
 
 // SetTx 设置为事务
-func (d *Delete) SetTx(tx *query.Query) *Delete {
+func (d *delete) SetTx(tx *query.Query) *delete {
 	d.tx = tx
 	d.qTx = nil
 	return d
 }
 
 // SetQueryTx 设置为手动事务
-func (d *Delete) SetQueryTx(tx *query.QueryTx) *Delete {
+func (d *delete) SetQueryTx(tx *query.QueryTx) *delete {
 	d.qTx = tx
 	d.tx = nil
 	return d
 }
 
-func (d *Delete) SetUnscoped() *Delete {
+func (d *delete) SetUnscoped() *delete {
 	d.unscoped = true
 	return d
 }
 
-func (d *Delete) SetConditionOpts(opts ...ConditionOption) *Delete {
+func (d *delete) SetConditionOpts(opts ...ConditionOption) *delete {
 	d.conditionOpts = append(d.conditionOpts, opts...)
 	return d
 }
 
 // Do 删除数据
-func (d *Delete) Do(ctx context.Context) (int64, error) {
+func (d *delete) Do(ctx context.Context) (int64, error) {
 	dq := d.core.q.{{.StructName}}
 	if d.tx != nil {
 		dq = d.tx.{{.StructName}}
@@ -465,7 +465,7 @@ import (
     "{{.ModelPkg}}"
 )
 
-type First struct {
+type first struct {
 	core          *{{.StructName}}
 	tx            *query.Query
 	qTx           *query.QueryTx
@@ -475,8 +475,8 @@ type First struct {
 	conditionOpts []ConditionOption
 }
 
-func ({{.Abbr}} *{{.StructName}}) First() *First {
-	return &First{
+func ({{.Abbr}} *{{.StructName}}) First() *first {
+	return &first{
 		core:          {{.Abbr}},
 		relationOpts:  make([]RelationOption, 0),
 		conditionOpts: make([]ConditionOption, 0),
@@ -484,41 +484,41 @@ func ({{.Abbr}} *{{.StructName}}) First() *First {
 }
 
 // SetTx 设置为事务
-func (f *First) SetTx(tx *query.Query) *First {
+func (f *first) SetTx(tx *query.Query) *first {
 	f.tx = tx
 	f.qTx = nil
 	return f
 }
 
 // SetQueryTx 设置为手动事务
-func (f *First) SetQueryTx(tx *query.QueryTx) *First {
+func (f *first) SetQueryTx(tx *query.QueryTx) *first {
 	f.qTx = tx
 	f.tx = nil
 	return f
 }
 
-func (f *First) SetForUpdate(forUpdate bool) *First {
+func (f *first) SetForUpdate(forUpdate bool) *first {
 	f.forUpdate = forUpdate
 	return f
 }
 
-func (f *First) SetUnscoped() *First {
+func (f *first) SetUnscoped() *first {
 	f.unscoped = true
 	return f
 }
 
-func (f *First) SetRelationOpts(opts ...RelationOption) *First {
+func (f *first) SetRelationOpts(opts ...RelationOption) *first {
 	f.relationOpts = append(f.relationOpts, opts...)
 	return f
 }
 
-func (f *First) SetConditionOpts(opts ...ConditionOption) *First {
+func (f *first) SetConditionOpts(opts ...ConditionOption) *first {
 	f.conditionOpts = append(f.conditionOpts, opts...)
 	return f
 }
 
 // Do 获取首条数据
-func (f *First) Do(ctx context.Context) (*{{.ModelName}}.{{.StructName}}, error) {
+func (f *first) Do(ctx context.Context) (*{{.ModelName}}.{{.StructName}}, error) {
 	fq := f.core.q.{{.StructName}}
 	if f.tx != nil {
 		fq = f.tx.{{.StructName}}
@@ -592,7 +592,7 @@ import (
     "{{.ModelPkg}}"
 )
 
-type Last struct {
+type last struct {
 	core          *{{.StructName}}
 	tx            *query.Query
 	qTx           *query.QueryTx
@@ -602,8 +602,8 @@ type Last struct {
 	conditionOpts []ConditionOption
 }
 
-func ({{.Abbr}} *{{.StructName}}) Last() *Last {
-	return &Last{
+func ({{.Abbr}} *{{.StructName}}) Last() *last {
+	return &last{
 		core:          {{.Abbr}},
 		relationOpts:  make([]RelationOption, 0),
 		conditionOpts: make([]ConditionOption, 0),
@@ -611,41 +611,41 @@ func ({{.Abbr}} *{{.StructName}}) Last() *Last {
 }
 
 // SetTx 设置为事务
-func (l *Last) SetTx(tx *query.Query) *Last {
+func (l *last) SetTx(tx *query.Query) *last {
 	l.tx = tx
 	l.qTx = nil
 	return l
 }
 
 // SetQueryTx 设置为手动事务
-func (l *Last) SetQueryTx(tx *query.QueryTx) *Last {
+func (l *last) SetQueryTx(tx *query.QueryTx) *last {
 	l.qTx = tx
 	l.tx = nil
 	return l
 }
 
-func (l *Last) SetForUpdate(forUpdate bool) *Last {
+func (l *last) SetForUpdate(forUpdate bool) *last {
 	l.forUpdate = forUpdate
 	return l
 }
 
-func (l *Last) SetUnscoped() *Last {
+func (l *last) SetUnscoped() *last {
 	l.unscoped = true
 	return l
 }
 
-func (l *Last) SetRelationOpts(opts ...RelationOption) *Last {
+func (l *last) SetRelationOpts(opts ...RelationOption) *last {
 	l.relationOpts = append(l.relationOpts, opts...)
 	return l
 }
 
-func (l *Last) SetConditionOpts(opts ...ConditionOption) *Last {
+func (l *last) SetConditionOpts(opts ...ConditionOption) *last {
 	l.conditionOpts = append(l.conditionOpts, opts...)
 	return l
 }
 
 // Do 获取最后一条数据
-func (l *Last) Do(ctx context.Context) (*{{.ModelName}}.{{.StructName}}, error) {
+func (l *last) Do(ctx context.Context) (*{{.ModelName}}.{{.StructName}}, error) {
 	lq := l.core.q.{{.StructName}}
 	if l.tx != nil {
 		lq = l.tx.{{.StructName}}
@@ -720,7 +720,7 @@ import (
     "{{.ModelPkg}}"
 )
 
-type List struct {
+type list struct {
 	core          *{{.StructName}}
 	tx            *query.Query
 	qTx           *query.QueryTx
@@ -733,8 +733,8 @@ type List struct {
 	conditionOpts []ConditionOption
 }
 
-func ({{.Abbr}} *{{.StructName}}) List() *List {
-	return &List{
+func ({{.Abbr}} *{{.StructName}}) List() *list {
+	return &list{
 		core:          {{.Abbr}},
 		relationOpts:  make([]RelationOption, 0),
 		orderOpts:     make([]OrderOption, 0),
@@ -743,52 +743,52 @@ func ({{.Abbr}} *{{.StructName}}) List() *List {
 }
 
 // SetTx 设置为事务
-func (l *List) SetTx(tx *query.Query) *List {
+func (l *list) SetTx(tx *query.Query) *list {
 	l.tx = tx
 	l.qTx = nil
 	return l
 }
 
 // SetQueryTx 设置为手动事务
-func (l *List) SetQueryTx(tx *query.QueryTx) *List {
+func (l *list) SetQueryTx(tx *query.QueryTx) *list {
 	l.qTx = tx
 	l.tx = nil
 	return l
 }
 
-func (l *List) SetForUpdate(forUpdate bool) *List {
+func (l *list) SetForUpdate(forUpdate bool) *list {
 	l.forUpdate = forUpdate
 	return l
 }
 
-func (l *List) SetUnscoped() *List {
+func (l *list) SetUnscoped() *list {
 	l.unscoped = true
 	return l
 }
 
-func (l *List) SetRelationOpts(opts ...RelationOption) *List {
+func (l *list) SetRelationOpts(opts ...RelationOption) *list {
 	l.relationOpts = append(l.relationOpts, opts...)
 	return l
 }
 
-func (l *List) SetOrderOpts(opts ...OrderOption) *List {
+func (l *list) SetOrderOpts(opts ...OrderOption) *list {
 	l.orderOpts = append(l.orderOpts, opts...)
 	return l
 }
 
-func (l *List) SetConditionOpts(opts ...ConditionOption) *List {
+func (l *list) SetConditionOpts(opts ...ConditionOption) *list {
 	l.conditionOpts = append(l.conditionOpts, opts...)
 	return l
 }
 
-func (l *List) SetPage(page, pageSize uint) *List {
+func (l *list) SetPage(page, pageSize uint) *list {
 	l.page = int(page)
 	l.pageSize = int(pageSize)
 	return l
 }
 
 // Do 获取数据列表
-func (l *List) Do(ctx context.Context) ([]*{{.ModelName}}.{{.StructName}}, error) {
+func (l *list) Do(ctx context.Context) ([]*{{.ModelName}}.{{.StructName}}, error) {
 	lq := l.core.q.{{.StructName}}
 	if l.tx != nil {
 		lq = l.tx.{{.StructName}}
@@ -877,7 +877,7 @@ import (
     "{{.ModelPkg}}"
 )
 
-type Take struct {
+type take struct {
 	core          *{{.StructName}}
 	tx            *query.Query
 	qTx           *query.QueryTx
@@ -888,8 +888,8 @@ type Take struct {
 	conditionOpts []ConditionOption
 }
 
-func ({{.Abbr}} *{{.StructName}}) Take() *Take {
-	return &Take{
+func ({{.Abbr}} *{{.StructName}}) Take() *take {
+	return &take{
 		core:          {{.Abbr}},
 		relationOpts:  make([]RelationOption, 0),
 		orderOpts:     make([]OrderOption, 0),
@@ -898,46 +898,46 @@ func ({{.Abbr}} *{{.StructName}}) Take() *Take {
 }
 
 // SetTx 设置为事务
-func (t *Take) SetTx(tx *query.Query) *Take {
+func (t *take) SetTx(tx *query.Query) *take {
 	t.tx = tx
 	t.qTx = nil
 	return t
 }
 
 // SetQueryTx 设置为手动事务
-func (t *Take) SetQueryTx(tx *query.QueryTx) *Take {
+func (t *take) SetQueryTx(tx *query.QueryTx) *take {
 	t.qTx = tx
 	t.tx = nil
 	return t
 }
 
-func (t *Take) SetForUpdate(forUpdate bool) *Take {
+func (t *take) SetForUpdate(forUpdate bool) *take {
 	t.forUpdate = forUpdate
 	return t
 }
 
-func (t *Take) SetUnscoped() *Take {
+func (t *take) SetUnscoped() *take {
 	t.unscoped = true
 	return t
 }
 
-func (t *Take) SetRelationOpts(opts ...RelationOption) *Take {
+func (t *take) SetRelationOpts(opts ...RelationOption) *take {
 	t.relationOpts = append(t.relationOpts, opts...)
 	return t
 }
 
-func (t *Take) SetOrderOpts(opts ...OrderOption) *Take {
+func (t *take) SetOrderOpts(opts ...OrderOption) *take {
 	t.orderOpts = append(t.orderOpts, opts...)
 	return t
 }
 
-func (t *Take) SetConditionOpts(opts ...ConditionOption) *Take {
+func (t *take) SetConditionOpts(opts ...ConditionOption) *take {
 	t.conditionOpts = append(t.conditionOpts, opts...)
 	return t
 }
 
 // Do 获取一条数据
-func (t *Take) Do(ctx context.Context) (*{{.ModelName}}.{{.StructName}}, error) {
+func (t *take) Do(ctx context.Context) (*{{.ModelName}}.{{.StructName}}, error) {
 	tq := t.core.q.{{.StructName}}
 	if t.tx != nil {
 		tq = t.tx.{{.StructName}}
@@ -1018,7 +1018,7 @@ import (
     "{{.RepoPkg}}"
 )
 
-type Update struct {
+type update struct {
 	core          *{{.StructName}}
 	tx            *query.Query
 	qTx           *query.QueryTx
@@ -1027,44 +1027,44 @@ type Update struct {
 	conditionOpts []ConditionOption
 }
 
-func ({{.Abbr}} *{{.StructName}}) Update() *Update {
-	return &Update{
+func ({{.Abbr}} *{{.StructName}}) Update() *update {
+	return &update{
 		core:          {{.Abbr}},
 		updateOpts:    make([]UpdateOption, 0),
 		conditionOpts: make([]ConditionOption, 0),
 	}
 }
 
-func (u *Update) SetTx(tx *query.Query) *Update {
+func (u *update) SetTx(tx *query.Query) *update {
 	u.tx = tx
 	u.qTx = nil
 	return u
 }
 
 // SetQueryTx 设置为手动事务
-func (u *Update) SetQueryTx(tx *query.QueryTx) *Update {
+func (u *update) SetQueryTx(tx *query.QueryTx) *update {
 	u.qTx = tx
 	u.tx = nil
 	return u
 }
 
-func (u *Update) SetUnscoped() *Update {
+func (u *update) SetUnscoped() *update {
 	u.unscoped = true
 	return u
 }
 
-func (u *Update) SetUpdateOpts(opts ...UpdateOption) *Update {
+func (u *update) SetUpdateOpts(opts ...UpdateOption) *update {
 	u.updateOpts = append(u.updateOpts, opts...)
 	return u
 }
 
-func (u *Update) SetConditionOpts(opts ...ConditionOption) *Update {
+func (u *update) SetConditionOpts(opts ...ConditionOption) *update {
 	u.conditionOpts = append(u.conditionOpts, opts...)
 	return u
 }
 
 // Do 更新数据
-func (u *Update) Do(ctx context.Context) (int64, error) {
+func (u *update) Do(ctx context.Context) (int64, error) {
 	if len(u.updateOpts) == 0 {
 		return 0, nil
 	}
@@ -1135,7 +1135,7 @@ import (
 	"{{.RepoPkg}}"
 )
 
-type Sum struct {
+type sum struct {
 	core          *{{.StructName}}
 	tx            *query.Query
 	qTx           *query.QueryTx
@@ -1144,38 +1144,38 @@ type Sum struct {
 	conditionOpts []ConditionOption
 }
 
-func ({{.Abbr}} *{{.StructName}}) Sum(genField field.Field) *Sum {
-	return &Sum{
+func ({{.Abbr}} *{{.StructName}}) Sum(genField field.Field) *sum {
+	return &sum{
 		core:          {{.Abbr}},
 		genField:      genField,
 		conditionOpts: make([]ConditionOption, 0),
 	}
 }
 
-func (s *Sum) SetTx(tx *query.Query) *Sum {
+func (s *sum) SetTx(tx *query.Query) *sum {
 	s.tx = tx
 	s.qTx = nil
 	return s
 }
 
 // SetQueryTx 设置为手动事务
-func (s *Sum) SetQueryTx(tx *query.QueryTx) *Sum {
+func (s *sum) SetQueryTx(tx *query.QueryTx) *sum {
 	s.qTx = tx
 	s.tx = nil
 	return s
 }
 
-func (s *Sum) SetUnscoped() *Sum {
+func (s *sum) SetUnscoped() *sum {
 	s.unscoped = true
 	return s
 }
 
-func (s *Sum) SetConditionOpts(opts ...ConditionOption) *Sum {
+func (s *sum) SetConditionOpts(opts ...ConditionOption) *sum {
 	s.conditionOpts = append(s.conditionOpts, opts...)
 	return s
 }
-` + "\ntype SumData struct {\n    Sum decimal.Decimal `json:\"sum\"`\n}\n\n" + `// Do SUM数据
-func (s *Sum) Do(ctx context.Context) (decimal.Decimal, error) {
+` + "\ntype Sum struct {\n    Sum decimal.Decimal `json:\"sum\"`\n}\n\n" + `// Do SUM数据
+func (s *sum) Do(ctx context.Context) (decimal.Decimal, error) {
 	sq := s.core.q.{{.StructName}}
 	if s.tx != nil {
 		sq = s.tx.{{.StructName}}
@@ -1205,7 +1205,7 @@ func (s *Sum) Do(ctx context.Context) (decimal.Decimal, error) {
 			sr = sr.Where(conditions...)
 		}
 	}
-	var data SumData
+	var data Sum
 	if err := sr.Scan(&data); err != nil {
 		if {{.RepoPkgName}}.IsRealErr(err) {
 			errFields = append(errFields, zap.String("field", s.genField.ColumnName().String()))
