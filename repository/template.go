@@ -209,7 +209,7 @@ func (c *Count) Do(ctx context.Context) (int64, error) {
 		cq = c.tx.{{.StructName}}
 	}
 	if c.qTx != nil {
-		{{.Abbr}}q = c.qTx.{{.StructName}}
+		cq = c.qTx.{{.StructName}}
 	}
 	cr := cq.WithContext(ctx)
 	if c.core.newTableName != nil && *c.core.newTableName != "" {
