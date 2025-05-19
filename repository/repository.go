@@ -106,6 +106,11 @@ func (r *Repository) Generate(models ...interface{}) error {
 			return err
 		}
 
+		// sum.go
+		if err := r.genSum(rt, abbr, filename, paths); err != nil {
+			return err
+		}
+
 		// take.go
 		if err := r.genTake(rt, abbr, filename, paths, modelName); err != nil {
 			return err
