@@ -1189,6 +1189,7 @@ func ({{.Abbr}} *{{.StructName}}) Sum(ctx context.Context, sd *SumData) (decimal
 	var data Sum
 	if err := {{.Abbr}}r.Scan(&data); err != nil {
 		if {{.RepoPkgName}}.IsRealErr(err) {
+			errFields = append(errFields, zap.String("field", sd.genField.ColumnName().String()))
 			errFields = append(errFields, zap.Error(err))
 			{{.Abbr}}.logger.Error("【{{.StructName}}.Sum】失败", errFields...)
 		}
