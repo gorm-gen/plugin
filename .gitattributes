@@ -1,6 +1,0 @@
-plaintext
-* text=auto
-plaintext
-*.go text lf=eol
-plaintext
-*.go text lf=CRLF
