@@ -364,75 +364,77 @@ import (
     "{{.RepoPkg}}"
 )
 
-type DeleteData struct {
+type Delete struct {
+	core          *{{.StructName}}
 	tx            *query.Query
 	qTx           *query.QueryTx
 	unscoped      bool
 	conditionOpts []ConditionOption
 }
 
-func NewDeleteData() *DeleteData {
-	return &DeleteData{
+func ({{.Abbr}} *{{.StructName}}) Delete() *Delete {
+	return &Delete{
+		core:          {{.Abbr}},
 		conditionOpts: make([]ConditionOption, 0),
 	}
 }
 
 // SetTx 设置为事务
-func (d *DeleteData) SetTx(tx *query.Query) *DeleteData {
+func (d *Delete) SetTx(tx *query.Query) *Delete {
 	d.tx = tx
 	d.qTx = nil
 	return d
 }
 
 // SetQueryTx 设置为手动事务
-func (d *DeleteData) SetQueryTx(tx *query.QueryTx) *DeleteData {
+func (d *Delete) SetQueryTx(tx *query.QueryTx) *Delete {
 	d.qTx = tx
 	d.tx = nil
 	return d
 }
 
-func (d *DeleteData) SetUnscoped() *DeleteData {
+func (d *Delete) SetUnscoped() *Delete {
 	d.unscoped = true
 	return d
 }
 
-func (d *DeleteData) SetConditionOpts(opts ...ConditionOption) *DeleteData {
+func (d *Delete) SetConditionOpts(opts ...ConditionOption) *Delete {
 	d.conditionOpts = append(d.conditionOpts, opts...)
 	return d
 }
 
-// Delete 删除数据
-func ({{.Abbr}} *{{.StructName}}) Delete(ctx context.Context, dd *DeleteData) (int64, error) {
-	{{.Abbr}}q := {{.Abbr}}.q.{{.StructName}}
-	if dd.tx != nil {
-		{{.Abbr}}q = dd.tx.{{.StructName}}
+// Do 删除数据
+func (d *Delete) Do(ctx context.Context) (int64, error) {
+	dq := d.core.q.{{.StructName}}
+	if d.tx != nil {
+		dq = d.tx.{{.StructName}}
 	}
-	if dd.qTx != nil {
-		{{.Abbr}}q = dd.qTx.{{.StructName}}
+	if d.qTx != nil {
+		dq = d.qTx.{{.StructName}}
 	}
-	{{.Abbr}}r := {{.Abbr}}q.WithContext(ctx)
-	if {{.Abbr}}.newTableName != nil && *{{.Abbr}}.newTableName != "" {
-		{{.Abbr}}r = {{.Abbr}}q.Table(*{{.Abbr}}.newTableName).WithContext(ctx)
+	dr := dq.WithContext(ctx)
+	if d.core.newTableName != nil && *d.core.newTableName != "" {
+		dr = dq.Table(*d.core.newTableName).WithContext(ctx)
 	}
-	if dd.unscoped {
-		{{.Abbr}}r = {{.Abbr}}r.Unscoped()
+	if d.unscoped {
+		dr = dr.Unscoped()
 	}
 	errFields := make([]zap.Field, 0)
-	if len(dd.conditionOpts) > 0 {
-		conditions := make([]gen.Condition, 0, len(dd.conditionOpts))
-		for _, opt := range dd.conditionOpts {
-			conditions = append(conditions, opt({{.Abbr}}))
+	if len(d.conditionOpts) > 0 {
+		conditions := make([]gen.Condition, 0, len(d.conditionOpts))
+		for _, opt := range d.conditionOpts {
+			conditions = append(conditions, opt(d.core))
 		}
 		if len(conditions) > 0 {
 			errFields = append(errFields, zap.Any("conditions", conditions))
-			{{.Abbr}}r = {{.Abbr}}r.Where(conditions...)
+			dr = dr.Where(conditions...)
 		}
 	}
-	res, err := {{.Abbr}}r.Delete()
+	res, err := dr.Delete()
 	if err != nil {
 		if {{.RepoPkgName}}.IsRealErr(err) {
 			errFields = append(errFields, zap.Error(err))
-			{{.Abbr}}.logger.Error("【{{.StructName}}.Delete】失败", errFields...)
+			d.core.logger.Error("【{{.StructName}}.Delete】失败", errFields...)
 		}
 		return 0, err
 	}
