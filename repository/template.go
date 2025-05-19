@@ -1018,7 +1018,8 @@ import (
     "{{.RepoPkg}}"
 )
 
-type UpdateData struct {
+type Update struct {
+	core          *{{.StructName}}
 	tx            *query.Query
 	qTx           *query.QueryTx
 	unscoped      bool
@@ -1026,84 +1027,85 @@ type UpdateData struct {
 	conditionOpts []ConditionOption
 }
 
-func NewUpdateData() *UpdateData {
-	return &UpdateData{
+func ({{.Abbr}} *{{.StructName}}) Update() *Update {
+	return &Update{
+		core:          {{.Abbr}},
 		updateOpts:    make([]UpdateOption, 0),
 		conditionOpts: make([]ConditionOption, 0),
 	}
 }
 
-func (u *UpdateData) SetTx(tx *query.Query) *UpdateData {
+func (u *Update) SetTx(tx *query.Query) *Update {
 	u.tx = tx
 	u.qTx = nil
 	return u
 }
 
 // SetQueryTx 设置为手动事务
-func (u *UpdateData) SetQueryTx(tx *query.QueryTx) *UpdateData {
+func (u *Update) SetQueryTx(tx *query.QueryTx) *Update {
 	u.qTx = tx
 	u.tx = nil
 	return u
 }
 
-func (u *UpdateData) SetUnscoped() *UpdateData {
+func (u *Update) SetUnscoped() *Update {
 	u.unscoped = true
 	return u
 }
 
-func (u *UpdateData) SetUpdateOpts(opts ...UpdateOption) *UpdateData {
+func (u *Update) SetUpdateOpts(opts ...UpdateOption) *Update {
 	u.updateOpts = append(u.updateOpts, opts...)
 	return u
 }
 
-func (u *UpdateData) SetConditionOpts(opts ...ConditionOption) *UpdateData {
+func (u *Update) SetConditionOpts(opts ...ConditionOption) *Update {
 	u.conditionOpts = append(u.conditionOpts, opts...)
 	return u
 }
 
-// Update 更新数据
-func ({{.Abbr}} *{{.StructName}}) Update(ctx context.Context, ud *UpdateData) (int64, error) {
-	if len(ud.updateOpts) == 0 {
+// Do 更新数据
+func (u *Update) Do(ctx context.Context) (int64, error) {
+	if len(u.updateOpts) == 0 {
 		return 0, nil
 	}
-	{{.Abbr}}q := {{.Abbr}}.q.{{.StructName}}
-	if ud.tx != nil {
-		{{.Abbr}}q = ud.tx.{{.StructName}}
+	uq := u.core.q.{{.StructName}}
+	if u.tx != nil {
+		uq = u.tx.{{.StructName}}
 	}
-	if ud.qTx != nil {
-		{{.Abbr}}q = ud.qTx.{{.StructName}}
+	if u.qTx != nil {
+		uq = u.qTx.{{.StructName}}
 	}
-	{{.Abbr}}r := {{.Abbr}}q.WithContext(ctx)
-	if {{.Abbr}}.newTableName != nil && *{{.Abbr}}.newTableName != "" {
-		{{.Abbr}}r = {{.Abbr}}q.Table(*{{.Abbr}}.newTableName).WithContext(ctx)
+	ur := uq.WithContext(ctx)
+	if u.core.newTableName != nil && *u.core.newTableName != "" {
+		ur = uq.Table(*u.core.newTableName).WithContext(ctx)
 	}
-	if ud.unscoped {
-		{{.Abbr}}r = {{.Abbr}}r.Unscoped()
+	if u.unscoped {
+		ur = ur.Unscoped()
 	}
 	errFields := make([]zap.Field, 0)
-	if len(ud.conditionOpts) > 0 {
-		conditions := make([]gen.Condition, 0, len(ud.conditionOpts))
-		for _, opt := range ud.conditionOpts {
-			conditions = append(conditions, opt({{.Abbr}}))
+	if len(u.conditionOpts) > 0 {
+		conditions := make([]gen.Condition, 0, len(u.conditionOpts))
+		for _, opt := range u.conditionOpts {
+			conditions = append(conditions, opt(u.core))
 		}
 		if len(conditions) > 0 {
 			errFields = append(errFields, zap.Any("conditions", conditions))
-			{{.Abbr}}r = {{.Abbr}}r.Where(conditions...)
+			ur = ur.Where(conditions...)
 		}
 	}
-	columns := make([]field.AssignExpr, 0, len(ud.updateOpts))
-	for _, opt := range ud.updateOpts {
-		columns = append(columns, opt({{.Abbr}}))
+	columns := make([]field.AssignExpr, 0, len(u.updateOpts))
+	for _, opt := range u.updateOpts {
+		columns = append(columns, opt(u.core))
 	}
 	if len(columns) == 0 {
 		return 0, nil
 	}
-	res, err := {{.Abbr}}r.UpdateSimple(columns...)
+	res, err := ur.UpdateSimple(columns...)
 	if err != nil {
 		if {{.RepoPkgName}}.IsRealErr(err) {
 			errFields = append(errFields, zap.Any("columns", columns))
 			errFields = append(errFields, zap.Error(err))
-			{{.Abbr}}.logger.Error("【{{.StructName}}.Update】失败", errFields...)
+			u.core.logger.Error("【{{.StructName}}.Update】失败", errFields...)
 		}
 		return 0, err
 	}
