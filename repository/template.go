@@ -163,75 +163,77 @@ import (
     "{{.RepoPkg}}"
 )
 
-type CountData struct {
+type Count struct {
+	core          *{{.StructName}}
 	tx            *query.Query
 	qTx           *query.QueryTx
 	unscoped      bool
 	conditionOpts []ConditionOption
 }
 
-func NewCountData() *CountData {
-	return &CountData{
+func ({{.Abbr}} *{{.StructName}}) Count() *Count {
+	return &Count{
+		core:          {{.Abbr}},
 		conditionOpts: make([]ConditionOption, 0),
 	}
 }
 
 // SetTx 设置为事务
-func (c *CountData) SetTx(tx *query.Query) *CountData {
+func (c *Count) SetTx(tx *query.Query) *Count {
 	c.tx = tx
 	c.qTx = nil
 	return c
 }
 
 // SetQueryTx 设置为手动事务
-func (c *CountData) SetQueryTx(tx *query.QueryTx) *CountData {
+func (c *Count) SetQueryTx(tx *query.QueryTx) *Count {
 	c.qTx = tx
 	c.tx = nil
 	return c
 }
 
-func (c *CountData) SetUnscoped() *CountData {
+func (c *Count) SetUnscoped() *Count {
 	c.unscoped = true
 	return c
 }
 
-func (c *CountData) SetConditionOpts(opts ...ConditionOption) *CountData {
+func (c *Count) SetConditionOpts(opts ...ConditionOption) *Count {
 	c.conditionOpts = append(c.conditionOpts, opts...)
 	return c
 }
 
-// Count 获取数据总条数
-func ({{.Abbr}} *{{.StructName}}) Count(ctx context.Context, cd *CountData) (int64, error) {
-	{{.Abbr}}q := {{.Abbr}}.q.{{.StructName}}
-	if cd.tx != nil {
-		{{.Abbr}}q = cd.tx.{{.StructName}}
+// Do 获取数据总条数
+func (c *Count) Do(ctx context.Context) (int64, error) {
+	cq := c.core.q.{{.StructName}}
+	if c.tx != nil {
+		cq = c.tx.{{.StructName}}
 	}
-	if cd.qTx != nil {
-		{{.Abbr}}q = cd.qTx.{{.StructName}}
+	if c.qTx != nil {
+		{{.Abbr}}q = c.qTx.{{.StructName}}
 	}
-	{{.Abbr}}r := {{.Abbr}}q.WithContext(ctx)
-	if {{.Abbr}}.newTableName != nil && *{{.Abbr}}.newTableName != "" {
-		{{.Abbr}}r = {{.Abbr}}q.Table(*{{.Abbr}}.newTableName).WithContext(ctx)
+	cr := cq.WithContext(ctx)
+	if c.core.newTableName != nil && *c.core.newTableName != "" {
+		cr = cq.Table(*c.core.newTableName).WithContext(ctx)
 	}
-	if cd.unscoped {
-		{{.Abbr}}r = {{.Abbr}}r.Unscoped()
+	if c.unscoped {
+		cr = cr.Unscoped()
 	}
 	errFields := make([]zap.Field, 0)
-	if len(cd.conditionOpts) > 0 {
-		conditions := make([]gen.Condition, 0, len(cd.conditionOpts))
-		for _, opt := range cd.conditionOpts {
-			conditions = append(conditions, opt({{.Abbr}}))
+	if len(c.conditionOpts) > 0 {
+		conditions := make([]gen.Condition, 0, len(c.conditionOpts))
+		for _, opt := range c.conditionOpts {
+			conditions = append(conditions, opt(c.core))
 		}
 		if len(conditions) > 0 {
 			errFields = append(errFields, zap.Any("conditions", conditions))
-			{{.Abbr}}r = {{.Abbr}}r.Where(conditions...)
+			cr = cr.Where(conditions...)
 		}
 	}
-	count, err := {{.Abbr}}r.Count()
+	count, err := cr.Count()
 	if err != nil {
 		if {{.RepoPkgName}}.IsRealErr(err) {
 			errFields = append(errFields, zap.Error(err))
-			{{.Abbr}}.logger.Error("【{{.StructName}}.Count】失败", errFields...)
+			c.core.logger.Error("【{{.StructName}}.Count】失败", errFields...)
 		}
 		return 0, err
 	}
