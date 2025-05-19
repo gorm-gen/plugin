@@ -1135,7 +1135,8 @@ import (
 	"{{.RepoPkg}}"
 )
 
-type SumData struct {
+type Sum struct {
+	core          *{{.StructName}}
 	tx            *query.Query
 	qTx           *query.QueryTx
 	unscoped      bool
@@ -1143,72 +1144,73 @@ type SumData struct {
 	conditionOpts []ConditionOption
 }
 
-func NewSumData(genField field.Field) *SumData {
-	return &SumData{
-		genField: genField,
+func ({{.Abbr}} *{{.StructName}}) Sum(genField field.Field) *Sum {
+	return &Sum{
+		core:          {{.Abbr}},
+		genField:      genField,
 		conditionOpts: make([]ConditionOption, 0),
 	}
 }
 
-func (s *SumData) SetTx(tx *query.Query) *SumData {
+func (s *Sum) SetTx(tx *query.Query) *Sum {
 	s.tx = tx
 	s.qTx = nil
 	return s
 }
 
 // SetQueryTx 设置为手动事务
-func (s *SumData) SetQueryTx(tx *query.QueryTx) *SumData {
+func (s *Sum) SetQueryTx(tx *query.QueryTx) *Sum {
 	s.qTx = tx
 	s.tx = nil
 	return s
 }
 
-func (s *SumData) SetUnscoped() *SumData {
+func (s *Sum) SetUnscoped() *Sum {
 	s.unscoped = true
 	return s
 }
 
-func (s *SumData) SetConditionOpts(opts ...ConditionOption) *SumData {
+func (s *Sum) SetConditionOpts(opts ...ConditionOption) *Sum {
 	s.conditionOpts = append(s.conditionOpts, opts...)
 	return s
 }
-` + "\ntype Sum struct {\n    Sum decimal.Decimal `json:\"sum\"`\n}\n\n" + `// Update SUM数据
-func ({{.Abbr}} *{{.StructName}}) Sum(ctx context.Context, sd *SumData) (decimal.Decimal, error) {
-	{{.Abbr}}q := {{.Abbr}}.q.{{.StructName}}
-	if sd.tx != nil {
-		{{.Abbr}}q = sd.tx.{{.StructName}}
+` + "\ntype SumData struct {\n    Sum decimal.Decimal `json:\"sum\"`\n}\n\n" + `// Do SUM数据
+func (s *Sum) Do(ctx context.Context) (decimal.Decimal, error) {
+	sq := s.core.q.{{.StructName}}
+	if s.tx != nil {
+		sq = s.tx.{{.StructName}}
 	}
-	if sd.qTx != nil {
-		{{.Abbr}}q = sd.qTx.{{.StructName}}
+	if s.qTx != nil {
+		sq = s.qTx.{{.StructName}}
 	}
-	{{.Abbr}}r := {{.Abbr}}q.WithContext(ctx).Select(sd.genField.Sum().As("sum"))
-	if {{.Abbr}}.newTableName != nil {
-		cf := f.NewDecimal(sd.genField, f.WithTableName(*{{.Abbr}}.newTableName)).Sum().As("sum")
-		{{.Abbr}}r = {{.Abbr}}q.WithContext(ctx).Select(cf)
-		if *{{.Abbr}}.newTableName != "" {
-			{{.Abbr}}r = {{.Abbr}}q.Table(*{{.Abbr}}.newTableName).WithContext(ctx).Select(cf)
+	sr := sq.WithContext(ctx).Select(s.genField.Sum().As("sum"))
+	if s.core.newTableName != nil {
+		cf := f.NewDecimal(s.genField, f.WithTableName(*s.core.newTableName)).Sum().As("sum")
+		sr = sq.WithContext(ctx).Select(cf)
+		if *s.core.newTableName != "" {
+			sr = sq.Table(*s.core.newTableName).WithContext(ctx).Select(cf)
 		}
 	}
-	if sd.unscoped {
-		{{.Abbr}}r = {{.Abbr}}r.Unscoped()
+	if s.unscoped {
+		sr = sr.Unscoped()
 	}
 	errFields := make([]zap.Field, 0)
-	if len(sd.conditionOpts) > 0 {
-		conditions := make([]gen.Condition, 0, len(sd.conditionOpts))
-		for _, opt := range sd.conditionOpts {
-			conditions = append(conditions, opt({{.Abbr}}))
+	if len(s.conditionOpts) > 0 {
+		conditions := make([]gen.Condition, 0, len(s.conditionOpts))
+		for _, opt := range s.conditionOpts {
+			conditions = append(conditions, opt(s.core))
 		}
 		if len(conditions) > 0 {
 			errFields = append(errFields, zap.Any("conditions", conditions))
-			{{.Abbr}}r = {{.Abbr}}r.Where(conditions...)
+			sr = sr.Where(conditions...)
 		}
 	}
-	var data Sum
-	if err := {{.Abbr}}r.Scan(&data); err != nil {
+	var data SumData
+	if err := sr.Scan(&data); err != nil {
 		if {{.RepoPkgName}}.IsRealErr(err) {
-			errFields = append(errFields, zap.String("field", sd.genField.ColumnName().String()))
+			errFields = append(errFields, zap.String("field", s.genField.ColumnName().String()))
 			errFields = append(errFields, zap.Error(err))
-			{{.Abbr}}.logger.Error("【{{.StructName}}.Sum】失败", errFields...)
+			s.core.logger.Error("【{{.StructName}}.Sum】失败", errFields...)
 		}
 		return decimal.Zero, err
 	}
