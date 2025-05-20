@@ -544,6 +544,9 @@ func (f *first) Do(ctx context.Context) (*{{.ModelName}}.{{.StructName}}, error)
 	if (f.tx != nil || f.qTx != nil) && f.forUpdate {
 		fr = fr.Clauses(clause.Locking{Strength: clause.LockingStrengthUpdate})
 	}
+	if (f.tx != nil || f.qTx != nil) && f.forShare {
+		fr = fr.Clauses(clause.Locking{Strength: clause.LockingStrengthShare})
+	}
 	errFields := make([]zap.Field, 0)
 	if len(f.conditionOpts) > 0 {
 		conditions := make([]gen.Condition, 0, len(f.conditionOpts))
@@ -678,6 +681,9 @@ func (l *last) Do(ctx context.Context) (*{{.ModelName}}.{{.StructName}}, error) 
 	}
 	if (l.tx != nil || l.qTx != nil) && l.forUpdate {
 		lr = lr.Clauses(clause.Locking{Strength: clause.LockingStrengthUpdate})
+	}
+	if (l.tx != nil || l.qTx != nil) && l.forShare {
+		lr = lr.Clauses(clause.Locking{Strength: clause.LockingStrengthShare})
 	}
 	errFields := make([]zap.Field, 0)
 	if len(l.conditionOpts) > 0 {
@@ -829,6 +835,9 @@ func (l *list) Do(ctx context.Context) ([]*{{.ModelName}}.{{.StructName}}, error
 	}
 	if (l.tx != nil || l.qTx != nil) && l.forUpdate {
 		lr = lr.Clauses(clause.Locking{Strength: clause.LockingStrengthUpdate})
+	}
+	if (l.tx != nil || l.qTx != nil) && l.forShare {
+		lr = lr.Clauses(clause.Locking{Strength: clause.LockingStrengthShare})
 	}
 	errFields := make([]zap.Field, 0)
 	if len(l.conditionOpts) > 0 {
@@ -986,6 +995,9 @@ func (t *take) Do(ctx context.Context) (*{{.ModelName}}.{{.StructName}}, error) 
 	}
 	if (t.tx != nil || t.qTx != nil) && t.forUpdate {
 		tr = tr.Clauses(clause.Locking{Strength: clause.LockingStrengthUpdate})
+	}
+	if (t.tx != nil || t.qTx != nil) && t.forShare {
+		tr = tr.Clauses(clause.Locking{Strength: clause.LockingStrengthShare})
 	}
 	errFields := make([]zap.Field, 0)
 	if len(t.conditionOpts) > 0 {
