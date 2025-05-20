@@ -517,6 +517,16 @@ func (f *first) SetForShare() *first {
 	return f
 }
 
+func (f *first) SetForShareSkipLocked() *first {
+	f.lock = clause.Locking{Strength: clause.LockingStrengthShare, Options: clause.LockingOptionsSkipLocked}
+	return f
+}
+
+func (f *first) SetForShareNoWait() *first {
+	f.lock = clause.Locking{Strength: clause.LockingStrengthShare, Options: clause.LockingOptionsNoWait}
+	return f
+}
+
 func (f *first) SetUnscoped() *first {
 	f.unscoped = true
 	return f
@@ -656,6 +666,16 @@ func (l *last) SetForUpdateNoWait() *last {
 
 func (l *last) SetForShare() *last {
 	l.lock = clause.Locking{Strength: clause.LockingStrengthShare}
+	return l
+}
+
+func (l *last) SetForShareSkipLocked() *last {
+	l.lock = clause.Locking{Strength: clause.LockingStrengthShare, Options: clause.LockingOptionsSkipLocked}
+	return l
+}
+
+func (l *last) SetForShareNoWait() *last {
+	l.lock = clause.Locking{Strength: clause.LockingStrengthShare, Options: clause.LockingOptionsNoWait}
 	return l
 }
 
@@ -803,6 +823,16 @@ func (l *list) SetForUpdateNoWait() *list {
 
 func (l *list) SetForShare() *list {
 	l.lock = clause.Locking{Strength: clause.LockingStrengthShare}
+	return l
+}
+
+func (l *list) SetForShareSkipLocked() *list {
+	l.lock = clause.Locking{Strength: clause.LockingStrengthShare, Options: clause.LockingOptionsSkipLocked}
+	return l
+}
+
+func (l *list) SetForShareNoWait() *list {
+	l.lock = clause.Locking{Strength: clause.LockingStrengthShare, Options: clause.LockingOptionsNoWait}
 	return l
 }
 
@@ -973,6 +1003,16 @@ func (t *take) SetForUpdateNoWait() *take {
 
 func (t *take) SetForShare() *take {
 	t.lock = clause.Locking{Strength: clause.LockingStrengthShare}
+	return t
+}
+
+func (t *take) SetForShareSkipLocked() *take {
+	t.lock = clause.Locking{Strength: clause.LockingStrengthShare, Options: clause.LockingOptionsSkipLocked}
+	return t
+}
+
+func (t *take) SetForShareNoWait() *take {
+	t.lock = clause.Locking{Strength: clause.LockingStrengthShare, Options: clause.LockingOptionsNoWait}
 	return t
 }
 
