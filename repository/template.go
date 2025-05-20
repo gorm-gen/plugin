@@ -504,6 +504,12 @@ func (f *first) SetForUpdate() *first {
 	return f
 }
 
+func (f *first) SetForShare() *first {
+	f.forShare = true
+	f.forUpdate = false
+	return f
+}
+
 func (f *first) SetUnscoped() *first {
 	f.unscoped = true
 	return f
@@ -630,6 +636,12 @@ func (l *last) SetQueryTx(tx *query.QueryTx) *last {
 func (l *last) SetForUpdate() *last {
 	l.forShare = false
 	l.forUpdate = true
+	return l
+}
+
+func (l *last) SetForShare() *last {
+	l.forShare = true
+	l.forUpdate = false
 	return l
 }
 
@@ -764,6 +776,12 @@ func (l *list) SetQueryTx(tx *query.QueryTx) *list {
 func (l *list) SetForUpdate() *list {
 	l.forShare = false
 	l.forUpdate = true
+	return l
+}
+
+func (l *list) SetForShare() *list {
+	l.forShare = true
+	l.forUpdate = false
 	return l
 }
 
@@ -921,6 +939,12 @@ func (t *take) SetQueryTx(tx *query.QueryTx) *take {
 func (t *take) SetForUpdate() *take {
 	t.forShare = false
 	t.forUpdate = true
+	return t
+}
+
+func (t *take) SetForShare() *take {
+	t.forShare = true
+	t.forUpdate = false
 	return t
 }
 
