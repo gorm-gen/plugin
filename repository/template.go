@@ -470,6 +470,7 @@ type first struct {
 	tx            *query.Query
 	qTx           *query.QueryTx
 	forUpdate     bool
+	forShare      bool
 	unscoped      bool
 	relationOpts  []RelationOption
 	conditionOpts []ConditionOption
@@ -497,8 +498,9 @@ func (f *first) SetQueryTx(tx *query.QueryTx) *first {
 	return f
 }
 
-func (f *first) SetForUpdate(forUpdate bool) *first {
-	f.forUpdate = forUpdate
+func (f *first) SetForUpdate() *first {
+	f.forShare = false
+	f.forUpdate = true
 	return f
 }
 
@@ -597,6 +599,7 @@ type last struct {
 	tx            *query.Query
 	qTx           *query.QueryTx
 	forUpdate     bool
+	forShare      bool
 	unscoped      bool
 	relationOpts  []RelationOption
 	conditionOpts []ConditionOption
@@ -624,8 +627,9 @@ func (l *last) SetQueryTx(tx *query.QueryTx) *last {
 	return l
 }
 
-func (l *last) SetForUpdate(forUpdate bool) *last {
-	l.forUpdate = forUpdate
+func (l *last) SetForUpdate() *last {
+	l.forShare = false
+	l.forUpdate = true
 	return l
 }
 
@@ -727,6 +731,7 @@ type list struct {
 	page          int
 	pageSize      int
 	forUpdate     bool
+	forShare      bool
 	unscoped      bool
 	relationOpts  []RelationOption
 	orderOpts     []OrderOption
@@ -756,8 +761,9 @@ func (l *list) SetQueryTx(tx *query.QueryTx) *list {
 	return l
 }
 
-func (l *list) SetForUpdate(forUpdate bool) *list {
-	l.forUpdate = forUpdate
+func (l *list) SetForUpdate() *list {
+	l.forShare = false
+	l.forUpdate = true
 	return l
 }
 
@@ -882,6 +888,7 @@ type take struct {
 	tx            *query.Query
 	qTx           *query.QueryTx
 	forUpdate     bool
+	forShare      bool
 	unscoped      bool
 	relationOpts  []RelationOption
 	orderOpts     []OrderOption
@@ -911,8 +918,9 @@ func (t *take) SetQueryTx(tx *query.QueryTx) *take {
 	return t
 }
 
-func (t *take) SetForUpdate(forUpdate bool) *take {
-	t.forUpdate = forUpdate
+func (t *take) SetForUpdate() *take {
+	t.forShare = false
+	t.forUpdate = true
 	return t
 }
 
