@@ -601,8 +601,7 @@ type last struct {
 	core          *{{.StructName}}
 	tx            *query.Query
 	qTx           *query.QueryTx
-	forUpdate     bool
-	forShare      bool
+	lock          clause.Expression
 	unscoped      bool
 	relationOpts  []RelationOption
 	conditionOpts []ConditionOption
@@ -631,14 +630,12 @@ func (l *last) SetQueryTx(tx *query.QueryTx) *last {
 }
 
 func (l *last) SetForUpdate() *last {
-	l.forShare = false
-	l.forUpdate = true
+	l.lock = clause.Locking{Strength: clause.LockingStrengthUpdate}
 	return l
 }
 
 func (l *last) SetForShare() *last {
-	l.forShare = true
-	l.forUpdate = false
+	l.lock = clause.Locking{Strength: clause.LockingStrengthShare}
 	return l
 }
 
@@ -673,11 +670,8 @@ func (l *last) Do(ctx context.Context) (*{{.ModelName}}.{{.StructName}}, error) 
 	if l.unscoped {
 		lr = lr.Unscoped()
 	}
-	if (l.tx != nil || l.qTx != nil) && l.forUpdate {
-		lr = lr.Clauses(clause.Locking{Strength: clause.LockingStrengthUpdate})
-	}
-	if (l.tx != nil || l.qTx != nil) && l.forShare {
-		lr = lr.Clauses(clause.Locking{Strength: clause.LockingStrengthShare})
+	if (l.tx != nil || l.qTx != nil) && l.lock != nil {
+		lr = lr.Clauses(l.lock)
 	}
 	errFields := make([]zap.Field, 0)
 	if len(l.conditionOpts) > 0 {
@@ -742,8 +736,7 @@ type list struct {
 	qTx           *query.QueryTx
 	page          int
 	pageSize      int
-	forUpdate     bool
-	forShare      bool
+	lock          clause.Expression
 	unscoped      bool
 	relationOpts  []RelationOption
 	orderOpts     []OrderOption
@@ -774,14 +767,12 @@ func (l *list) SetQueryTx(tx *query.QueryTx) *list {
 }
 
 func (l *list) SetForUpdate() *list {
-	l.forShare = false
-	l.forUpdate = true
+	l.lock = clause.Locking{Strength: clause.LockingStrengthUpdate}
 	return l
 }
 
 func (l *list) SetForShare() *list {
-	l.forShare = true
-	l.forUpdate = false
+	l.lock = clause.Locking{Strength: clause.LockingStrengthShare}
 	return l
 }
 
@@ -827,11 +818,8 @@ func (l *list) Do(ctx context.Context) ([]*{{.ModelName}}.{{.StructName}}, error
 	if l.unscoped {
 		lr = lr.Unscoped()
 	}
-	if (l.tx != nil || l.qTx != nil) && l.forUpdate {
-		lr = lr.Clauses(clause.Locking{Strength: clause.LockingStrengthUpdate})
-	}
-	if (l.tx != nil || l.qTx != nil) && l.forShare {
-		lr = lr.Clauses(clause.Locking{Strength: clause.LockingStrengthShare})
+	if (l.tx != nil || l.qTx != nil) && l.lock != nil {
+		lr = lr.Clauses(l.lock)
 	}
 	errFields := make([]zap.Field, 0)
 	if len(l.conditionOpts) > 0 {
@@ -908,8 +896,7 @@ type take struct {
 	core          *{{.StructName}}
 	tx            *query.Query
 	qTx           *query.QueryTx
-	forUpdate     bool
-	forShare      bool
+	lock          clause.Expression
 	unscoped      bool
 	relationOpts  []RelationOption
 	orderOpts     []OrderOption
@@ -940,14 +927,12 @@ func (t *take) SetQueryTx(tx *query.QueryTx) *take {
 }
 
 func (t *take) SetForUpdate() *take {
-	t.forShare = false
-	t.forUpdate = true
+	t.lock = clause.Locking{Strength: clause.LockingStrengthUpdate}
 	return t
 }
 
 func (t *take) SetForShare() *take {
-	t.forShare = true
-	t.forUpdate = false
+	t.lock = clause.Locking{Strength: clause.LockingStrengthShare}
 	return t
 }
 
@@ -987,11 +972,8 @@ func (t *take) Do(ctx context.Context) (*{{.ModelName}}.{{.StructName}}, error) 
 	if t.unscoped {
 		tr = tr.Unscoped()
 	}
-	if (t.tx != nil || t.qTx != nil) && t.forUpdate {
-		tr = tr.Clauses(clause.Locking{Strength: clause.LockingStrengthUpdate})
-	}
-	if (t.tx != nil || t.qTx != nil) && t.forShare {
-		tr = tr.Clauses(clause.Locking{Strength: clause.LockingStrengthShare})
+	if (t.tx != nil || t.qTx != nil) && t.lock {
+		tr = tr.Clauses(t.lock)
 	}
 	errFields := make([]zap.Field, 0)
 	if len(t.conditionOpts) > 0 {
