@@ -141,7 +141,7 @@ func New(db *gorm.DB, opts ...Option) *Generate {
 		g.generator.WithJSONTagNameStrategy(func(columnName string) string {
 			if tag, ok := g.jsonTagName[columnName]; ok {
 				if tag.Replace != "" {
-					return tag.Replace
+					columnName = tag.Replace
 				}
 				var appends string
 				for _, v := range tag.Append {
