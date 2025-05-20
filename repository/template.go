@@ -469,8 +469,7 @@ type first struct {
 	core          *{{.StructName}}
 	tx            *query.Query
 	qTx           *query.QueryTx
-	forUpdate     bool
-	forShare      bool
+	lock          clause.Expression
 	unscoped      bool
 	relationOpts  []RelationOption
 	conditionOpts []ConditionOption
@@ -499,14 +498,12 @@ func (f *first) SetQueryTx(tx *query.QueryTx) *first {
 }
 
 func (f *first) SetForUpdate() *first {
-	f.forShare = false
-	f.forUpdate = true
+	f.lock = clause.Locking{Strength: clause.LockingStrengthUpdate}
 	return f
 }
 
 func (f *first) SetForShare() *first {
-	f.forShare = true
-	f.forUpdate = false
+	f.lock = clause.Locking{Strength: clause.LockingStrengthShare}
 	return f
 }
 
@@ -541,11 +538,8 @@ func (f *first) Do(ctx context.Context) (*{{.ModelName}}.{{.StructName}}, error)
 	if f.unscoped {
 		fr = fr.Unscoped()
 	}
-	if (f.tx != nil || f.qTx != nil) && f.forUpdate {
-		fr = fr.Clauses(clause.Locking{Strength: clause.LockingStrengthUpdate})
-	}
-	if (f.tx != nil || f.qTx != nil) && f.forShare {
-		fr = fr.Clauses(clause.Locking{Strength: clause.LockingStrengthShare})
+	if (f.tx != nil || f.qTx != nil) && f.lock != nil {
+		fr = fr.Clauses(f.lock)
 	}
 	errFields := make([]zap.Field, 0)
 	if len(f.conditionOpts) > 0 {
