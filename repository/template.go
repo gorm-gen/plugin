@@ -534,7 +534,7 @@ func (f *first) Do(ctx context.Context) (*{{.ModelName}}.{{.StructName}}, error)
 		fr = fr.Unscoped()
 	}
 	if (f.tx != nil || f.qTx != nil) && f.forUpdate {
-		fr = fr.Clauses(clause.Locking{Strength: "UPDATE"})
+		fr = fr.Clauses(clause.Locking{Strength: clause.LockingStrengthUpdate})
 	}
 	errFields := make([]zap.Field, 0)
 	if len(f.conditionOpts) > 0 {
@@ -661,7 +661,7 @@ func (l *last) Do(ctx context.Context) (*{{.ModelName}}.{{.StructName}}, error) 
 		lr = lr.Unscoped()
 	}
 	if (l.tx != nil || l.qTx != nil) && l.forUpdate {
-		lr = lr.Clauses(clause.Locking{Strength: "UPDATE"})
+		lr = lr.Clauses(clause.Locking{Strength: clause.LockingStrengthUpdate})
 	}
 	errFields := make([]zap.Field, 0)
 	if len(l.conditionOpts) > 0 {
@@ -804,7 +804,7 @@ func (l *list) Do(ctx context.Context) ([]*{{.ModelName}}.{{.StructName}}, error
 		lr = lr.Unscoped()
 	}
 	if (l.tx != nil || l.qTx != nil) && l.forUpdate {
-		lr = lr.Clauses(clause.Locking{Strength: "UPDATE"})
+		lr = lr.Clauses(clause.Locking{Strength: clause.LockingStrengthUpdate})
 	}
 	errFields := make([]zap.Field, 0)
 	if len(l.conditionOpts) > 0 {
@@ -953,7 +953,7 @@ func (t *take) Do(ctx context.Context) (*{{.ModelName}}.{{.StructName}}, error) 
 		tr = tr.Unscoped()
 	}
 	if (t.tx != nil || t.qTx != nil) && t.forUpdate {
-		tr = tr.Clauses(clause.Locking{Strength: "UPDATE"})
+		tr = tr.Clauses(clause.Locking{Strength: clause.LockingStrengthUpdate})
 	}
 	errFields := make([]zap.Field, 0)
 	if len(t.conditionOpts) > 0 {
