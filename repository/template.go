@@ -502,6 +502,16 @@ func (f *first) SetForUpdate() *first {
 	return f
 }
 
+func (f *first) SetForUpdateSkipLocked() *first {
+	f.lock = clause.Locking{Strength: clause.LockingStrengthUpdate, Options: clause.LockingOptionsSkipLocked}
+	return f
+}
+
+func (f *first) SetForUpdateNoWait() *first {
+	f.lock = clause.Locking{Strength: clause.LockingStrengthUpdate, Options: clause.LockingOptionsNoWait}
+	return f
+}
+
 func (f *first) SetForShare() *first {
 	f.lock = clause.Locking{Strength: clause.LockingStrengthShare}
 	return f
@@ -631,6 +641,16 @@ func (l *last) SetQueryTx(tx *query.QueryTx) *last {
 
 func (l *last) SetForUpdate() *last {
 	l.lock = clause.Locking{Strength: clause.LockingStrengthUpdate}
+	return l
+}
+
+func (l *last) SetForUpdateSkipLocked() *last {
+	l.lock = clause.Locking{Strength: clause.LockingStrengthUpdate, Options: clause.LockingOptionsSkipLocked}
+	return l
+}
+
+func (l *last) SetForUpdateNoWait() *last {
+	l.lock = clause.Locking{Strength: clause.LockingStrengthUpdate, Options: clause.LockingOptionsNoWait}
 	return l
 }
 
@@ -768,6 +788,16 @@ func (l *list) SetQueryTx(tx *query.QueryTx) *list {
 
 func (l *list) SetForUpdate() *list {
 	l.lock = clause.Locking{Strength: clause.LockingStrengthUpdate}
+	return l
+}
+
+func (l *list) SetForUpdateSkipLocked() *list {
+	l.lock = clause.Locking{Strength: clause.LockingStrengthUpdate, Options: clause.LockingOptionsSkipLocked}
+	return l
+}
+
+func (l *list) SetForUpdateNoWait() *list {
+	l.lock = clause.Locking{Strength: clause.LockingStrengthUpdate, Options: clause.LockingOptionsNoWait}
 	return l
 }
 
@@ -931,6 +961,16 @@ func (t *take) SetForUpdate() *take {
 	return t
 }
 
+func (t *take) SetForUpdateSkipLocked() *take {
+	t.lock = clause.Locking{Strength: clause.LockingStrengthUpdate, Options: clause.LockingOptionsSkipLocked}
+	return t
+}
+
+func (t *take) SetForUpdateNoWait() *take {
+	t.lock = clause.Locking{Strength: clause.LockingStrengthUpdate, Options: clause.LockingOptionsNoWait}
+	return t
+}
+
 func (t *take) SetForShare() *take {
 	t.lock = clause.Locking{Strength: clause.LockingStrengthShare}
 	return t
@@ -972,7 +1012,7 @@ func (t *take) Do(ctx context.Context) (*{{.ModelName}}.{{.StructName}}, error) 
 	if t.unscoped {
 		tr = tr.Unscoped()
 	}
-	if (t.tx != nil || t.qTx != nil) && t.lock {
+	if (t.tx != nil || t.qTx != nil) && t.lock != nil {
 		tr = tr.Clauses(t.lock)
 	}
 	errFields := make([]zap.Field, 0)
