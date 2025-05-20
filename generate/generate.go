@@ -140,6 +140,9 @@ func New(db *gorm.DB, opts ...Option) *Generate {
 	if g.jsonTagName != nil && len(g.jsonTagName) > 0 {
 		g.generator.WithJSONTagNameStrategy(func(columnName string) string {
 			if tag, ok := g.jsonTagName[columnName]; ok {
+				if tag.Replace != "" {
+					return tag.Replace
+				}
 				var appends string
 				for _, v := range tag.Append {
 					appends += "," + v
@@ -271,8 +274,9 @@ func dataTypeMap() map[string]func(gorm.ColumnType) string {
 }
 
 type JsonTag struct {
-	Append []string
-	Add    []map[string]string
+	Replace string
+	Append  []string
+	Add     []map[string]string
 }
 
 func jsonTagName() map[string]JsonTag {
