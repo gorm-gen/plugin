@@ -197,7 +197,7 @@ func (c *count) Unscoped() *count {
 	return c
 }
 
-func (c *count) Condition(opts ...ConditionOption) *count {
+func (c *count) Where(opts ...ConditionOption) *count {
 	c.conditionOpts = append(c.conditionOpts, opts...)
 	return c
 }
@@ -398,7 +398,7 @@ func (d *delete) Unscoped() *delete {
 	return d
 }
 
-func (d *delete) Condition(opts ...ConditionOption) *delete {
+func (d *delete) Where(opts ...ConditionOption) *delete {
 	d.conditionOpts = append(d.conditionOpts, opts...)
 	return d
 }
@@ -537,7 +537,7 @@ func (f *first) Relation(opts ...RelationOption) *first {
 	return f
 }
 
-func (f *first) Condition(opts ...ConditionOption) *first {
+func (f *first) Where(opts ...ConditionOption) *first {
 	f.conditionOpts = append(f.conditionOpts, opts...)
 	return f
 }
@@ -689,7 +689,7 @@ func (l *last) Relation(opts ...RelationOption) *last {
 	return l
 }
 
-func (l *last) Condition(opts ...ConditionOption) *last {
+func (l *last) Where(opts ...ConditionOption) *last {
 	l.conditionOpts = append(l.conditionOpts, opts...)
 	return l
 }
@@ -851,7 +851,7 @@ func (l *list) Order(opts ...OrderOption) *list {
 	return l
 }
 
-func (l *list) Condition(opts ...ConditionOption) *list {
+func (l *list) Where(opts ...ConditionOption) *list {
 	l.conditionOpts = append(l.conditionOpts, opts...)
 	return l
 }
@@ -1031,7 +1031,7 @@ func (t *take) Order(opts ...OrderOption) *take {
 	return t
 }
 
-func (t *take) Condition(opts ...ConditionOption) *take {
+func (t *take) Where(opts ...ConditionOption) *take {
 	t.conditionOpts = append(t.conditionOpts, opts...)
 	return t
 }
@@ -1158,7 +1158,7 @@ func (u *update) Update(opts ...UpdateOption) *update {
 	return u
 }
 
-func (u *update) Condition(opts ...ConditionOption) *update {
+func (u *update) Where(opts ...ConditionOption) *update {
 	u.conditionOpts = append(u.conditionOpts, opts...)
 	return u
 }
@@ -1270,7 +1270,7 @@ func (s *sum) Unscoped() *sum {
 	return s
 }
 
-func (s *sum) Condition(opts ...ConditionOption) *sum {
+func (s *sum) Where(opts ...ConditionOption) *sum {
 	s.conditionOpts = append(s.conditionOpts, opts...)
 	return s
 }
