@@ -272,7 +272,8 @@ type create struct {
 
 func ({{.Abbr}} *{{.StructName}}) Create() *create {
 	return &create{
-		core: {{.Abbr}},
+		core:   {{.Abbr}},
+		values: make([]*{{.ModelName}}.{{.StructName}}, 0),
 	}
 }
 
