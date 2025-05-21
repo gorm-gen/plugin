@@ -179,25 +179,25 @@ func ({{.Abbr}} *{{.StructName}}) Count() *count {
 }
 
 // SetTx 设置为事务
-func (c *count) SetTx(tx *query.Query) *count {
+func (c *count) Tx(tx *query.Query) *count {
 	c.tx = tx
 	c.qTx = nil
 	return c
 }
 
 // SetQueryTx 设置为手动事务
-func (c *count) SetQueryTx(tx *query.QueryTx) *count {
+func (c *count) QueryTx(tx *query.QueryTx) *count {
 	c.qTx = tx
 	c.tx = nil
 	return c
 }
 
-func (c *count) SetUnscoped() *count {
+func (c *count) Unscoped() *count {
 	c.unscoped = true
 	return c
 }
 
-func (c *count) SetConditionOpts(opts ...ConditionOption) *count {
+func (c *count) ConditionOpts(opts ...ConditionOption) *count {
 	c.conditionOpts = append(c.conditionOpts, opts...)
 	return c
 }
@@ -277,31 +277,31 @@ func ({{.Abbr}} *{{.StructName}}) Create() *create {
 }
 
 // SetTx 设置为事务
-func (c *create) SetTx(tx *query.Query) *create {
+func (c *create) Tx(tx *query.Query) *create {
 	c.tx = tx
 	c.qTx = nil
 	return c
 }
 
 // SetQueryTx 设置为手动事务
-func (c *create) SetQueryTx(tx *query.QueryTx) *create {
+func (c *create) QueryTx(tx *query.QueryTx) *create {
 	c.qTx = tx
 	c.tx = nil
 	return c
 }
 
-func (c *create) SetUnscoped() *create {
+func (c *create) Unscoped() *create {
 	c.unscoped = true
 	return c
 }
 
-func (c *create) SetValues(values ...*{{.ModelName}}.{{.StructName}}) *create {
+func (c *create) Values(values ...*{{.ModelName}}.{{.StructName}}) *create {
 	c.values = append(c.values, values...)
 	return c
 }
 
 // SetBatchSize 设置当批量插入时指定创建的数量
-func (c *create) SetBatchSize(batchSize uint) *create {
+func (c *create) BatchSize(batchSize uint) *create {
 	c.batchSize = int(batchSize)
 	return c
 }
@@ -380,25 +380,25 @@ func ({{.Abbr}} *{{.StructName}}) Delete() *delete {
 }
 
 // SetTx 设置为事务
-func (d *delete) SetTx(tx *query.Query) *delete {
+func (d *delete) Tx(tx *query.Query) *delete {
 	d.tx = tx
 	d.qTx = nil
 	return d
 }
 
 // SetQueryTx 设置为手动事务
-func (d *delete) SetQueryTx(tx *query.QueryTx) *delete {
+func (d *delete) QueryTx(tx *query.QueryTx) *delete {
 	d.qTx = tx
 	d.tx = nil
 	return d
 }
 
-func (d *delete) SetUnscoped() *delete {
+func (d *delete) Unscoped() *delete {
 	d.unscoped = true
 	return d
 }
 
-func (d *delete) SetConditionOpts(opts ...ConditionOption) *delete {
+func (d *delete) ConditionOpts(opts ...ConditionOption) *delete {
 	d.conditionOpts = append(d.conditionOpts, opts...)
 	return d
 }
@@ -484,60 +484,60 @@ func ({{.Abbr}} *{{.StructName}}) First() *first {
 }
 
 // SetTx 设置为事务
-func (f *first) SetTx(tx *query.Query) *first {
+func (f *first) Tx(tx *query.Query) *first {
 	f.tx = tx
 	f.qTx = nil
 	return f
 }
 
 // SetQueryTx 设置为手动事务
-func (f *first) SetQueryTx(tx *query.QueryTx) *first {
+func (f *first) QueryTx(tx *query.QueryTx) *first {
 	f.qTx = tx
 	f.tx = nil
 	return f
 }
 
-func (f *first) SetForUpdate() *first {
+func (f *first) ForUpdate() *first {
 	f.lock = clause.Locking{Strength: clause.LockingStrengthUpdate}
 	return f
 }
 
-func (f *first) SetForUpdateSkipLocked() *first {
+func (f *first) ForUpdateSkipLocked() *first {
 	f.lock = clause.Locking{Strength: clause.LockingStrengthUpdate, Options: clause.LockingOptionsSkipLocked}
 	return f
 }
 
-func (f *first) SetForUpdateNoWait() *first {
+func (f *first) ForUpdateNoWait() *first {
 	f.lock = clause.Locking{Strength: clause.LockingStrengthUpdate, Options: clause.LockingOptionsNoWait}
 	return f
 }
 
-func (f *first) SetForShare() *first {
+func (f *first) ForShare() *first {
 	f.lock = clause.Locking{Strength: clause.LockingStrengthShare}
 	return f
 }
 
-func (f *first) SetForShareSkipLocked() *first {
+func (f *first) ForShareSkipLocked() *first {
 	f.lock = clause.Locking{Strength: clause.LockingStrengthShare, Options: clause.LockingOptionsSkipLocked}
 	return f
 }
 
-func (f *first) SetForShareNoWait() *first {
+func (f *first) ForShareNoWait() *first {
 	f.lock = clause.Locking{Strength: clause.LockingStrengthShare, Options: clause.LockingOptionsNoWait}
 	return f
 }
 
-func (f *first) SetUnscoped() *first {
+func (f *first) Unscoped() *first {
 	f.unscoped = true
 	return f
 }
 
-func (f *first) SetRelationOpts(opts ...RelationOption) *first {
+func (f *first) RelationOpts(opts ...RelationOption) *first {
 	f.relationOpts = append(f.relationOpts, opts...)
 	return f
 }
 
-func (f *first) SetConditionOpts(opts ...ConditionOption) *first {
+func (f *first) ConditionOpts(opts ...ConditionOption) *first {
 	f.conditionOpts = append(f.conditionOpts, opts...)
 	return f
 }
@@ -636,60 +636,60 @@ func ({{.Abbr}} *{{.StructName}}) Last() *last {
 }
 
 // SetTx 设置为事务
-func (l *last) SetTx(tx *query.Query) *last {
+func (l *last) Tx(tx *query.Query) *last {
 	l.tx = tx
 	l.qTx = nil
 	return l
 }
 
 // SetQueryTx 设置为手动事务
-func (l *last) SetQueryTx(tx *query.QueryTx) *last {
+func (l *last) QueryTx(tx *query.QueryTx) *last {
 	l.qTx = tx
 	l.tx = nil
 	return l
 }
 
-func (l *last) SetForUpdate() *last {
+func (l *last) ForUpdate() *last {
 	l.lock = clause.Locking{Strength: clause.LockingStrengthUpdate}
 	return l
 }
 
-func (l *last) SetForUpdateSkipLocked() *last {
+func (l *last) ForUpdateSkipLocked() *last {
 	l.lock = clause.Locking{Strength: clause.LockingStrengthUpdate, Options: clause.LockingOptionsSkipLocked}
 	return l
 }
 
-func (l *last) SetForUpdateNoWait() *last {
+func (l *last) ForUpdateNoWait() *last {
 	l.lock = clause.Locking{Strength: clause.LockingStrengthUpdate, Options: clause.LockingOptionsNoWait}
 	return l
 }
 
-func (l *last) SetForShare() *last {
+func (l *last) ForShare() *last {
 	l.lock = clause.Locking{Strength: clause.LockingStrengthShare}
 	return l
 }
 
-func (l *last) SetForShareSkipLocked() *last {
+func (l *last) ForShareSkipLocked() *last {
 	l.lock = clause.Locking{Strength: clause.LockingStrengthShare, Options: clause.LockingOptionsSkipLocked}
 	return l
 }
 
-func (l *last) SetForShareNoWait() *last {
+func (l *last) ForShareNoWait() *last {
 	l.lock = clause.Locking{Strength: clause.LockingStrengthShare, Options: clause.LockingOptionsNoWait}
 	return l
 }
 
-func (l *last) SetUnscoped() *last {
+func (l *last) Unscoped() *last {
 	l.unscoped = true
 	return l
 }
 
-func (l *last) SetRelationOpts(opts ...RelationOption) *last {
+func (l *last) RelationOpts(opts ...RelationOption) *last {
 	l.relationOpts = append(l.relationOpts, opts...)
 	return l
 }
 
-func (l *last) SetConditionOpts(opts ...ConditionOption) *last {
+func (l *last) ConditionOpts(opts ...ConditionOption) *last {
 	l.conditionOpts = append(l.conditionOpts, opts...)
 	return l
 }
@@ -793,70 +793,70 @@ func ({{.Abbr}} *{{.StructName}}) List() *list {
 }
 
 // SetTx 设置为事务
-func (l *list) SetTx(tx *query.Query) *list {
+func (l *list) Tx(tx *query.Query) *list {
 	l.tx = tx
 	l.qTx = nil
 	return l
 }
 
 // SetQueryTx 设置为手动事务
-func (l *list) SetQueryTx(tx *query.QueryTx) *list {
+func (l *list) QueryTx(tx *query.QueryTx) *list {
 	l.qTx = tx
 	l.tx = nil
 	return l
 }
 
-func (l *list) SetForUpdate() *list {
+func (l *list) ForUpdate() *list {
 	l.lock = clause.Locking{Strength: clause.LockingStrengthUpdate}
 	return l
 }
 
-func (l *list) SetForUpdateSkipLocked() *list {
+func (l *list) ForUpdateSkipLocked() *list {
 	l.lock = clause.Locking{Strength: clause.LockingStrengthUpdate, Options: clause.LockingOptionsSkipLocked}
 	return l
 }
 
-func (l *list) SetForUpdateNoWait() *list {
+func (l *list) ForUpdateNoWait() *list {
 	l.lock = clause.Locking{Strength: clause.LockingStrengthUpdate, Options: clause.LockingOptionsNoWait}
 	return l
 }
 
-func (l *list) SetForShare() *list {
+func (l *list) ForShare() *list {
 	l.lock = clause.Locking{Strength: clause.LockingStrengthShare}
 	return l
 }
 
-func (l *list) SetForShareSkipLocked() *list {
+func (l *list) ForShareSkipLocked() *list {
 	l.lock = clause.Locking{Strength: clause.LockingStrengthShare, Options: clause.LockingOptionsSkipLocked}
 	return l
 }
 
-func (l *list) SetForShareNoWait() *list {
+func (l *list) ForShareNoWait() *list {
 	l.lock = clause.Locking{Strength: clause.LockingStrengthShare, Options: clause.LockingOptionsNoWait}
 	return l
 }
 
-func (l *list) SetUnscoped() *list {
+func (l *list) Unscoped() *list {
 	l.unscoped = true
 	return l
 }
 
-func (l *list) SetRelationOpts(opts ...RelationOption) *list {
+func (l *list) RelationOpts(opts ...RelationOption) *list {
 	l.relationOpts = append(l.relationOpts, opts...)
 	return l
 }
 
-func (l *list) SetOrderOpts(opts ...OrderOption) *list {
+func (l *list) OrderOpts(opts ...OrderOption) *list {
 	l.orderOpts = append(l.orderOpts, opts...)
 	return l
 }
 
-func (l *list) SetConditionOpts(opts ...ConditionOption) *list {
+func (l *list) ConditionOpts(opts ...ConditionOption) *list {
 	l.conditionOpts = append(l.conditionOpts, opts...)
 	return l
 }
 
-func (l *list) SetPage(page, pageSize uint) *list {
+func (l *list) Page(page, pageSize uint) *list {
 	l.page = int(page)
 	l.pageSize = int(pageSize)
 	return l
@@ -973,65 +973,65 @@ func ({{.Abbr}} *{{.StructName}}) Take() *take {
 }
 
 // SetTx 设置为事务
-func (t *take) SetTx(tx *query.Query) *take {
+func (t *take) Tx(tx *query.Query) *take {
 	t.tx = tx
 	t.qTx = nil
 	return t
 }
 
 // SetQueryTx 设置为手动事务
-func (t *take) SetQueryTx(tx *query.QueryTx) *take {
+func (t *take) QueryTx(tx *query.QueryTx) *take {
 	t.qTx = tx
 	t.tx = nil
 	return t
 }
 
-func (t *take) SetForUpdate() *take {
+func (t *take) ForUpdate() *take {
 	t.lock = clause.Locking{Strength: clause.LockingStrengthUpdate}
 	return t
 }
 
-func (t *take) SetForUpdateSkipLocked() *take {
+func (t *take) ForUpdateSkipLocked() *take {
 	t.lock = clause.Locking{Strength: clause.LockingStrengthUpdate, Options: clause.LockingOptionsSkipLocked}
 	return t
 }
 
-func (t *take) SetForUpdateNoWait() *take {
+func (t *take) ForUpdateNoWait() *take {
 	t.lock = clause.Locking{Strength: clause.LockingStrengthUpdate, Options: clause.LockingOptionsNoWait}
 	return t
 }
 
-func (t *take) SetForShare() *take {
+func (t *take) ForShare() *take {
 	t.lock = clause.Locking{Strength: clause.LockingStrengthShare}
 	return t
 }
 
-func (t *take) SetForShareSkipLocked() *take {
+func (t *take) ForShareSkipLocked() *take {
 	t.lock = clause.Locking{Strength: clause.LockingStrengthShare, Options: clause.LockingOptionsSkipLocked}
 	return t
 }
 
-func (t *take) SetForShareNoWait() *take {
+func (t *take) ForShareNoWait() *take {
 	t.lock = clause.Locking{Strength: clause.LockingStrengthShare, Options: clause.LockingOptionsNoWait}
 	return t
 }
 
-func (t *take) SetUnscoped() *take {
+func (t *take) Unscoped() *take {
 	t.unscoped = true
 	return t
 }
 
-func (t *take) SetRelationOpts(opts ...RelationOption) *take {
+func (t *take) RelationOpts(opts ...RelationOption) *take {
 	t.relationOpts = append(t.relationOpts, opts...)
 	return t
 }
 
-func (t *take) SetOrderOpts(opts ...OrderOption) *take {
+func (t *take) OrderOpts(opts ...OrderOption) *take {
 	t.orderOpts = append(t.orderOpts, opts...)
 	return t
 }
 
-func (t *take) SetConditionOpts(opts ...ConditionOption) *take {
+func (t *take) ConditionOpts(opts ...ConditionOption) *take {
 	t.conditionOpts = append(t.conditionOpts, opts...)
 	return t
 }
@@ -1135,30 +1135,30 @@ func ({{.Abbr}} *{{.StructName}}) Update() *update {
 	}
 }
 
-func (u *update) SetTx(tx *query.Query) *update {
+func (u *update) Tx(tx *query.Query) *update {
 	u.tx = tx
 	u.qTx = nil
 	return u
 }
 
 // SetQueryTx 设置为手动事务
-func (u *update) SetQueryTx(tx *query.QueryTx) *update {
+func (u *update) QueryTx(tx *query.QueryTx) *update {
 	u.qTx = tx
 	u.tx = nil
 	return u
 }
 
-func (u *update) SetUnscoped() *update {
+func (u *update) Unscoped() *update {
 	u.unscoped = true
 	return u
 }
 
-func (u *update) SetUpdateOpts(opts ...UpdateOption) *update {
+func (u *update) UpdateOpts(opts ...UpdateOption) *update {
 	u.updateOpts = append(u.updateOpts, opts...)
 	return u
 }
 
-func (u *update) SetConditionOpts(opts ...ConditionOption) *update {
+func (u *update) ConditionOpts(opts ...ConditionOption) *update {
 	u.conditionOpts = append(u.conditionOpts, opts...)
 	return u
 }
@@ -1252,25 +1252,25 @@ func ({{.Abbr}} *{{.StructName}}) Sum(genField field.Field) *sum {
 	}
 }
 
-func (s *sum) SetTx(tx *query.Query) *sum {
+func (s *sum) Tx(tx *query.Query) *sum {
 	s.tx = tx
 	s.qTx = nil
 	return s
 }
 
 // SetQueryTx 设置为手动事务
-func (s *sum) SetQueryTx(tx *query.QueryTx) *sum {
+func (s *sum) QueryTx(tx *query.QueryTx) *sum {
 	s.qTx = tx
 	s.tx = nil
 	return s
 }
 
-func (s *sum) SetUnscoped() *sum {
+func (s *sum) Unscoped() *sum {
 	s.unscoped = true
 	return s
 }
 
-func (s *sum) SetConditionOpts(opts ...ConditionOption) *sum {
+func (s *sum) ConditionOpts(opts ...ConditionOption) *sum {
 	s.conditionOpts = append(s.conditionOpts, opts...)
 	return s
 }
