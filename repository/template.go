@@ -197,7 +197,7 @@ func (c *count) Unscoped() *count {
 	return c
 }
 
-func (c *count) ConditionOpts(opts ...ConditionOption) *count {
+func (c *count) Condition(opts ...ConditionOption) *count {
 	c.conditionOpts = append(c.conditionOpts, opts...)
 	return c
 }
@@ -398,7 +398,7 @@ func (d *delete) Unscoped() *delete {
 	return d
 }
 
-func (d *delete) ConditionOpts(opts ...ConditionOption) *delete {
+func (d *delete) Condition(opts ...ConditionOption) *delete {
 	d.conditionOpts = append(d.conditionOpts, opts...)
 	return d
 }
@@ -532,12 +532,12 @@ func (f *first) Unscoped() *first {
 	return f
 }
 
-func (f *first) RelationOpts(opts ...RelationOption) *first {
+func (f *first) Relation(opts ...RelationOption) *first {
 	f.relationOpts = append(f.relationOpts, opts...)
 	return f
 }
 
-func (f *first) ConditionOpts(opts ...ConditionOption) *first {
+func (f *first) Condition(opts ...ConditionOption) *first {
 	f.conditionOpts = append(f.conditionOpts, opts...)
 	return f
 }
@@ -684,12 +684,12 @@ func (l *last) Unscoped() *last {
 	return l
 }
 
-func (l *last) RelationOpts(opts ...RelationOption) *last {
+func (l *last) Relation(opts ...RelationOption) *last {
 	l.relationOpts = append(l.relationOpts, opts...)
 	return l
 }
 
-func (l *last) ConditionOpts(opts ...ConditionOption) *last {
+func (l *last) Condition(opts ...ConditionOption) *last {
 	l.conditionOpts = append(l.conditionOpts, opts...)
 	return l
 }
@@ -841,17 +841,17 @@ func (l *list) Unscoped() *list {
 	return l
 }
 
-func (l *list) RelationOpts(opts ...RelationOption) *list {
+func (l *list) Relation(opts ...RelationOption) *list {
 	l.relationOpts = append(l.relationOpts, opts...)
 	return l
 }
 
-func (l *list) OrderOpts(opts ...OrderOption) *list {
+func (l *list) Order(opts ...OrderOption) *list {
 	l.orderOpts = append(l.orderOpts, opts...)
 	return l
 }
 
-func (l *list) ConditionOpts(opts ...ConditionOption) *list {
+func (l *list) Condition(opts ...ConditionOption) *list {
 	l.conditionOpts = append(l.conditionOpts, opts...)
 	return l
 }
@@ -1021,17 +1021,17 @@ func (t *take) Unscoped() *take {
 	return t
 }
 
-func (t *take) RelationOpts(opts ...RelationOption) *take {
+func (t *take) Relation(opts ...RelationOption) *take {
 	t.relationOpts = append(t.relationOpts, opts...)
 	return t
 }
 
-func (t *take) OrderOpts(opts ...OrderOption) *take {
+func (t *take) Order(opts ...OrderOption) *take {
 	t.orderOpts = append(t.orderOpts, opts...)
 	return t
 }
 
-func (t *take) ConditionOpts(opts ...ConditionOption) *take {
+func (t *take) Condition(opts ...ConditionOption) *take {
 	t.conditionOpts = append(t.conditionOpts, opts...)
 	return t
 }
@@ -1153,12 +1153,12 @@ func (u *update) Unscoped() *update {
 	return u
 }
 
-func (u *update) UpdateOpts(opts ...UpdateOption) *update {
+func (u *update) Update(opts ...UpdateOption) *update {
 	u.updateOpts = append(u.updateOpts, opts...)
 	return u
 }
 
-func (u *update) ConditionOpts(opts ...ConditionOption) *update {
+func (u *update) Condition(opts ...ConditionOption) *update {
 	u.conditionOpts = append(u.conditionOpts, opts...)
 	return u
 }
@@ -1270,7 +1270,7 @@ func (s *sum) Unscoped() *sum {
 	return s
 }
 
-func (s *sum) ConditionOpts(opts ...ConditionOption) *sum {
+func (s *sum) Condition(opts ...ConditionOption) *sum {
 	s.conditionOpts = append(s.conditionOpts, opts...)
 	return s
 }
