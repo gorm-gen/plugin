@@ -171,6 +171,7 @@ type count struct {
 	conditionOpts []ConditionOption
 }
 
+// Count 获取数据总条数
 func ({{.Abbr}} *{{.StructName}}) Count() *count {
 	return &count{
 		core:          {{.Abbr}},
@@ -178,14 +179,14 @@ func ({{.Abbr}} *{{.StructName}}) Count() *count {
 	}
 }
 
-// SetTx 设置为事务
+// Tx 设置为事务
 func (c *count) Tx(tx *query.Query) *count {
 	c.tx = tx
 	c.qTx = nil
 	return c
 }
 
-// SetQueryTx 设置为手动事务
+// QueryTx 设置为手动事务
 func (c *count) QueryTx(tx *query.QueryTx) *count {
 	c.qTx = tx
 	c.tx = nil
@@ -202,7 +203,7 @@ func (c *count) Where(opts ...ConditionOption) *count {
 	return c
 }
 
-// Do 获取数据总条数
+// Do 执行获取数据总条数
 func (c *count) Do(ctx context.Context) (int64, error) {
 	cq := c.core.q.{{.StructName}}
 	if c.tx != nil {
@@ -270,6 +271,7 @@ type create struct {
 	batchSize int
 }
 
+// Create 添加数据
 func ({{.Abbr}} *{{.StructName}}) Create() *create {
 	return &create{
 		core:   {{.Abbr}},
@@ -277,14 +279,14 @@ func ({{.Abbr}} *{{.StructName}}) Create() *create {
 	}
 }
 
-// SetTx 设置为事务
+// Tx 设置为事务
 func (c *create) Tx(tx *query.Query) *create {
 	c.tx = tx
 	c.qTx = nil
 	return c
 }
 
-// SetQueryTx 设置为手动事务
+// QueryTx 设置为手动事务
 func (c *create) QueryTx(tx *query.QueryTx) *create {
 	c.qTx = tx
 	c.tx = nil
@@ -301,13 +303,13 @@ func (c *create) Values(values ...*{{.ModelName}}.{{.StructName}}) *create {
 	return c
 }
 
-// SetBatchSize 设置当批量插入时指定创建的数量
+// BatchSize 当批量插入时指定创建的数量
 func (c *create) BatchSize(batchSize uint) *create {
 	c.batchSize = int(batchSize)
 	return c
 }
 
-// Do 添加数据
+// Do 执行添加数据
 func (c *create) Do(ctx context.Context) (err error) {
 	length := len(c.values)
 	if length == 0 {
@@ -373,6 +375,7 @@ type delete struct {
 	conditionOpts []ConditionOption
 }
 
+// Delete 删除数据
 func ({{.Abbr}} *{{.StructName}}) Delete() *delete {
 	return &delete{
 		core:          {{.Abbr}},
@@ -380,14 +383,14 @@ func ({{.Abbr}} *{{.StructName}}) Delete() *delete {
 	}
 }
 
-// SetTx 设置为事务
+// Tx 设置为事务
 func (d *delete) Tx(tx *query.Query) *delete {
 	d.tx = tx
 	d.qTx = nil
 	return d
 }
 
-// SetQueryTx 设置为手动事务
+// QueryTx 设置为手动事务
 func (d *delete) QueryTx(tx *query.QueryTx) *delete {
 	d.qTx = tx
 	d.tx = nil
@@ -404,7 +407,7 @@ func (d *delete) Where(opts ...ConditionOption) *delete {
 	return d
 }
 
-// Do 删除数据
+// Do 执行删除数据
 func (d *delete) Do(ctx context.Context) (int64, error) {
 	dq := d.core.q.{{.StructName}}
 	if d.tx != nil {
@@ -476,6 +479,7 @@ type first struct {
 	conditionOpts []ConditionOption
 }
 
+// First 获取第一条记录（主键升序）
 func ({{.Abbr}} *{{.StructName}}) First() *first {
 	return &first{
 		core:          {{.Abbr}},
@@ -484,14 +488,14 @@ func ({{.Abbr}} *{{.StructName}}) First() *first {
 	}
 }
 
-// SetTx 设置为事务
+// Tx 设置为事务
 func (f *first) Tx(tx *query.Query) *first {
 	f.tx = tx
 	f.qTx = nil
 	return f
 }
 
-// SetQueryTx 设置为手动事务
+// QueryTx 设置为手动事务
 func (f *first) QueryTx(tx *query.QueryTx) *first {
 	f.qTx = tx
 	f.tx = nil
@@ -543,7 +547,7 @@ func (f *first) Where(opts ...ConditionOption) *first {
 	return f
 }
 
-// Do 获取首条数据
+// Do 执行获取第一条记录（主键升序）
 func (f *first) Do(ctx context.Context) (*{{.ModelName}}.{{.StructName}}, error) {
 	fq := f.core.q.{{.StructName}}
 	if f.tx != nil {
@@ -628,6 +632,7 @@ type last struct {
 	conditionOpts []ConditionOption
 }
 
+// Last 获取最后一条记录（主键降序）
 func ({{.Abbr}} *{{.StructName}}) Last() *last {
 	return &last{
 		core:          {{.Abbr}},
@@ -636,14 +641,14 @@ func ({{.Abbr}} *{{.StructName}}) Last() *last {
 	}
 }
 
-// SetTx 设置为事务
+// Tx 设置为事务
 func (l *last) Tx(tx *query.Query) *last {
 	l.tx = tx
 	l.qTx = nil
 	return l
 }
 
-// SetQueryTx 设置为手动事务
+// QueryTx 设置为手动事务
 func (l *last) QueryTx(tx *query.QueryTx) *last {
 	l.qTx = tx
 	l.tx = nil
@@ -695,7 +700,7 @@ func (l *last) Where(opts ...ConditionOption) *last {
 	return l
 }
 
-// Do 获取最后一条数据
+// Do 执行获取最后一条记录（主键降序）
 func (l *last) Do(ctx context.Context) (*{{.ModelName}}.{{.StructName}}, error) {
 	lq := l.core.q.{{.StructName}}
 	if l.tx != nil {
@@ -784,6 +789,7 @@ type list struct {
 	conditionOpts []ConditionOption
 }
 
+// List 获取数据列表
 func ({{.Abbr}} *{{.StructName}}) List() *list {
 	return &list{
 		core:          {{.Abbr}},
@@ -793,14 +799,14 @@ func ({{.Abbr}} *{{.StructName}}) List() *list {
 	}
 }
 
-// SetTx 设置为事务
+// Tx 设置为事务
 func (l *list) Tx(tx *query.Query) *list {
 	l.tx = tx
 	l.qTx = nil
 	return l
 }
 
-// SetQueryTx 设置为手动事务
+// QueryTx 设置为手动事务
 func (l *list) QueryTx(tx *query.QueryTx) *list {
 	l.qTx = tx
 	l.tx = nil
@@ -857,13 +863,14 @@ func (l *list) Where(opts ...ConditionOption) *list {
 	return l
 }
 
+// Page 列表分页
 func (l *list) Page(page, pageSize uint) *list {
 	l.page = int(page)
 	l.pageSize = int(pageSize)
 	return l
 }
 
-// Do 获取数据列表
+// Do 执行获取数据列表
 func (l *list) Do(ctx context.Context) ([]*{{.ModelName}}.{{.StructName}}, error) {
 	lq := l.core.q.{{.StructName}}
 	if l.tx != nil {
@@ -964,6 +971,7 @@ type take struct {
 	conditionOpts []ConditionOption
 }
 
+// Take 获取一条记录
 func ({{.Abbr}} *{{.StructName}}) Take() *take {
 	return &take{
 		core:          {{.Abbr}},
@@ -973,14 +981,14 @@ func ({{.Abbr}} *{{.StructName}}) Take() *take {
 	}
 }
 
-// SetTx 设置为事务
+// Tx 设置为事务
 func (t *take) Tx(tx *query.Query) *take {
 	t.tx = tx
 	t.qTx = nil
 	return t
 }
 
-// SetQueryTx 设置为手动事务
+// QueryTx 设置为手动事务
 func (t *take) QueryTx(tx *query.QueryTx) *take {
 	t.qTx = tx
 	t.tx = nil
@@ -1037,7 +1045,7 @@ func (t *take) Where(opts ...ConditionOption) *take {
 	return t
 }
 
-// Do 获取一条数据
+// Do 执行获取一条记录
 func (t *take) Do(ctx context.Context) (*{{.ModelName}}.{{.StructName}}, error) {
 	tq := t.core.q.{{.StructName}}
 	if t.tx != nil {
@@ -1128,6 +1136,7 @@ type update struct {
 	conditionOpts []ConditionOption
 }
 
+// Update 更新数据
 func ({{.Abbr}} *{{.StructName}}) Update() *update {
 	return &update{
 		core:          {{.Abbr}},
@@ -1136,13 +1145,14 @@ func ({{.Abbr}} *{{.StructName}}) Update() *update {
 	}
 }
 
+// Tx 设置为事务
 func (u *update) Tx(tx *query.Query) *update {
 	u.tx = tx
 	u.qTx = nil
 	return u
 }
 
-// SetQueryTx 设置为手动事务
+// QueryTx 设置为手动事务
 func (u *update) QueryTx(tx *query.QueryTx) *update {
 	u.qTx = tx
 	u.tx = nil
@@ -1164,7 +1174,7 @@ func (u *update) Where(opts ...ConditionOption) *update {
 	return u
 }
 
-// Do 更新数据
+// Do 执行更新数据
 func (u *update) Do(ctx context.Context) (int64, error) {
 	if len(u.updateOpts) == 0 {
 		return 0, nil
@@ -1245,6 +1255,7 @@ type sum struct {
 	conditionOpts []ConditionOption
 }
 
+// Sum SUM数据
 func ({{.Abbr}} *{{.StructName}}) Sum(genField field.Field) *sum {
 	return &sum{
 		core:          {{.Abbr}},
@@ -1253,6 +1264,7 @@ func ({{.Abbr}} *{{.StructName}}) Sum(genField field.Field) *sum {
 	}
 }
 
+// Tx 设置为事务
 func (s *sum) Tx(tx *query.Query) *sum {
 	s.tx = tx
 	s.qTx = nil
@@ -1275,7 +1287,7 @@ func (s *sum) Where(opts ...ConditionOption) *sum {
 	s.conditionOpts = append(s.conditionOpts, opts...)
 	return s
 }
-` + "\ntype Sum struct {\n    Sum decimal.Decimal `json:\"sum\"`\n}\n\n" + `// Do SUM数据
+` + "\ntype Sum struct {\n    Sum decimal.Decimal `json:\"sum\"`\n}\n\n" + `// Do 执行SUM数据
 func (s *sum) Do(ctx context.Context) (decimal.Decimal, error) {
 	sq := s.core.q.{{.StructName}}
 	if s.tx != nil {
