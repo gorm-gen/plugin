@@ -433,6 +433,37 @@ func (r *Repository) isTime(fieldType string) bool {
 	return false
 }
 
+func (r *Repository) boolCondition(fieldName, fieldType string, rt reflect.Type, abbr string) []Condition {
+	var conditions []Condition
+
+	condition := fmt.Sprintf(`
+func Condition%[1]sIs(v ...%[2]s) ConditionOption {
+	return func(%[3]s *%[4]s) gen.Condition {
+        _v := true
+        if len(v) > 0 {
+            _v = v[0]
+        }
+        if %[3]s.newTableName != nil {
+            return %[3]s.q.%[4]s.Table(*%[3]s.newTableName).%[1]s.Is(_v)
+        }
+        return %[3]s.q.%[4]s.%[1]s.Is(_v)
+    }
+}
+`, fieldName, fieldType, abbr, rt.Name())
+	conditions = append(conditions, Condition(condition))
+	return conditions
+}
+
+func (r *Repository) isBool(fieldType string) bool {
+	if fieldType == "bool" {
+		return true
+	}
+	if fieldType == "*bool" {
+		return true
+	}
+	return false
+}
+
 func (r *Repository) decimalCondition(fieldName, fieldType string, rt reflect.Type, abbr string) []Condition {
 	var conditions []Condition
 
@@ -581,6 +612,9 @@ func (r *Repository) allowType(fieldType string) bool {
 	if r.isTime(fieldType) {
 		return true
 	}
+	if r.isBool(fieldType) {
+		return true
+	}
 	return false
 }
 
@@ -606,6 +640,9 @@ func (r *Repository) genConditionOpt(rt reflect.Type, abbr string) (conditions [
 			decimalPkg = true
 			numberDecimalPkg = true
 			conditions = append(conditions, r.decimalCondition(field.Name, fieldType, rt, abbr)...)
+		}
+		if r.isBool(typ) {
+			conditions = append(conditions, r.boolCondition(field.Name, fieldType, rt, abbr)...)
 		}
 
 		if !strings.Contains(typ, "*") {
