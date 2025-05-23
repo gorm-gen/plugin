@@ -121,7 +121,7 @@ func Update(update field.AssignExpr) UpdateOption {
 type OrderOption func(*{{.StructName}}) field.Expr
 
 // Order 自定义数据排序
-func Order(order field.Expr) OrderOption {
+func OrderBy(order field.Expr) OrderOption {
     return func(*{{.StructName}}) field.Expr {
         return order
     }
