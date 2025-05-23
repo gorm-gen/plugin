@@ -655,11 +655,21 @@ func (r *Repository) allowType(fieldType string) bool {
 	return false
 }
 
+func (r *Repository) allowConditionType(fieldType string) bool {
+	if fieldType == "soft_delete.DeletedAt" {
+		return true
+	}
+	if fieldType == "gorm.DeletedAt" {
+		return true
+	}
+	return r.allowType(fieldType)
+}
+
 func (r *Repository) genConditionOpt(rt reflect.Type, abbr string) (conditions []Condition, timePkg, decimalPkg, numberDecimalPkg bool) {
 	for i := 0; i < rt.NumField(); i++ {
 		field := rt.Field(i)
 		typ := field.Type.String()
-		if !r.allowType(typ) && !r.isDeleted(typ) {
+		if !r.allowConditionType(typ) {
 			continue
 		}
 		fieldType := strings.Trim(field.Type.String(), "*")
