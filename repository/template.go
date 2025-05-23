@@ -475,7 +475,7 @@ type first struct {
 	qTx           *query.QueryTx
 	lock          clause.Expression
 	unscoped      bool
-	select        []field.Expr
+	selects       []field.Expr
 	relationOpts  []RelationOption
 	conditionOpts []ConditionOption
 }
@@ -484,7 +484,7 @@ type first struct {
 func ({{.Abbr}} *{{.StructName}}) First() *first {
 	return &first{
 		core:          {{.Abbr}},
-		select:        make([]field.Expr, 0),
+		selects:       make([]field.Expr, 0),
 		relationOpts:  make([]RelationOption, 0),
 		conditionOpts: make([]ConditionOption, 0),
 	}
@@ -505,7 +505,7 @@ func (f *first) QueryTx(tx *query.QueryTx) *first {
 }
 
 func (f *first) Select(field ...field.Expr) *first {
-	f.select = append(t.select, field...)
+	f.selects = append(f.selects, field...)
 	return f
 }
 
@@ -567,12 +567,12 @@ func (f *first) Do(ctx context.Context) (*{{.ModelName}}.{{.StructName}}, error)
 	if f.core.newTableName != nil && *f.core.newTableName != "" {
 		fr = fq.Table(*f.core.newTableName).WithContext(ctx)
 	}
-	if len(f.select) > 0 {
+	if len(f.selects) > 0 {
 		if f.core.newTableName == nil {
-			fr = fr.Select(f.select...)
+			fr = fr.Select(f.selects...)
 		} else {
-			fs := make([]field.Expr, 0, len(f.select))
-			for _, v := range f.select {
+			fs := make([]field.Expr, 0, len(f.selects))
+			for _, v := range f.selects {
 				fs = append(fs, field.NewField(*f.core.newTableName, v.ColumnName().String()))
 			}
 			fr = fr.Select(fs...)
@@ -646,7 +646,7 @@ type last struct {
 	qTx           *query.QueryTx
 	lock          clause.Expression
 	unscoped      bool
-	select        []field.Expr
+	selects       []field.Expr
 	relationOpts  []RelationOption
 	conditionOpts []ConditionOption
 }
@@ -655,7 +655,7 @@ type last struct {
 func ({{.Abbr}} *{{.StructName}}) Last() *last {
 	return &last{
 		core:          {{.Abbr}},
-		select:        make([]field.Expr, 0),
+		selects:       make([]field.Expr, 0),
 		relationOpts:  make([]RelationOption, 0),
 		conditionOpts: make([]ConditionOption, 0),
 	}
@@ -676,7 +676,7 @@ func (l *last) QueryTx(tx *query.QueryTx) *last {
 }
 
 func (l *last) Select(field ...field.Expr) *last {
-	l.select = append(t.select, field...)
+	l.selects = append(l.selects, field...)
 	return l
 }
 
@@ -738,12 +738,12 @@ func (l *last) Do(ctx context.Context) (*{{.ModelName}}.{{.StructName}}, error) 
 	if l.core.newTableName != nil && *l.core.newTableName != "" {
 		lr = lq.Table(*l.core.newTableName).WithContext(ctx)
 	}
-	if len(l.select) > 0 {
+	if len(l.selects) > 0 {
 		if l.core.newTableName == nil {
-			lr = lr.Select(l.select...)
+			lr = lr.Select(l.selects...)
 		} else {
-			fs := make([]field.Expr, 0, len(l.select))
-			for _, v := range l.select {
+			fs := make([]field.Expr, 0, len(l.selects))
+			for _, v := range l.selects {
 				fs = append(fs, field.NewField(*l.core.newTableName, v.ColumnName().String()))
 			}
 			lr = lr.Select(fs...)
@@ -820,7 +820,7 @@ type list struct {
 	pageSize      int
 	lock          clause.Expression
 	unscoped      bool
-	select        []field.Expr
+	selects       []field.Expr
 	relationOpts  []RelationOption
 	orderOpts     []OrderOption
 	conditionOpts []ConditionOption
@@ -830,7 +830,7 @@ type list struct {
 func ({{.Abbr}} *{{.StructName}}) List() *list {
 	return &list{
 		core:          {{.Abbr}},
-		select:        make([]field.Expr, 0),
+		selects:       make([]field.Expr, 0),
 		relationOpts:  make([]RelationOption, 0),
 		orderOpts:     make([]OrderOption, 0),
 		conditionOpts: make([]ConditionOption, 0),
@@ -852,7 +852,7 @@ func (l *list) QueryTx(tx *query.QueryTx) *list {
 }
 
 func (l *list) Select(field ...field.Expr) *list {
-	l.select = append(t.select, field...)
+	l.selects = append(l.selects, field...)
 	return l
 }
 
@@ -926,12 +926,12 @@ func (l *list) Do(ctx context.Context) ([]*{{.ModelName}}.{{.StructName}}, error
 	if l.core.newTableName != nil && *l.core.newTableName != "" {
 		lr = lq.Table(*l.core.newTableName).WithContext(ctx)
 	}
-	if len(l.select) > 0 {
+	if len(l.selects) > 0 {
 		if l.core.newTableName == nil {
-			lr = lr.Select(l.select...)
+			lr = lr.Select(l.selects...)
 		} else {
-			fs := make([]field.Expr, 0, len(l.select))
-			for _, v := range l.select {
+			fs := make([]field.Expr, 0, len(l.selects))
+			for _, v := range l.selects {
 				fs = append(fs, field.NewField(*l.core.newTableName, v.ColumnName().String()))
 			}
 			lr = lr.Select(fs...)
@@ -1020,7 +1020,7 @@ type take struct {
 	qTx           *query.QueryTx
 	lock          clause.Expression
 	unscoped      bool
-	select        []field.Expr
+	selects       []field.Expr
 	relationOpts  []RelationOption
 	orderOpts     []OrderOption
 	conditionOpts []ConditionOption
@@ -1030,7 +1030,7 @@ type take struct {
 func ({{.Abbr}} *{{.StructName}}) Take() *take {
 	return &take{
 		core:          {{.Abbr}},
-		select:        make([]field.Expr, 0),
+		selects:       make([]field.Expr, 0),
 		relationOpts:  make([]RelationOption, 0),
 		orderOpts:     make([]OrderOption, 0),
 		conditionOpts: make([]ConditionOption, 0),
@@ -1052,7 +1052,7 @@ func (t *take) QueryTx(tx *query.QueryTx) *take {
 }
 
 func (t *take) Select(field ...field.Expr) *take {
-	t.select = append(t.select, field...)
+	t.selects = append(t.selects, field...)
 	return t
 }
 
@@ -1119,12 +1119,12 @@ func (t *take) Do(ctx context.Context) (*{{.ModelName}}.{{.StructName}}, error) 
 	if t.core.newTableName != nil && *t.core.newTableName != "" {
 		tr = tq.Table(*t.core.newTableName).WithContext(ctx)
 	}
-	if len(t.select) > 0 {
+	if len(t.selects) > 0 {
 		if t.core.newTableName == nil {
-			tr = tr.Select(t.select...)
+			tr = tr.Select(t.selects...)
 		} else {
-			fs := make([]field.Expr, 0, len(t.select))
-			for _, v := range t.select {
+			fs := make([]field.Expr, 0, len(t.selects))
+			for _, v := range t.selects {
 				fs = append(fs, field.NewField(*t.core.newTableName, v.ColumnName().String()))
 			}
 			tr = tr.Select(fs...)
