@@ -605,20 +605,10 @@ func (r *Repository) deletedCondition(fieldName string, rt reflect.Type, abbr st
 	condition := fmt.Sprintf(`
 func Condition%[1]sIsZero() ConditionOption {
 	return func(%[2]s *%[3]s) gen.Condition {
-        isInt := true
-        if reflect.TypeOf(%[2]s.q.%[3]s.%[1]s).String() == "field.Field" {
-            isInt = false
-        }
         if %[2]s.newTableName != nil {
-            if !isInt {
-            	return %[2]s.q.%[3]s.Table(*%[2]s.newTableName).%[1]s.Eq(f.NewDecimal(decimal.Zero))
-            }
-            return %[2]s.q.%[3]s.Table(*%[2]s.newTableName).%[1]s.Eq(0)
+            return f.NewDecimal(%[2]s.q.%[3]s.%[1]s, f.WithTableName(*%[2]s.newTableName)).Eq(decimal.Zero)
         }
-        if !isInt {
-            return %[2]s.q.%[3]s.%[1]s.Eq(f.NewDecimal(decimal.Zero))
-        }
-        return %[2]s.q.%[3]s.%[1]s.Eq(0)
+        return f.NewDecimal(%[2]s.q.%[3]s.%[1]s).Eq(decimal.Zero)
     }
 }
 `, fieldName, abbr, rt.Name())
@@ -627,20 +617,10 @@ func Condition%[1]sIsZero() ConditionOption {
 	condition = fmt.Sprintf(`
 func Condition%[1]sGtZero() ConditionOption {
 	return func(%[2]s *%[3]s) gen.Condition {
-        isInt := true
-        if reflect.TypeOf(%[2]s.q.%[3]s.%[1]s).String() == "field.Field" {
-            isInt = false
-        }
         if %[2]s.newTableName != nil {
-            if !isInt {
-            	return %[2]s.q.%[3]s.Table(*%[2]s.newTableName).%[1]s.Gt(f.NewDecimal(decimal.Zero))
-            }
-            return %[2]s.q.%[3]s.Table(*%[2]s.newTableName).%[1]s.Gt(0)
+            return f.NewDecimal(%[2]s.q.%[3]s.%[1]s, f.WithTableName(*%[2]s.newTableName)).Gt(decimal.Zero)
         }
-        if !isInt {
-            return %[2]s.q.%[3]s.%[1]s.Gt(f.NewDecimal(decimal.Zero))
-        }
-        return %[2]s.q.%[3]s.%[1]s.Gt(0)
+        return f.NewDecimal(%[2]s.q.%[3]s.%[1]s).Gt(decimal.Zero)
     }
 }
 `, fieldName, abbr, rt.Name())
@@ -714,7 +694,6 @@ func (r *Repository) genConditionOpt(rt reflect.Type, abbr string) (conditions [
 		if r.isDeleted(typ) {
 			decimalPkg = true
 			numberDecimalPkg = true
-			reflectPkg = true
 			conditions = append(conditions, r.deletedCondition(field.Name, rt, abbr)...)
 		}
 
