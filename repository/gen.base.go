@@ -55,15 +55,17 @@ func (r *Repository) genBase(rt reflect.Type, abbr, filename, paths string) erro
 	var imports []template.HTML
 	var wrap bool
 	if reflectPkg {
-		imports = append(imports, `    "reflect"`)
+		imports = append(imports, `    "reflect"
+`)
 		wrap = true
 	}
 	if timePkg {
-		imports = append(imports, `    "time"`)
+		imports = append(imports, `    "time"
+`)
 		wrap = true
 	}
 	if wrap {
-		imports = append(imports, "\n\n")
+		imports = append(imports, "\n")
 	}
 
 	if numberDecimalPkg {
