@@ -63,7 +63,7 @@ func (r *Repository) genBase(rt reflect.Type, abbr, filename, paths string) erro
 		wrap = true
 	}
 	if wrap {
-		imports = append(imports, "\n")
+		imports = append(imports, "\n\n")
 	}
 
 	if numberDecimalPkg {
