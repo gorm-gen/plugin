@@ -1322,12 +1322,12 @@ type sum struct {
 	tx            *query.Query
 	qTx           *query.QueryTx
 	unscoped      bool
-	genField      field.AssignExpr
+	genField      field.Expr
 	conditionOpts []ConditionOption
 }
 
 // Sum SUM数据
-func ({{.Abbr}} *{{.StructName}}) Sum(genField field.AssignExpr) *sum {
+func ({{.Abbr}} *{{.StructName}}) Sum(genField field.Expr) *sum {
 	return &sum{
 		core:          {{.Abbr}},
 		genField:      genField,
