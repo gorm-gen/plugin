@@ -54,6 +54,7 @@ type {{.StructName}} struct {
 	q            *query.Query
 	db           *gorm.DB
 	logger       *zap.Logger
+	unscoped     bool
 	newTableName *string
 }
 
@@ -81,6 +82,12 @@ func WithDB(db *gorm.DB) Option {
 func WithNewTableName(newTableName string) Option {
 	return func({{.Abbr}} *{{.StructName}}) {
 		{{.Abbr}}.newTableName = &newTableName
+	}
+}
+
+func WithUnscoped() Option {
+	return func({{.Abbr}} *{{.StructName}}) {
+		{{.Abbr}}.unscoped = true
 	}
 }
 
@@ -175,6 +182,7 @@ type count struct {
 func ({{.Abbr}} *{{.StructName}}) Count() *count {
 	return &count{
 		core:          {{.Abbr}},
+		unscoped:      {{.Abbr}}.unscoped,
 		conditionOpts: make([]ConditionOption, 0),
 	}
 }
@@ -274,8 +282,9 @@ type create struct {
 // Create 添加数据
 func ({{.Abbr}} *{{.StructName}}) Create() *create {
 	return &create{
-		core:   {{.Abbr}},
-		values: make([]*{{.ModelName}}.{{.StructName}}, 0),
+		core:     {{.Abbr}},
+		unscoped: {{.Abbr}}.unscoped,
+		values:   make([]*{{.ModelName}}.{{.StructName}}, 0),
 	}
 }
 
@@ -379,6 +388,7 @@ type delete struct {
 func ({{.Abbr}} *{{.StructName}}) Delete() *delete {
 	return &delete{
 		core:          {{.Abbr}},
+		unscoped:      {{.Abbr}}.unscoped,
 		conditionOpts: make([]ConditionOption, 0),
 	}
 }
@@ -484,6 +494,7 @@ type first struct {
 func ({{.Abbr}} *{{.StructName}}) First() *first {
 	return &first{
 		core:          {{.Abbr}},
+		unscoped:      {{.Abbr}}.unscoped,
 		selects:       make([]field.Expr, 0),
 		relationOpts:  make([]RelationOption, 0),
 		conditionOpts: make([]ConditionOption, 0),
@@ -655,6 +666,7 @@ type last struct {
 func ({{.Abbr}} *{{.StructName}}) Last() *last {
 	return &last{
 		core:          {{.Abbr}},
+		unscoped:      {{.Abbr}}.unscoped,
 		selects:       make([]field.Expr, 0),
 		relationOpts:  make([]RelationOption, 0),
 		conditionOpts: make([]ConditionOption, 0),
@@ -830,6 +842,7 @@ type list struct {
 func ({{.Abbr}} *{{.StructName}}) List() *list {
 	return &list{
 		core:          {{.Abbr}},
+		unscoped:      {{.Abbr}}.unscoped,
 		selects:       make([]field.Expr, 0),
 		relationOpts:  make([]RelationOption, 0),
 		orderOpts:     make([]OrderOption, 0),
@@ -1030,6 +1043,7 @@ type take struct {
 func ({{.Abbr}} *{{.StructName}}) Take() *take {
 	return &take{
 		core:          {{.Abbr}},
+		unscoped:      {{.Abbr}}.unscoped,
 		selects:       make([]field.Expr, 0),
 		relationOpts:  make([]RelationOption, 0),
 		orderOpts:     make([]OrderOption, 0),
@@ -1212,6 +1226,7 @@ type update struct {
 func ({{.Abbr}} *{{.StructName}}) Update() *update {
 	return &update{
 		core:          {{.Abbr}},
+		unscoped:      {{.Abbr}}.unscoped,
 		updateOpts:    make([]UpdateOption, 0),
 		conditionOpts: make([]ConditionOption, 0),
 	}
@@ -1330,6 +1345,7 @@ type sum struct {
 func ({{.Abbr}} *{{.StructName}}) Sum(genField field.Expr) *sum {
 	return &sum{
 		core:          {{.Abbr}},
+		unscoped:      {{.Abbr}}.unscoped,
 		genField:      genField,
 		conditionOpts: make([]ConditionOption, 0),
 	}
