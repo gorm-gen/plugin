@@ -665,7 +665,7 @@ func (r *Repository) allowConditionType(fieldType string) bool {
 	return r.allowType(fieldType)
 }
 
-func (r *Repository) genConditionOpt(rt reflect.Type, abbr string) (conditions []Condition, timePkg, decimalPkg, numberDecimalPkg, reflectPkg bool) {
+func (r *Repository) genConditionOpt(rt reflect.Type, abbr string) (conditions []Condition, timePkg, decimalPkg, pfPkg, pfvPkg, reflectPkg bool) {
 	for i := 0; i < rt.NumField(); i++ {
 		field := rt.Field(i)
 		typ := field.Type.String()
@@ -685,7 +685,8 @@ func (r *Repository) genConditionOpt(rt reflect.Type, abbr string) (conditions [
 		}
 		if r.isDecimal(typ) {
 			decimalPkg = true
-			numberDecimalPkg = true
+			pfPkg = true
+			pfvPkg = true
 			conditions = append(conditions, r.decimalCondition(field.Name, fieldType, rt, abbr)...)
 		}
 		if r.isBool(typ) {
@@ -693,7 +694,7 @@ func (r *Repository) genConditionOpt(rt reflect.Type, abbr string) (conditions [
 		}
 		if r.isDeleted(typ) {
 			decimalPkg = true
-			numberDecimalPkg = true
+			pfPkg = true
 			conditions = append(conditions, r.deletedCondition(field.Name, rt, abbr)...)
 		}
 

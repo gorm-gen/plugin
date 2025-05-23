@@ -15,17 +15,20 @@ type Update string
 type Order string
 
 func (r *Repository) genBase(rt reflect.Type, abbr, filename, paths string) error {
-	var timePkg, decimalPkg, numberDecimalPkg, reflectPkg bool
+	var timePkg, decimalPkg, pfPkg, pfvPkg, reflectPkg bool
 
-	conditions, _timePkg, _decimalPkg, _numberDecimalPkg, _reflectPkg := r.genConditionOpt(rt, abbr)
+	conditions, _timePkg, _decimalPkg, _pfPkg, _pfvPkg, _reflectPkg := r.genConditionOpt(rt, abbr)
 	if _timePkg {
 		timePkg = true
 	}
 	if _decimalPkg {
 		decimalPkg = true
 	}
-	if _numberDecimalPkg {
-		numberDecimalPkg = true
+	if _pfPkg {
+		pfPkg = true
+	}
+	if _pfvPkg {
+		pfvPkg = true
 	}
 	if _reflectPkg {
 		reflectPkg = true
@@ -44,7 +47,8 @@ func (r *Repository) genBase(rt reflect.Type, abbr, filename, paths string) erro
 		decimalPkg = true
 	}
 	if _numberDecimalPkg {
-		numberDecimalPkg = true
+		pfPkg = true
+		pfvPkg = true
 	}
 
 	_updates := make([]template.HTML, 0, len(updates))
@@ -68,9 +72,12 @@ func (r *Repository) genBase(rt reflect.Type, abbr, filename, paths string) erro
 		imports = append(imports, "\n")
 	}
 
-	if numberDecimalPkg {
+	if pfPkg {
 		imports = append(imports, `    f "github.com/gorm-gen/plugin/field"
-    "github.com/gorm-gen/plugin/field/value"
+`)
+	}
+	if pfvPkg {
+		imports = append(imports, `    github.com/gorm-gen/plugin/field/value"
 `)
 	}
 	if decimalPkg {
