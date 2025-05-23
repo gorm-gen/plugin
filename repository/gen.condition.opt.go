@@ -599,6 +599,43 @@ func (r *Repository) isDecimal(fieldType string) bool {
 	return false
 }
 
+func (r *Repository) deletedCondition(fieldName string, rt reflect.Type, abbr string) []Condition {
+	var conditions []Condition
+
+	condition := fmt.Sprintf(`
+func Condition%[1]sIsZero() ConditionOption {
+	return func(%[2]s *%[3]s) gen.Condition {
+        if %[2]s.newTableName != nil {
+            return %[2]s.q.%[3]s.Table(*%[2]s.newTableName).%[1]s.Eq(0)
+        }
+        return %[2]s.q.%[3]s.%[1]s.Eq(0)
+    }
+}
+`, fieldName, abbr, rt.Name())
+	conditions = append(conditions, Condition(condition))
+
+	condition = fmt.Sprintf(`
+func Condition%[1]sGtZero() ConditionOption {
+	return func(%[2]s *%[3]s) gen.Condition {
+        if %[2]s.newTableName != nil {
+            return %[2]s.q.%[3]s.Table(*%[2]s.newTableName).%[1]s.Gt(0)
+        }
+        return %[2]s.q.%[3]s.%[1]s.Gt(0)
+    }
+}
+`, fieldName, abbr, rt.Name())
+	conditions = append(conditions, Condition(condition))
+
+	return conditions
+}
+
+func (r *Repository) isDeleted(fieldType string) bool {
+	if fieldType == "soft_delete.DeletedAt" {
+		return true
+	}
+	return false
+}
+
 func (r *Repository) allowType(fieldType string) bool {
 	if r.isInt(fieldType) {
 		return true
@@ -644,8 +681,11 @@ func (r *Repository) genConditionOpt(rt reflect.Type, abbr string) (conditions [
 		if r.isBool(typ) {
 			conditions = append(conditions, r.boolCondition(field.Name, fieldType, rt, abbr)...)
 		}
+		if r.isDeleted(typ) {
+			conditions = append(conditions, r.deletedCondition(field.Name, rt, abbr)...)
+		}
 
-		if !strings.Contains(typ, "*") {
+		if !strings.Contains(typ, "*") && fieldType != "gorm.DeletedAt" {
 			continue
 		}
 
