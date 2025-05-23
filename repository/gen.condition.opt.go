@@ -659,7 +659,7 @@ func (r *Repository) genConditionOpt(rt reflect.Type, abbr string) (conditions [
 	for i := 0; i < rt.NumField(); i++ {
 		field := rt.Field(i)
 		typ := field.Type.String()
-		if !r.allowType(typ) {
+		if !r.allowType(typ) && !r.isDeleted(typ) {
 			continue
 		}
 		fieldType := strings.Trim(field.Type.String(), "*")
