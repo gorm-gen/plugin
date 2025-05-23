@@ -15,9 +15,9 @@ type Update string
 type Order string
 
 func (r *Repository) genBase(rt reflect.Type, abbr, filename, paths string) error {
-	var timePkg, decimalPkg, numberDecimalPkg bool
+	var timePkg, decimalPkg, numberDecimalPkg, reflectPkg bool
 
-	conditions, _timePkg, _decimalPkg, _numberDecimalPkg := r.genConditionOpt(rt, abbr)
+	conditions, _timePkg, _decimalPkg, _numberDecimalPkg, _reflectPkg := r.genConditionOpt(rt, abbr)
 	if _timePkg {
 		timePkg = true
 	}
@@ -26,6 +26,9 @@ func (r *Repository) genBase(rt reflect.Type, abbr, filename, paths string) erro
 	}
 	if _numberDecimalPkg {
 		numberDecimalPkg = true
+	}
+	if _reflectPkg {
+		reflectPkg = true
 	}
 
 	_conditions := make([]template.HTML, 0, len(conditions))
@@ -50,10 +53,17 @@ func (r *Repository) genBase(rt reflect.Type, abbr, filename, paths string) erro
 	}
 
 	var imports []template.HTML
+	var wrap bool
+	if reflectPkg {
+		imports = append(imports, `    "reflect"`)
+		wrap = true
+	}
 	if timePkg {
-		imports = append(imports, `    "time"
-
-`)
+		imports = append(imports, `    "time"`)
+		wrap = true
+	}
+	if wrap {
+		imports = append(imports, "\n")
 	}
 
 	if numberDecimalPkg {
