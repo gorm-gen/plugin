@@ -10,7 +10,7 @@ type Field struct {
 	column    string
 }
 
-func NewDecimal(genField field.Field, opts ...Option) *Field {
+func NewDecimal(genField field.Expr, opts ...Option) *Field {
 	f := &Field{
 		column: genField.ColumnName().String(),
 	}
