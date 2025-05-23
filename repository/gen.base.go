@@ -77,7 +77,7 @@ func (r *Repository) genBase(rt reflect.Type, abbr, filename, paths string) erro
 `)
 	}
 	if pfvPkg {
-		imports = append(imports, `    github.com/gorm-gen/plugin/field/value"
+		imports = append(imports, `    "github.com/gorm-gen/plugin/field/value"
 `)
 	}
 	if decimalPkg {
