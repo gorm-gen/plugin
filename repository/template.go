@@ -1235,7 +1235,6 @@ package {{.Package}}
 import (
 	"context"
 
-	f "github.com/gorm-gen/plugin/field"
 	"github.com/shopspring/decimal"
 	"go.uber.org/zap"
 	"gorm.io/gen"
@@ -1251,12 +1250,12 @@ type sum struct {
 	tx            *query.Query
 	qTx           *query.QueryTx
 	unscoped      bool
-	genField      field.Field
+	genField      field.AssignExpr
 	conditionOpts []ConditionOption
 }
 
 // Sum SUM数据
-func ({{.Abbr}} *{{.StructName}}) Sum(genField field.Field) *sum {
+func ({{.Abbr}} *{{.StructName}}) Sum(genField field.AssignExpr) *sum {
 	return &sum{
 		core:          {{.Abbr}},
 		genField:      genField,
@@ -1296,14 +1295,12 @@ func (s *sum) Do(ctx context.Context) (decimal.Decimal, error) {
 	if s.qTx != nil {
 		sq = s.qTx.{{.StructName}}
 	}
-	sr := sq.WithContext(ctx).Select(s.genField.Sum().As("sum"))
-	if s.core.newTableName != nil {
-		cf := f.NewDecimal(s.genField, f.WithTableName(*s.core.newTableName)).Sum().As("sum")
-		sr = sq.WithContext(ctx).Select(cf)
-		if *s.core.newTableName != "" {
-			sr = sq.Table(*s.core.newTableName).WithContext(ctx).Select(cf)
-		}
+	expr := field.NewField("", s.genField.ColumnName().String()).Sum().As("sum")
+	sr := sq.WithContext(ctx)
+	if s.core.newTableName != nil && *s.core.newTableName != "" {
+		sr = sq.Table(*s.core.newTableName).WithContext(ctx)
 	}
+	sr = sr.Select(expr)
 	if s.unscoped {
 		sr = sr.Unscoped()
 	}
