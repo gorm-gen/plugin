@@ -475,6 +475,7 @@ type first struct {
 	qTx           *query.QueryTx
 	lock          clause.Expression
 	unscoped      bool
+	select        []field.Expr
 	relationOpts  []RelationOption
 	conditionOpts []ConditionOption
 }
@@ -483,6 +484,7 @@ type first struct {
 func ({{.Abbr}} *{{.StructName}}) First() *first {
 	return &first{
 		core:          {{.Abbr}},
+		select:        make([]field.Expr, 0),
 		relationOpts:  make([]RelationOption, 0),
 		conditionOpts: make([]ConditionOption, 0),
 	}
@@ -499,6 +501,11 @@ func (f *first) Tx(tx *query.Query) *first {
 func (f *first) QueryTx(tx *query.QueryTx) *first {
 	f.qTx = tx
 	f.tx = nil
+	return f
+}
+
+func (f *first) Select(field ...field.Expr) *first {
+	f.select = append(t.select, field...)
 	return f
 }
 
@@ -559,6 +566,17 @@ func (f *first) Do(ctx context.Context) (*{{.ModelName}}.{{.StructName}}, error)
 	fr := fq.WithContext(ctx)
 	if f.core.newTableName != nil && *f.core.newTableName != "" {
 		fr = fq.Table(*f.core.newTableName).WithContext(ctx)
+	}
+	if len(f.select) > 0 {
+		if f.core.newTableName == nil {
+			fr = fr.Select(f.select...)
+		} else {
+			fs := make([]field.Expr, 0, len(f.select))
+			for _, v := range f.select {
+				fs = append(fs, field.NewField(*f.core.newTableName, v.ColumnName().String()))
+			}
+			fr = fr.Select(fs...)
+		}
 	}
 	if f.unscoped {
 		fr = fr.Unscoped()
@@ -628,6 +646,7 @@ type last struct {
 	qTx           *query.QueryTx
 	lock          clause.Expression
 	unscoped      bool
+	select        []field.Expr
 	relationOpts  []RelationOption
 	conditionOpts []ConditionOption
 }
@@ -636,6 +655,7 @@ type last struct {
 func ({{.Abbr}} *{{.StructName}}) Last() *last {
 	return &last{
 		core:          {{.Abbr}},
+		select:        make([]field.Expr, 0),
 		relationOpts:  make([]RelationOption, 0),
 		conditionOpts: make([]ConditionOption, 0),
 	}
@@ -652,6 +672,11 @@ func (l *last) Tx(tx *query.Query) *last {
 func (l *last) QueryTx(tx *query.QueryTx) *last {
 	l.qTx = tx
 	l.tx = nil
+	return l
+}
+
+func (l *last) Select(field ...field.Expr) *last {
+	l.select = append(t.select, field...)
 	return l
 }
 
@@ -712,6 +737,17 @@ func (l *last) Do(ctx context.Context) (*{{.ModelName}}.{{.StructName}}, error) 
 	lr := lq.WithContext(ctx)
 	if l.core.newTableName != nil && *l.core.newTableName != "" {
 		lr = lq.Table(*l.core.newTableName).WithContext(ctx)
+	}
+	if len(l.select) > 0 {
+		if l.core.newTableName == nil {
+			lr = lr.Select(l.select...)
+		} else {
+			fs := make([]field.Expr, 0, len(l.select))
+			for _, v := range l.select {
+				fs = append(fs, field.NewField(*l.core.newTableName, v.ColumnName().String()))
+			}
+			lr = lr.Select(fs...)
+		}
 	}
 	if l.unscoped {
 		lr = lr.Unscoped()
@@ -784,6 +820,7 @@ type list struct {
 	pageSize      int
 	lock          clause.Expression
 	unscoped      bool
+	select        []field.Expr
 	relationOpts  []RelationOption
 	orderOpts     []OrderOption
 	conditionOpts []ConditionOption
@@ -793,6 +830,7 @@ type list struct {
 func ({{.Abbr}} *{{.StructName}}) List() *list {
 	return &list{
 		core:          {{.Abbr}},
+		select:        make([]field.Expr, 0),
 		relationOpts:  make([]RelationOption, 0),
 		orderOpts:     make([]OrderOption, 0),
 		conditionOpts: make([]ConditionOption, 0),
@@ -810,6 +848,11 @@ func (l *list) Tx(tx *query.Query) *list {
 func (l *list) QueryTx(tx *query.QueryTx) *list {
 	l.qTx = tx
 	l.tx = nil
+	return l
+}
+
+func (l *list) Select(field ...field.Expr) *list {
+	l.select = append(t.select, field...)
 	return l
 }
 
@@ -882,6 +925,17 @@ func (l *list) Do(ctx context.Context) ([]*{{.ModelName}}.{{.StructName}}, error
 	lr := lq.WithContext(ctx)
 	if l.core.newTableName != nil && *l.core.newTableName != "" {
 		lr = lq.Table(*l.core.newTableName).WithContext(ctx)
+	}
+	if len(l.select) > 0 {
+		if l.core.newTableName == nil {
+			lr = lr.Select(l.select...)
+		} else {
+			fs := make([]field.Expr, 0, len(l.select))
+			for _, v := range l.select {
+				fs = append(fs, field.NewField(*l.core.newTableName, v.ColumnName().String()))
+			}
+			lr = lr.Select(fs...)
+		}
 	}
 	if l.unscoped {
 		lr = lr.Unscoped()
@@ -966,6 +1020,7 @@ type take struct {
 	qTx           *query.QueryTx
 	lock          clause.Expression
 	unscoped      bool
+	select        []field.Expr
 	relationOpts  []RelationOption
 	orderOpts     []OrderOption
 	conditionOpts []ConditionOption
@@ -975,6 +1030,7 @@ type take struct {
 func ({{.Abbr}} *{{.StructName}}) Take() *take {
 	return &take{
 		core:          {{.Abbr}},
+		select:        make([]field.Expr, 0),
 		relationOpts:  make([]RelationOption, 0),
 		orderOpts:     make([]OrderOption, 0),
 		conditionOpts: make([]ConditionOption, 0),
@@ -992,6 +1048,11 @@ func (t *take) Tx(tx *query.Query) *take {
 func (t *take) QueryTx(tx *query.QueryTx) *take {
 	t.qTx = tx
 	t.tx = nil
+	return t
+}
+
+func (t *take) Select(field ...field.Expr) *take {
+	t.select = append(t.select, field...)
 	return t
 }
 
@@ -1057,6 +1118,17 @@ func (t *take) Do(ctx context.Context) (*{{.ModelName}}.{{.StructName}}, error) 
 	tr := tq.WithContext(ctx)
 	if t.core.newTableName != nil && *t.core.newTableName != "" {
 		tr = tq.Table(*t.core.newTableName).WithContext(ctx)
+	}
+	if len(t.select) > 0 {
+		if t.core.newTableName == nil {
+			tr = tr.Select(t.select...)
+		} else {
+			fs := make([]field.Expr, 0, len(t.select))
+			for _, v := range t.select {
+				fs = append(fs, field.NewField(*t.core.newTableName, v.ColumnName().String()))
+			}
+			tr = tr.Select(fs...)
+		}
 	}
 	if t.unscoped {
 		tr = tr.Unscoped()
