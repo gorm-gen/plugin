@@ -271,7 +271,7 @@ import (
     "{{.ModelPkg}}"
 )
 
-type create struct {
+type _create struct {
 	core      *{{.StructName}}
 	tx        *query.Query
 	qTx       *query.QueryTx
@@ -377,7 +377,7 @@ import (
     "{{.RepoPkg}}"
 )
 
-type delete struct {
+type _delete struct {
 	core          *{{.StructName}}
 	tx            *query.Query
 	qTx           *query.QueryTx
@@ -481,7 +481,7 @@ import (
     "{{.ModelPkg}}"
 )
 
-type first struct {
+type _first struct {
 	core          *{{.StructName}}
 	tx            *query.Query
 	qTx           *query.QueryTx
@@ -653,7 +653,7 @@ import (
     "{{.ModelPkg}}"
 )
 
-type last struct {
+type _last struct {
 	core          *{{.StructName}}
 	tx            *query.Query
 	qTx           *query.QueryTx
@@ -826,7 +826,7 @@ import (
     "{{.ModelPkg}}"
 )
 
-type list struct {
+type _list struct {
 	core          *{{.StructName}}
 	tx            *query.Query
 	qTx           *query.QueryTx
@@ -1026,7 +1026,7 @@ import (
     "{{.ModelPkg}}"
 )
 
-type take struct {
+type _take struct {
 	core          *{{.StructName}}
 	tx            *query.Query
 	qTx           *query.QueryTx
@@ -1211,7 +1211,7 @@ import (
     "{{.RepoPkg}}"
 )
 
-type update struct {
+type _update struct {
 	core          *{{.StructName}}
 	tx            *query.Query
 	qTx           *query.QueryTx
@@ -1330,7 +1330,7 @@ import (
 	"{{.RepoPkg}}"
 )
 
-type sum struct {
+type _sum struct {
 	core          *{{.StructName}}
 	tx            *query.Query
 	qTx           *query.QueryTx
