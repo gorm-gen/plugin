@@ -170,7 +170,7 @@ import (
     "{{.RepoPkg}}"
 )
 
-type count struct {
+type _count struct {
 	core          *{{.StructName}}
 	tx            *query.Query
 	qTx           *query.QueryTx
@@ -179,7 +179,7 @@ type count struct {
 }
 
 // Count 获取数据总条数
-func ({{.Abbr}} *{{.StructName}}) Count() *count {
+func ({{.Abbr}} *{{.StructName}}) Count() *_count {
 	return &count{
 		core:          {{.Abbr}},
 		unscoped:      {{.Abbr}}.unscoped,
@@ -188,7 +188,7 @@ func ({{.Abbr}} *{{.StructName}}) Count() *count {
 }
 
 // Tx 设置为事务
-func (c *count) Tx(tx *query.Query) *count {
+func (c *_count) Tx(tx *query.Query) *_count {
 	c.tx = tx
 	if tx != nil {
 		c.qTx = nil
@@ -197,7 +197,7 @@ func (c *count) Tx(tx *query.Query) *count {
 }
 
 // QueryTx 设置为手动事务
-func (c *count) QueryTx(tx *query.QueryTx) *count {
+func (c *_count) QueryTx(tx *query.QueryTx) *_count {
 	c.qTx = tx
 	if tx != nil {
 		c.tx = nil
@@ -205,18 +205,18 @@ func (c *count) QueryTx(tx *query.QueryTx) *count {
 	return c
 }
 
-func (c *count) Unscoped() *count {
+func (c *_count) Unscoped() *_count {
 	c.unscoped = true
 	return c
 }
 
-func (c *count) Where(opts ...ConditionOption) *count {
+func (c *_count) Where(opts ...ConditionOption) *_count {
 	c.conditionOpts = append(c.conditionOpts, opts...)
 	return c
 }
 
 // Do 执行获取数据总条数
-func (c *count) Do(ctx context.Context) (int64, error) {
+func (c *_count) Do(ctx context.Context) (int64, error) {
 	cq := c.core.q.{{.StructName}}
 	if c.tx != nil {
 		cq = c.tx.{{.StructName}}
@@ -281,7 +281,7 @@ type create struct {
 }
 
 // Create 添加数据
-func ({{.Abbr}} *{{.StructName}}) Create() *create {
+func ({{.Abbr}} *{{.StructName}}) Create() *_create {
 	return &create{
 		core:     {{.Abbr}},
 		unscoped: {{.Abbr}}.unscoped,
@@ -290,7 +290,7 @@ func ({{.Abbr}} *{{.StructName}}) Create() *create {
 }
 
 // Tx 设置为事务
-func (c *create) Tx(tx *query.Query) *create {
+func (c *_create) Tx(tx *query.Query) *_create {
 	c.tx = tx
 	if tx != nil {
 		c.qTx = nil
@@ -299,7 +299,7 @@ func (c *create) Tx(tx *query.Query) *create {
 }
 
 // QueryTx 设置为手动事务
-func (c *create) QueryTx(tx *query.QueryTx) *create {
+func (c *_create) QueryTx(tx *query.QueryTx) *_create {
 	c.qTx = tx
 	if tx != nil {
 		c.tx = nil
@@ -307,24 +307,24 @@ func (c *create) QueryTx(tx *query.QueryTx) *create {
 	return c
 }
 
-func (c *create) Unscoped() *create {
+func (c *_create) Unscoped() *_create {
 	c.unscoped = true
 	return c
 }
 
-func (c *create) Values(values ...*{{.ModelName}}.{{.StructName}}) *create {
+func (c *_create) Values(values ...*{{.ModelName}}.{{.StructName}}) *_create {
 	c.values = append(c.values, values...)
 	return c
 }
 
 // BatchSize 当批量插入时指定创建的数量
-func (c *create) BatchSize(batchSize uint) *create {
+func (c *_create) BatchSize(batchSize uint) *_create {
 	c.batchSize = int(batchSize)
 	return c
 }
 
 // Do 执行添加数据
-func (c *create) Do(ctx context.Context) (err error) {
+func (c *_create) Do(ctx context.Context) (err error) {
 	length := len(c.values)
 	if length == 0 {
 		return nil
@@ -386,7 +386,7 @@ type delete struct {
 }
 
 // Delete 删除数据
-func ({{.Abbr}} *{{.StructName}}) Delete() *delete {
+func ({{.Abbr}} *{{.StructName}}) Delete() *_delete {
 	return &delete{
 		core:          {{.Abbr}},
 		unscoped:      {{.Abbr}}.unscoped,
@@ -395,7 +395,7 @@ func ({{.Abbr}} *{{.StructName}}) Delete() *delete {
 }
 
 // Tx 设置为事务
-func (d *delete) Tx(tx *query.Query) *delete {
+func (d *_delete) Tx(tx *query.Query) *_delete {
 	d.tx = tx
 	if tx != nil {
 		d.qTx = nil
@@ -404,7 +404,7 @@ func (d *delete) Tx(tx *query.Query) *delete {
 }
 
 // QueryTx 设置为手动事务
-func (d *delete) QueryTx(tx *query.QueryTx) *delete {
+func (d *_delete) QueryTx(tx *query.QueryTx) *_delete {
 	d.qTx = tx
 	if tx != nil {
 		d.tx = nil
@@ -412,18 +412,18 @@ func (d *delete) QueryTx(tx *query.QueryTx) *delete {
 	return d
 }
 
-func (d *delete) Unscoped() *delete {
+func (d *_delete) Unscoped() *_delete {
 	d.unscoped = true
 	return d
 }
 
-func (d *delete) Where(opts ...ConditionOption) *delete {
+func (d *_delete) Where(opts ...ConditionOption) *_delete {
 	d.conditionOpts = append(d.conditionOpts, opts...)
 	return d
 }
 
 // Do 执行删除数据
-func (d *delete) Do(ctx context.Context) (int64, error) {
+func (d *_delete) Do(ctx context.Context) (int64, error) {
 	dq := d.core.q.{{.StructName}}
 	if d.tx != nil {
 		dq = d.tx.{{.StructName}}
@@ -493,7 +493,7 @@ type first struct {
 }
 
 // First 获取第一条记录（主键升序）
-func ({{.Abbr}} *{{.StructName}}) First() *first {
+func ({{.Abbr}} *{{.StructName}}) First() *_first {
 	return &first{
 		core:          {{.Abbr}},
 		unscoped:      {{.Abbr}}.unscoped,
@@ -504,7 +504,7 @@ func ({{.Abbr}} *{{.StructName}}) First() *first {
 }
 
 // Tx 设置为事务
-func (f *first) Tx(tx *query.Query) *first {
+func (f *_first) Tx(tx *query.Query) *_first {
 	f.tx = tx
 	if tx != nil {
 		f.qTx = nil
@@ -513,7 +513,7 @@ func (f *first) Tx(tx *query.Query) *first {
 }
 
 // QueryTx 设置为手动事务
-func (f *first) QueryTx(tx *query.QueryTx) *first {
+func (f *_first) QueryTx(tx *query.QueryTx) *_first {
 	f.qTx = tx
 	if tx != nil {
 		f.tx = nil
@@ -521,58 +521,58 @@ func (f *first) QueryTx(tx *query.QueryTx) *first {
 	return f
 }
 
-func (f *first) Select(field ...field.Expr) *first {
+func (f *_first) Select(field ...field.Expr) *_first {
 	f.selects = append(f.selects, field...)
 	return f
 }
 
-func (f *first) ForUpdate() *first {
+func (f *_first) ForUpdate() *_first {
 	f.lock = clause.Locking{Strength: clause.LockingStrengthUpdate}
 	return f
 }
 
-func (f *first) ForUpdateSkipLocked() *first {
+func (f *_first) ForUpdateSkipLocked() *_first {
 	f.lock = clause.Locking{Strength: clause.LockingStrengthUpdate, Options: clause.LockingOptionsSkipLocked}
 	return f
 }
 
-func (f *first) ForUpdateNoWait() *first {
+func (f *_first) ForUpdateNoWait() *_first {
 	f.lock = clause.Locking{Strength: clause.LockingStrengthUpdate, Options: clause.LockingOptionsNoWait}
 	return f
 }
 
-func (f *first) ForShare() *first {
+func (f *_first) ForShare() *_first {
 	f.lock = clause.Locking{Strength: clause.LockingStrengthShare}
 	return f
 }
 
-func (f *first) ForShareSkipLocked() *first {
+func (f *_first) ForShareSkipLocked() *_first {
 	f.lock = clause.Locking{Strength: clause.LockingStrengthShare, Options: clause.LockingOptionsSkipLocked}
 	return f
 }
 
-func (f *first) ForShareNoWait() *first {
+func (f *_first) ForShareNoWait() *_first {
 	f.lock = clause.Locking{Strength: clause.LockingStrengthShare, Options: clause.LockingOptionsNoWait}
 	return f
 }
 
-func (f *first) Unscoped() *first {
+func (f *_first) Unscoped() *_first {
 	f.unscoped = true
 	return f
 }
 
-func (f *first) Relation(opts ...RelationOption) *first {
+func (f *_first) Relation(opts ...RelationOption) *_first {
 	f.relationOpts = append(f.relationOpts, opts...)
 	return f
 }
 
-func (f *first) Where(opts ...ConditionOption) *first {
+func (f *_first) Where(opts ...ConditionOption) *_first {
 	f.conditionOpts = append(f.conditionOpts, opts...)
 	return f
 }
 
 // Do 执行获取第一条记录（主键升序）
-func (f *first) Do(ctx context.Context) (*{{.ModelName}}.{{.StructName}}, error) {
+func (f *_first) Do(ctx context.Context) (*{{.ModelName}}.{{.StructName}}, error) {
 	fq := f.core.q.{{.StructName}}
 	if f.tx != nil {
 		fq = f.tx.{{.StructName}}
@@ -665,7 +665,7 @@ type last struct {
 }
 
 // Last 获取最后一条记录（主键降序）
-func ({{.Abbr}} *{{.StructName}}) Last() *last {
+func ({{.Abbr}} *{{.StructName}}) Last() *_last {
 	return &last{
 		core:          {{.Abbr}},
 		unscoped:      {{.Abbr}}.unscoped,
@@ -676,7 +676,7 @@ func ({{.Abbr}} *{{.StructName}}) Last() *last {
 }
 
 // Tx 设置为事务
-func (l *last) Tx(tx *query.Query) *last {
+func (l *_last) Tx(tx *query.Query) *_last {
 	l.tx = tx
 	if tx != nil {
 		l.qTx = nil
@@ -685,7 +685,7 @@ func (l *last) Tx(tx *query.Query) *last {
 }
 
 // QueryTx 设置为手动事务
-func (l *last) QueryTx(tx *query.QueryTx) *last {
+func (l *_last) QueryTx(tx *query.QueryTx) *_last {
 	l.qTx = tx
 	if tx != nil {
 		l.tx = nil
@@ -693,58 +693,58 @@ func (l *last) QueryTx(tx *query.QueryTx) *last {
 	return l
 }
 
-func (l *last) Select(field ...field.Expr) *last {
+func (l *_last) Select(field ...field.Expr) *_last {
 	l.selects = append(l.selects, field...)
 	return l
 }
 
-func (l *last) ForUpdate() *last {
+func (l *_last) ForUpdate() *_last {
 	l.lock = clause.Locking{Strength: clause.LockingStrengthUpdate}
 	return l
 }
 
-func (l *last) ForUpdateSkipLocked() *last {
+func (l *_last) ForUpdateSkipLocked() *_last {
 	l.lock = clause.Locking{Strength: clause.LockingStrengthUpdate, Options: clause.LockingOptionsSkipLocked}
 	return l
 }
 
-func (l *last) ForUpdateNoWait() *last {
+func (l *_last) ForUpdateNoWait() *_last {
 	l.lock = clause.Locking{Strength: clause.LockingStrengthUpdate, Options: clause.LockingOptionsNoWait}
 	return l
 }
 
-func (l *last) ForShare() *last {
+func (l *_last) ForShare() *_last {
 	l.lock = clause.Locking{Strength: clause.LockingStrengthShare}
 	return l
 }
 
-func (l *last) ForShareSkipLocked() *last {
+func (l *_last) ForShareSkipLocked() *_last {
 	l.lock = clause.Locking{Strength: clause.LockingStrengthShare, Options: clause.LockingOptionsSkipLocked}
 	return l
 }
 
-func (l *last) ForShareNoWait() *last {
+func (l *_last) ForShareNoWait() *_last {
 	l.lock = clause.Locking{Strength: clause.LockingStrengthShare, Options: clause.LockingOptionsNoWait}
 	return l
 }
 
-func (l *last) Unscoped() *last {
+func (l *_last) Unscoped() *_last {
 	l.unscoped = true
 	return l
 }
 
-func (l *last) Relation(opts ...RelationOption) *last {
+func (l *_last) Relation(opts ...RelationOption) *_last {
 	l.relationOpts = append(l.relationOpts, opts...)
 	return l
 }
 
-func (l *last) Where(opts ...ConditionOption) *last {
+func (l *_last) Where(opts ...ConditionOption) *_last {
 	l.conditionOpts = append(l.conditionOpts, opts...)
 	return l
 }
 
 // Do 执行获取最后一条记录（主键降序）
-func (l *last) Do(ctx context.Context) (*{{.ModelName}}.{{.StructName}}, error) {
+func (l *_last) Do(ctx context.Context) (*{{.ModelName}}.{{.StructName}}, error) {
 	lq := l.core.q.{{.StructName}}
 	if l.tx != nil {
 		lq = l.tx.{{.StructName}}
@@ -841,7 +841,7 @@ type list struct {
 }
 
 // List 获取数据列表
-func ({{.Abbr}} *{{.StructName}}) List() *list {
+func ({{.Abbr}} *{{.StructName}}) List() *_list {
 	return &list{
 		core:          {{.Abbr}},
 		unscoped:      {{.Abbr}}.unscoped,
@@ -853,7 +853,7 @@ func ({{.Abbr}} *{{.StructName}}) List() *list {
 }
 
 // Tx 设置为事务
-func (l *list) Tx(tx *query.Query) *list {
+func (l *_list) Tx(tx *query.Query) *_list {
 	l.tx = tx
 	if tx != nil {
 		l.qTx = nil
@@ -862,7 +862,7 @@ func (l *list) Tx(tx *query.Query) *list {
 }
 
 // QueryTx 设置为手动事务
-func (l *list) QueryTx(tx *query.QueryTx) *list {
+func (l *_list) QueryTx(tx *query.QueryTx) *_list {
 	l.qTx = tx
 	if tx != nil {
 		l.tx = nil
@@ -870,70 +870,70 @@ func (l *list) QueryTx(tx *query.QueryTx) *list {
 	return l
 }
 
-func (l *list) Select(field ...field.Expr) *list {
+func (l *_list) Select(field ...field.Expr) *_list {
 	l.selects = append(l.selects, field...)
 	return l
 }
 
-func (l *list) ForUpdate() *list {
+func (l *_list) ForUpdate() *_list {
 	l.lock = clause.Locking{Strength: clause.LockingStrengthUpdate}
 	return l
 }
 
-func (l *list) ForUpdateSkipLocked() *list {
+func (l *_list) ForUpdateSkipLocked() *_list {
 	l.lock = clause.Locking{Strength: clause.LockingStrengthUpdate, Options: clause.LockingOptionsSkipLocked}
 	return l
 }
 
-func (l *list) ForUpdateNoWait() *list {
+func (l *_list) ForUpdateNoWait() *_list {
 	l.lock = clause.Locking{Strength: clause.LockingStrengthUpdate, Options: clause.LockingOptionsNoWait}
 	return l
 }
 
-func (l *list) ForShare() *list {
+func (l *_list) ForShare() *_list {
 	l.lock = clause.Locking{Strength: clause.LockingStrengthShare}
 	return l
 }
 
-func (l *list) ForShareSkipLocked() *list {
+func (l *_list) ForShareSkipLocked() *_list {
 	l.lock = clause.Locking{Strength: clause.LockingStrengthShare, Options: clause.LockingOptionsSkipLocked}
 	return l
 }
 
-func (l *list) ForShareNoWait() *list {
+func (l *_list) ForShareNoWait() *_list {
 	l.lock = clause.Locking{Strength: clause.LockingStrengthShare, Options: clause.LockingOptionsNoWait}
 	return l
 }
 
-func (l *list) Unscoped() *list {
+func (l *_list) Unscoped() *_list {
 	l.unscoped = true
 	return l
 }
 
-func (l *list) Relation(opts ...RelationOption) *list {
+func (l *_list) Relation(opts ...RelationOption) *_list {
 	l.relationOpts = append(l.relationOpts, opts...)
 	return l
 }
 
-func (l *list) Order(opts ...OrderOption) *list {
+func (l *_list) Order(opts ...OrderOption) *_list {
 	l.orderOpts = append(l.orderOpts, opts...)
 	return l
 }
 
-func (l *list) Where(opts ...ConditionOption) *list {
+func (l *_list) Where(opts ...ConditionOption) *_list {
 	l.conditionOpts = append(l.conditionOpts, opts...)
 	return l
 }
 
 // Page 列表分页
-func (l *list) Page(page, pageSize uint) *list {
+func (l *_list) Page(page, pageSize uint) *_list {
 	l.page = int(page)
 	l.pageSize = int(pageSize)
 	return l
 }
 
 // Do 执行获取数据列表
-func (l *list) Do(ctx context.Context) ([]*{{.ModelName}}.{{.StructName}}, error) {
+func (l *_list) Do(ctx context.Context) ([]*{{.ModelName}}.{{.StructName}}, error) {
 	lq := l.core.q.{{.StructName}}
 	if l.tx != nil {
 		lq = l.tx.{{.StructName}}
@@ -1039,7 +1039,7 @@ type take struct {
 }
 
 // Take 获取一条记录
-func ({{.Abbr}} *{{.StructName}}) Take() *take {
+func ({{.Abbr}} *{{.StructName}}) Take() *_take {
 	return &take{
 		core:          {{.Abbr}},
 		unscoped:      {{.Abbr}}.unscoped,
@@ -1051,7 +1051,7 @@ func ({{.Abbr}} *{{.StructName}}) Take() *take {
 }
 
 // Tx 设置为事务
-func (t *take) Tx(tx *query.Query) *take {
+func (t *_take) Tx(tx *query.Query) *_take {
 	t.tx = tx
 	if tx != nil {
 		t.qTx = nil
@@ -1060,7 +1060,7 @@ func (t *take) Tx(tx *query.Query) *take {
 }
 
 // QueryTx 设置为手动事务
-func (t *take) QueryTx(tx *query.QueryTx) *take {
+func (t *_take) QueryTx(tx *query.QueryTx) *_take {
 	t.qTx = tx
 	if tx != nil {
 		t.tx = nil
@@ -1068,63 +1068,63 @@ func (t *take) QueryTx(tx *query.QueryTx) *take {
 	return t
 }
 
-func (t *take) Select(field ...field.Expr) *take {
+func (t *_take) Select(field ...field.Expr) *_take {
 	t.selects = append(t.selects, field...)
 	return t
 }
 
-func (t *take) ForUpdate() *take {
+func (t *_take) ForUpdate() *_take {
 	t.lock = clause.Locking{Strength: clause.LockingStrengthUpdate}
 	return t
 }
 
-func (t *take) ForUpdateSkipLocked() *take {
+func (t *_take) ForUpdateSkipLocked() *_take {
 	t.lock = clause.Locking{Strength: clause.LockingStrengthUpdate, Options: clause.LockingOptionsSkipLocked}
 	return t
 }
 
-func (t *take) ForUpdateNoWait() *take {
+func (t *_take) ForUpdateNoWait() *_take {
 	t.lock = clause.Locking{Strength: clause.LockingStrengthUpdate, Options: clause.LockingOptionsNoWait}
 	return t
 }
 
-func (t *take) ForShare() *take {
+func (t *_take) ForShare() *_take {
 	t.lock = clause.Locking{Strength: clause.LockingStrengthShare}
 	return t
 }
 
-func (t *take) ForShareSkipLocked() *take {
+func (t *_take) ForShareSkipLocked() *_take {
 	t.lock = clause.Locking{Strength: clause.LockingStrengthShare, Options: clause.LockingOptionsSkipLocked}
 	return t
 }
 
-func (t *take) ForShareNoWait() *take {
+func (t *_take) ForShareNoWait() *_take {
 	t.lock = clause.Locking{Strength: clause.LockingStrengthShare, Options: clause.LockingOptionsNoWait}
 	return t
 }
 
-func (t *take) Unscoped() *take {
+func (t *_take) Unscoped() *_take {
 	t.unscoped = true
 	return t
 }
 
-func (t *take) Relation(opts ...RelationOption) *take {
+func (t *_take) Relation(opts ...RelationOption) *_take {
 	t.relationOpts = append(t.relationOpts, opts...)
 	return t
 }
 
-func (t *take) Order(opts ...OrderOption) *take {
+func (t *_take) Order(opts ...OrderOption) *_take {
 	t.orderOpts = append(t.orderOpts, opts...)
 	return t
 }
 
-func (t *take) Where(opts ...ConditionOption) *take {
+func (t *_take) Where(opts ...ConditionOption) *_take {
 	t.conditionOpts = append(t.conditionOpts, opts...)
 	return t
 }
 
 // Do 执行获取一条记录
-func (t *take) Do(ctx context.Context) (*{{.ModelName}}.{{.StructName}}, error) {
+func (t *_take) Do(ctx context.Context) (*{{.ModelName}}.{{.StructName}}, error) {
 	tq := t.core.q.{{.StructName}}
 	if t.tx != nil {
 		tq = t.tx.{{.StructName}}
@@ -1221,7 +1221,7 @@ type update struct {
 }
 
 // Update 更新数据
-func ({{.Abbr}} *{{.StructName}}) Update() *update {
+func ({{.Abbr}} *{{.StructName}}) Update() *_update {
 	return &update{
 		core:          {{.Abbr}},
 		unscoped:      {{.Abbr}}.unscoped,
@@ -1231,7 +1231,7 @@ func ({{.Abbr}} *{{.StructName}}) Update() *update {
 }
 
 // Tx 设置为事务
-func (u *update) Tx(tx *query.Query) *update {
+func (u *_update) Tx(tx *query.Query) *_update {
 	u.tx = tx
 	if tx != nil {
 		u.qTx = nil
@@ -1240,7 +1240,7 @@ func (u *update) Tx(tx *query.Query) *update {
 }
 
 // QueryTx 设置为手动事务
-func (u *update) QueryTx(tx *query.QueryTx) *update {
+func (u *_update) QueryTx(tx *query.QueryTx) *_update {
 	u.qTx = tx
 	if tx != nil {
 		u.tx = nil
@@ -1248,23 +1248,23 @@ func (u *update) QueryTx(tx *query.QueryTx) *update {
 	return u
 }
 
-func (u *update) Unscoped() *update {
+func (u *_update) Unscoped() *_update {
 	u.unscoped = true
 	return u
 }
 
-func (u *update) Update(opts ...UpdateOption) *update {
+func (u *_update) Update(opts ...UpdateOption) *_update {
 	u.updateOpts = append(u.updateOpts, opts...)
 	return u
 }
 
-func (u *update) Where(opts ...ConditionOption) *update {
+func (u *_update) Where(opts ...ConditionOption) *_update {
 	u.conditionOpts = append(u.conditionOpts, opts...)
 	return u
 }
 
 // Do 执行更新数据
-func (u *update) Do(ctx context.Context) (int64, error) {
+func (u *_update) Do(ctx context.Context) (int64, error) {
 	if len(u.updateOpts) == 0 {
 		return 0, nil
 	}
@@ -1340,7 +1340,7 @@ type sum struct {
 }
 
 // Sum SUM数据
-func ({{.Abbr}} *{{.StructName}}) Sum(genField field.Expr) *sum {
+func ({{.Abbr}} *{{.StructName}}) Sum(genField field.Expr) *_sum {
 	return &sum{
 		core:          {{.Abbr}},
 		unscoped:      {{.Abbr}}.unscoped,
@@ -1350,7 +1350,7 @@ func ({{.Abbr}} *{{.StructName}}) Sum(genField field.Expr) *sum {
 }
 
 // Tx 设置为事务
-func (s *sum) Tx(tx *query.Query) *sum {
+func (s *_sum) Tx(tx *query.Query) *_sum {
 	s.tx = tx
 	if tx != nil {
 		s.qTx = nil
@@ -1359,7 +1359,7 @@ func (s *sum) Tx(tx *query.Query) *sum {
 }
 
 // SetQueryTx 设置为手动事务
-func (s *sum) QueryTx(tx *query.QueryTx) *sum {
+func (s *_sum) QueryTx(tx *query.QueryTx) *_sum {
 	s.qTx = tx
 	if tx != nil {
 		s.tx = nil
@@ -1367,17 +1367,17 @@ func (s *sum) QueryTx(tx *query.QueryTx) *sum {
 	return s
 }
 
-func (s *sum) Unscoped() *sum {
+func (s *_sum) Unscoped() *_sum {
 	s.unscoped = true
 	return s
 }
 
-func (s *sum) Where(opts ...ConditionOption) *sum {
+func (s *_sum) Where(opts ...ConditionOption) *_sum {
 	s.conditionOpts = append(s.conditionOpts, opts...)
 	return s
 }
 ` + "\ntype Sum struct {\n    Sum decimal.Decimal `json:\"sum\"`\n}\n\n" + `// Do 执行SUM数据
-func (s *sum) Do(ctx context.Context) (decimal.Decimal, error) {
+func (s *_sum) Do(ctx context.Context) (decimal.Decimal, error) {
 	sq := s.core.q.{{.StructName}}
 	if s.tx != nil {
 		sq = s.tx.{{.StructName}}
