@@ -180,7 +180,7 @@ type _count struct {
 
 // Count 获取数据总条数
 func ({{.Abbr}} *{{.StructName}}) Count() *_count {
-	return &count{
+	return &_count{
 		core:          {{.Abbr}},
 		unscoped:      {{.Abbr}}.unscoped,
 		conditionOpts: make([]ConditionOption, 0),
@@ -282,7 +282,7 @@ type create struct {
 
 // Create 添加数据
 func ({{.Abbr}} *{{.StructName}}) Create() *_create {
-	return &create{
+	return &_create{
 		core:     {{.Abbr}},
 		unscoped: {{.Abbr}}.unscoped,
 		values:   make([]*{{.ModelName}}.{{.StructName}}, 0),
@@ -387,7 +387,7 @@ type delete struct {
 
 // Delete 删除数据
 func ({{.Abbr}} *{{.StructName}}) Delete() *_delete {
-	return &delete{
+	return &_delete{
 		core:          {{.Abbr}},
 		unscoped:      {{.Abbr}}.unscoped,
 		conditionOpts: make([]ConditionOption, 0),
@@ -494,7 +494,7 @@ type first struct {
 
 // First 获取第一条记录（主键升序）
 func ({{.Abbr}} *{{.StructName}}) First() *_first {
-	return &first{
+	return &_first{
 		core:          {{.Abbr}},
 		unscoped:      {{.Abbr}}.unscoped,
 		selects:       make([]field.Expr, 0),
@@ -666,7 +666,7 @@ type last struct {
 
 // Last 获取最后一条记录（主键降序）
 func ({{.Abbr}} *{{.StructName}}) Last() *_last {
-	return &last{
+	return &_last{
 		core:          {{.Abbr}},
 		unscoped:      {{.Abbr}}.unscoped,
 		selects:       make([]field.Expr, 0),
@@ -842,7 +842,7 @@ type list struct {
 
 // List 获取数据列表
 func ({{.Abbr}} *{{.StructName}}) List() *_list {
-	return &list{
+	return &_list{
 		core:          {{.Abbr}},
 		unscoped:      {{.Abbr}}.unscoped,
 		selects:       make([]field.Expr, 0),
@@ -1040,7 +1040,7 @@ type take struct {
 
 // Take 获取一条记录
 func ({{.Abbr}} *{{.StructName}}) Take() *_take {
-	return &take{
+	return &_take{
 		core:          {{.Abbr}},
 		unscoped:      {{.Abbr}}.unscoped,
 		selects:       make([]field.Expr, 0),
@@ -1222,7 +1222,7 @@ type update struct {
 
 // Update 更新数据
 func ({{.Abbr}} *{{.StructName}}) Update() *_update {
-	return &update{
+	return &_update{
 		core:          {{.Abbr}},
 		unscoped:      {{.Abbr}}.unscoped,
 		updateOpts:    make([]UpdateOption, 0),
@@ -1341,7 +1341,7 @@ type sum struct {
 
 // Sum SUM数据
 func ({{.Abbr}} *{{.StructName}}) Sum(genField field.Expr) *_sum {
-	return &sum{
+	return &_sum{
 		core:          {{.Abbr}},
 		unscoped:      {{.Abbr}}.unscoped,
 		genField:      genField,
