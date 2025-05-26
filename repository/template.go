@@ -227,22 +227,19 @@ func (c *count) Do(ctx context.Context) (int64, error) {
 	if c.unscoped {
 		cr = cr.Unscoped()
 	}
-	errFields := make([]zap.Field, 0)
 	if len(c.conditionOpts) > 0 {
 		conditions := make([]gen.Condition, 0, len(c.conditionOpts))
 		for _, opt := range c.conditionOpts {
 			conditions = append(conditions, opt(c.core))
 		}
 		if len(conditions) > 0 {
-			errFields = append(errFields, zap.Any("conditions", conditions))
 			cr = cr.Where(conditions...)
 		}
 	}
 	count, err := cr.Count()
 	if err != nil {
 		if {{.RepoPkgName}}.IsRealErr(err) {
-			errFields = append(errFields, zap.Error(err))
-			c.core.logger.Error("【{{.StructName}}.Count】失败", errFields...)
+			c.core.logger.Error("【{{.StructName}}.Count】失败", zap.Error(err))
 		}
 		return 0, err
 	}
@@ -338,18 +335,14 @@ func (c *create) Do(ctx context.Context) (err error) {
 	if c.unscoped {
 		cr = cr.Unscoped()
 	}
-	errFields := make([]zap.Field, 0)
 	if length > 1 && c.batchSize > 0 {
-		errFields = append(errFields, zap.Int("batchSize", c.batchSize))
 		err = cr.CreateInBatches(c.values, c.batchSize)
 	} else {
 		err = cr.Create(c.values...)
 	}
 	if err != nil {
 		if {{.RepoPkgName}}.IsRealErr(err) {
-			errFields = append(errFields, zap.Any("values", c.values))
-			errFields = append(errFields, zap.Error(err))
-			c.core.logger.Error("【{{.StructName}}.Create】失败", errFields...)
+			c.core.logger.Error("【{{.StructName}}.Create】失败", zap.Error(err))
 		}
 		return err
 	}
@@ -433,22 +426,19 @@ func (d *delete) Do(ctx context.Context) (int64, error) {
 	if d.unscoped {
 		dr = dr.Unscoped()
 	}
-	errFields := make([]zap.Field, 0)
 	if len(d.conditionOpts) > 0 {
 		conditions := make([]gen.Condition, 0, len(d.conditionOpts))
 		for _, opt := range d.conditionOpts {
 			conditions = append(conditions, opt(d.core))
 		}
 		if len(conditions) > 0 {
-			errFields = append(errFields, zap.Any("conditions", conditions))
 			dr = dr.Where(conditions...)
 		}
 	}
 	res, err := dr.Delete()
 	if err != nil {
 		if {{.RepoPkgName}}.IsRealErr(err) {
-			errFields = append(errFields, zap.Error(err))
-			d.core.logger.Error("【{{.StructName}}.Delete】失败", errFields...)
+			d.core.logger.Error("【{{.StructName}}.Delete】失败", zap.Error(err))
 		}
 		return 0, err
 	}
@@ -595,14 +585,12 @@ func (f *first) Do(ctx context.Context) (*{{.ModelName}}.{{.StructName}}, error)
 	if (f.tx != nil || f.qTx != nil) && f.lock != nil {
 		fr = fr.Clauses(f.lock)
 	}
-	errFields := make([]zap.Field, 0)
 	if len(f.conditionOpts) > 0 {
 		conditions := make([]gen.Condition, 0, len(f.conditionOpts))
 		for _, opt := range f.conditionOpts {
 			conditions = append(conditions, opt(f.core))
 		}
 		if len(conditions) > 0 {
-			errFields = append(errFields, zap.Any("conditions", conditions))
 			fr = fr.Where(conditions...)
 		}
 	}
@@ -612,15 +600,13 @@ func (f *first) Do(ctx context.Context) (*{{.ModelName}}.{{.StructName}}, error)
 			relations = append(relations, opt(f.core))
 		}
 		if len(relations) > 0 {
-			errFields = append(errFields, zap.Any("relations", relations))
 			fr = fr.Preload(relations...)
 		}
 	}
 	res, err := fr.First()
 	if err != nil {
 		if {{.RepoPkgName}}.IsRealErr(err) {
-			errFields = append(errFields, zap.Error(err))
-			f.core.logger.Error("【{{.StructName}}.First】失败", errFields...)
+			f.core.logger.Error("【{{.StructName}}.First】失败", zap.Error(err))
 		}
 		return nil, err
 	}
@@ -767,14 +753,12 @@ func (l *last) Do(ctx context.Context) (*{{.ModelName}}.{{.StructName}}, error) 
 	if (l.tx != nil || l.qTx != nil) && l.lock != nil {
 		lr = lr.Clauses(l.lock)
 	}
-	errFields := make([]zap.Field, 0)
 	if len(l.conditionOpts) > 0 {
 		conditions := make([]gen.Condition, 0, len(l.conditionOpts))
 		for _, opt := range l.conditionOpts {
 			conditions = append(conditions, opt(l.core))
 		}
 		if len(conditions) > 0 {
-			errFields = append(errFields, zap.Any("conditions", conditions))
 			lr = lr.Where(conditions...)
 		}
 	}
@@ -784,15 +768,13 @@ func (l *last) Do(ctx context.Context) (*{{.ModelName}}.{{.StructName}}, error) 
 			relations = append(relations, opt(l.core))
 		}
 		if len(relations) > 0 {
-			errFields = append(errFields, zap.Any("relations", relations))
 			lr = lr.Preload(relations...)
 		}
 	}
 	res, err := lr.Last()
 	if err != nil {
 		if {{.RepoPkgName}}.IsRealErr(err) {
-			errFields = append(errFields, zap.Error(err))
-			l.core.logger.Error("【{{.StructName}}.Last】失败", errFields...)
+			l.core.logger.Error("【{{.StructName}}.Last】失败", zap.Error(err))
 		}
 		return nil, err
 	}
@@ -956,14 +938,12 @@ func (l *list) Do(ctx context.Context) ([]*{{.ModelName}}.{{.StructName}}, error
 	if (l.tx != nil || l.qTx != nil) && l.lock != nil {
 		lr = lr.Clauses(l.lock)
 	}
-	errFields := make([]zap.Field, 0)
 	if len(l.conditionOpts) > 0 {
 		conditions := make([]gen.Condition, 0, len(l.conditionOpts))
 		for _, opt := range l.conditionOpts {
 			conditions = append(conditions, opt(l.core))
 		}
 		if len(conditions) > 0 {
-			errFields = append(errFields, zap.Any("conditions", conditions))
 			lr = lr.Where(conditions...)
 		}
 	}
@@ -973,13 +953,10 @@ func (l *list) Do(ctx context.Context) ([]*{{.ModelName}}.{{.StructName}}, error
 			orders = append(orders, opt(l.core))
 		}
 		if len(orders) > 0 {
-			errFields = append(errFields, zap.Any("orders", orders))
 			lr = lr.Order(orders...)
 		}
 	}
 	if l.page > 0 && l.pageSize > 0 {
-		errFields = append(errFields, zap.Int("page", l.page))
-		errFields = append(errFields, zap.Int("pageSize", l.pageSize))
 		lr = lr.Scopes(paginate.Gen(l.page, l.pageSize))
 	}
 	if len(l.relationOpts) > 0 {
@@ -988,15 +965,13 @@ func (l *list) Do(ctx context.Context) ([]*{{.ModelName}}.{{.StructName}}, error
 			relations = append(relations, opt(l.core))
 		}
 		if len(relations) > 0 {
-			errFields = append(errFields, zap.Any("relations", relations))
 			lr = lr.Preload(relations...)
 		}
 	}
 	list, err := lr.Find()
 	if err != nil {
 		if {{.RepoPkgName}}.IsRealErr(err) {
-			errFields = append(errFields, zap.Error(err))
-			l.core.logger.Error("【{{.StructName}}.List】失败", errFields...)
+			l.core.logger.Error("【{{.StructName}}.List】失败", zap.Error(err))
 		}
 		return nil, err
 	}
@@ -1150,14 +1125,12 @@ func (t *take) Do(ctx context.Context) (*{{.ModelName}}.{{.StructName}}, error) 
 	if (t.tx != nil || t.qTx != nil) && t.lock != nil {
 		tr = tr.Clauses(t.lock)
 	}
-	errFields := make([]zap.Field, 0)
 	if len(t.conditionOpts) > 0 {
 		conditions := make([]gen.Condition, 0, len(t.conditionOpts))
 		for _, opt := range t.conditionOpts {
 			conditions = append(conditions, opt(t.core))
 		}
 		if len(conditions) > 0 {
-			errFields = append(errFields, zap.Any("conditions", conditions))
 			tr = tr.Where(conditions...)
 		}
 	}
@@ -1167,7 +1140,6 @@ func (t *take) Do(ctx context.Context) (*{{.ModelName}}.{{.StructName}}, error) 
 			orders = append(orders, opt(t.core))
 		}
 		if len(orders) > 0 {
-			errFields = append(errFields, zap.Any("orders", orders))
 			tr = tr.Order(orders...)
 		}
 	}
@@ -1177,15 +1149,13 @@ func (t *take) Do(ctx context.Context) (*{{.ModelName}}.{{.StructName}}, error) 
 			relations = append(relations, opt(t.core))
 		}
 		if len(relations) > 0 {
-			errFields = append(errFields, zap.Any("relations", relations))
 			tr = tr.Preload(relations...)
 		}
 	}
 	res, err := tr.Take()
 	if err != nil {
 		if {{.RepoPkgName}}.IsRealErr(err) {
-			errFields = append(errFields, zap.Error(err))
-			t.core.logger.Error("【{{.StructName}}.Take】失败", errFields...)
+			t.core.logger.Error("【{{.StructName}}.Take】失败", zap.Error(err))
 		}
 		return nil, err
 	}
@@ -1280,14 +1250,12 @@ func (u *update) Do(ctx context.Context) (int64, error) {
 	if u.unscoped {
 		ur = ur.Unscoped()
 	}
-	errFields := make([]zap.Field, 0)
 	if len(u.conditionOpts) > 0 {
 		conditions := make([]gen.Condition, 0, len(u.conditionOpts))
 		for _, opt := range u.conditionOpts {
 			conditions = append(conditions, opt(u.core))
 		}
 		if len(conditions) > 0 {
-			errFields = append(errFields, zap.Any("conditions", conditions))
 			ur = ur.Where(conditions...)
 		}
 	}
@@ -1301,9 +1269,7 @@ func (u *update) Do(ctx context.Context) (int64, error) {
 	res, err := ur.UpdateSimple(columns...)
 	if err != nil {
 		if {{.RepoPkgName}}.IsRealErr(err) {
-			errFields = append(errFields, zap.Any("columns", columns))
-			errFields = append(errFields, zap.Error(err))
-			u.core.logger.Error("【{{.StructName}}.Update】失败", errFields...)
+			u.core.logger.Error("【{{.StructName}}.Update】失败", zap.Error(err))
 		}
 		return 0, err
 	}
@@ -1392,23 +1358,19 @@ func (s *sum) Do(ctx context.Context) (decimal.Decimal, error) {
 	if s.unscoped {
 		sr = sr.Unscoped()
 	}
-	errFields := make([]zap.Field, 0)
 	if len(s.conditionOpts) > 0 {
 		conditions := make([]gen.Condition, 0, len(s.conditionOpts))
 		for _, opt := range s.conditionOpts {
 			conditions = append(conditions, opt(s.core))
 		}
 		if len(conditions) > 0 {
-			errFields = append(errFields, zap.Any("conditions", conditions))
 			sr = sr.Where(conditions...)
 		}
 	}
 	var data Sum
 	if err := sr.Scan(&data); err != nil {
 		if {{.RepoPkgName}}.IsRealErr(err) {
-			errFields = append(errFields, zap.String("field", s.genField.ColumnName().String()))
-			errFields = append(errFields, zap.Error(err))
-			s.core.logger.Error("【{{.StructName}}.Sum】失败", errFields...)
+			s.core.logger.Error("【{{.StructName}}.Sum】失败", zap.Error(err))
 		}
 		return decimal.Zero, err
 	}
