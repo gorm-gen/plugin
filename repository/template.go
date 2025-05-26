@@ -190,14 +190,18 @@ func ({{.Abbr}} *{{.StructName}}) Count() *count {
 // Tx 设置为事务
 func (c *count) Tx(tx *query.Query) *count {
 	c.tx = tx
-	c.qTx = nil
+	if tx != nil {
+		c.qTx = nil
+	}
 	return c
 }
 
 // QueryTx 设置为手动事务
 func (c *count) QueryTx(tx *query.QueryTx) *count {
 	c.qTx = tx
-	c.tx = nil
+	if tx != nil {
+		c.tx = nil
+	}
 	return c
 }
 
@@ -288,14 +292,18 @@ func ({{.Abbr}} *{{.StructName}}) Create() *create {
 // Tx 设置为事务
 func (c *create) Tx(tx *query.Query) *create {
 	c.tx = tx
-	c.qTx = nil
+	if tx != nil {
+		c.qTx = nil
+	}
 	return c
 }
 
 // QueryTx 设置为手动事务
 func (c *create) QueryTx(tx *query.QueryTx) *create {
 	c.qTx = tx
-	c.tx = nil
+	if tx != nil {
+		c.tx = nil
+	}
 	return c
 }
 
@@ -389,14 +397,18 @@ func ({{.Abbr}} *{{.StructName}}) Delete() *delete {
 // Tx 设置为事务
 func (d *delete) Tx(tx *query.Query) *delete {
 	d.tx = tx
-	d.qTx = nil
+	if tx != nil {
+		d.qTx = nil
+	}
 	return d
 }
 
 // QueryTx 设置为手动事务
 func (d *delete) QueryTx(tx *query.QueryTx) *delete {
 	d.qTx = tx
-	d.tx = nil
+	if tx != nil {
+		d.tx = nil
+	}
 	return d
 }
 
@@ -494,14 +506,18 @@ func ({{.Abbr}} *{{.StructName}}) First() *first {
 // Tx 设置为事务
 func (f *first) Tx(tx *query.Query) *first {
 	f.tx = tx
-	f.qTx = nil
+	if tx != nil {
+		f.qTx = nil
+	}
 	return f
 }
 
 // QueryTx 设置为手动事务
 func (f *first) QueryTx(tx *query.QueryTx) *first {
 	f.qTx = tx
-	f.tx = nil
+	if tx != nil {
+		f.tx = nil
+	}
 	return f
 }
 
@@ -662,14 +678,18 @@ func ({{.Abbr}} *{{.StructName}}) Last() *last {
 // Tx 设置为事务
 func (l *last) Tx(tx *query.Query) *last {
 	l.tx = tx
-	l.qTx = nil
+	if tx != nil {
+		l.qTx = nil
+	}
 	return l
 }
 
 // QueryTx 设置为手动事务
 func (l *last) QueryTx(tx *query.QueryTx) *last {
 	l.qTx = tx
-	l.tx = nil
+	if tx != nil {
+		l.tx = nil
+	}
 	return l
 }
 
@@ -835,14 +855,18 @@ func ({{.Abbr}} *{{.StructName}}) List() *list {
 // Tx 设置为事务
 func (l *list) Tx(tx *query.Query) *list {
 	l.tx = tx
-	l.qTx = nil
+	if tx != nil {
+		l.qTx = nil
+	}
 	return l
 }
 
 // QueryTx 设置为手动事务
 func (l *list) QueryTx(tx *query.QueryTx) *list {
 	l.qTx = tx
-	l.tx = nil
+	if tx != nil {
+		l.tx = nil
+	}
 	return l
 }
 
@@ -1029,14 +1053,18 @@ func ({{.Abbr}} *{{.StructName}}) Take() *take {
 // Tx 设置为事务
 func (t *take) Tx(tx *query.Query) *take {
 	t.tx = tx
-	t.qTx = nil
+	if tx != nil {
+		t.qTx = nil
+	}
 	return t
 }
 
 // QueryTx 设置为手动事务
 func (t *take) QueryTx(tx *query.QueryTx) *take {
 	t.qTx = tx
-	t.tx = nil
+	if tx != nil {
+		t.tx = nil
+	}
 	return t
 }
 
@@ -1205,14 +1233,18 @@ func ({{.Abbr}} *{{.StructName}}) Update() *update {
 // Tx 设置为事务
 func (u *update) Tx(tx *query.Query) *update {
 	u.tx = tx
-	u.qTx = nil
+	if tx != nil {
+		u.qTx = nil
+	}
 	return u
 }
 
 // QueryTx 设置为手动事务
 func (u *update) QueryTx(tx *query.QueryTx) *update {
 	u.qTx = tx
-	u.tx = nil
+	if tx != nil {
+		u.tx = nil
+	}
 	return u
 }
 
@@ -1320,14 +1352,18 @@ func ({{.Abbr}} *{{.StructName}}) Sum(genField field.Expr) *sum {
 // Tx 设置为事务
 func (s *sum) Tx(tx *query.Query) *sum {
 	s.tx = tx
-	s.qTx = nil
+	if tx != nil {
+		s.qTx = nil
+	}
 	return s
 }
 
 // SetQueryTx 设置为手动事务
 func (s *sum) QueryTx(tx *query.QueryTx) *sum {
 	s.qTx = tx
-	s.tx = nil
+	if tx != nil {
+		s.tx = nil
+	}
 	return s
 }
 
