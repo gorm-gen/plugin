@@ -11,12 +11,16 @@ func (r *Repository) intUpdate(fieldName, fieldType string, rt reflect.Type, abb
 
 	update := fmt.Sprintf(`
 // Update%[1]sAdd +=
-func Update%[1]sAdd(v %[2]s) UpdateOption {
+func Update%[1]sAdd(v ...%[2]s) UpdateOption {
 	return func(%[3]s *%[4]s) field.AssignExpr {
-        if %[3]s.newTableName != nil {
-            return %[3]s.q.%[4]s.Table(*%[3]s.newTableName).%[1]s.Add(v)
+        _v := %[2]s(1)
+        if len(v) > 0 {
+            _v = v[0]
         }
-        return %[3]s.q.%[4]s.%[1]s.Add(v)
+        if %[3]s.newTableName != nil {
+            return %[3]s.q.%[4]s.Table(*%[3]s.newTableName).%[1]s.Add(_v)
+        }
+        return %[3]s.q.%[4]s.%[1]s.Add(_v)
     }
 }
 `, fieldName, fieldType, abbr, rt.Name())
@@ -24,12 +28,16 @@ func Update%[1]sAdd(v %[2]s) UpdateOption {
 
 	update = fmt.Sprintf(`
 // Update%[1]sSub -=
-func Update%[1]sSub(v %[2]s) UpdateOption {
+func Update%[1]sSub(v ...%[2]s) UpdateOption {
 	return func(%[3]s *%[4]s) field.AssignExpr {
-        if %[3]s.newTableName != nil {
-            return %[3]s.q.%[4]s.Table(*%[3]s.newTableName).%[1]s.Sub(v)
+        _v := %[2]s(1)
+        if len(v) > 0 {
+            _v = v[0]
         }
-        return %[3]s.q.%[4]s.%[1]s.Sub(v)
+        if %[3]s.newTableName != nil {
+            return %[3]s.q.%[4]s.Table(*%[3]s.newTableName).%[1]s.Sub(_v)
+        }
+        return %[3]s.q.%[4]s.%[1]s.Sub(_v)
     }
 }
 `, fieldName, fieldType, abbr, rt.Name())
