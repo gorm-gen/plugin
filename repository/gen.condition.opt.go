@@ -226,7 +226,7 @@ func (r *Repository) stringCondition(fieldName, fieldType string, rt reflect.Typ
 	var conditions []Condition
 
 	condition := fmt.Sprintf(`
-func Condition%[1]sEq(v %[2]s) ConditionOption {
+func Condition%[1]s(v %[2]s) ConditionOption {
 	return func(%[3]s *%[4]s) gen.Condition {
         if %[3]s.newTableName != nil {
             return %[3]s.q.%[4]s.Table(*%[3]s.newTableName).%[1]s.Eq(v)
@@ -290,7 +290,7 @@ func (r *Repository) timeCondition(fieldName, fieldType string, rt reflect.Type,
 	var conditions []Condition
 
 	condition := fmt.Sprintf(`
-func Condition%[1]sEq(v ...%[2]s) ConditionOption {
+func Condition%[1]s(v ...%[2]s) ConditionOption {
 	return func(%[3]s *%[4]s) gen.Condition {
         if %[3]s.newTableName != nil {
             if len(v) > 0 && !v[0].IsZero() {
@@ -468,7 +468,7 @@ func (r *Repository) decimalCondition(fieldName, fieldType string, rt reflect.Ty
 	var conditions []Condition
 
 	condition := fmt.Sprintf(`
-func Condition%[1]sEq(v %[2]s) ConditionOption {
+func Condition%[1]s(v %[2]s) ConditionOption {
 	return func(%[3]s *%[4]s) gen.Condition {
         if %[3]s.newTableName != nil {
             return %[3]s.q.%[4]s.Table(*%[3]s.newTableName).%[1]s.Eq(value.NewDecimal(v))
