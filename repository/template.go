@@ -1358,7 +1358,7 @@ func (s *_sum) Tx(tx *query.Query) *_sum {
 	return s
 }
 
-// SetQueryTx 设置为手动事务
+// QueryTx 设置为手动事务
 func (s *_sum) QueryTx(tx *query.QueryTx) *_sum {
 	s.qTx = tx
 	if tx != nil {
