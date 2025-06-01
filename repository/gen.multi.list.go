@@ -23,7 +23,7 @@ func (r *Repository) genMultiList(rt reflect.Type, abbr, filename, paths, shardi
 		ShardingKeyTypeFormat string
 		ChanSign              template.HTML
 		DecimalPkg            template.HTML
-		ToShardingValue       string
+		ToShardingValue       template.HTML
 		ShardingValueTo       string
 	}{
 		Package:               filename,
@@ -53,7 +53,7 @@ func (r *Repository) genMultiList(rt reflect.Type, abbr, filename, paths, shardi
     "github.com/shopspring/decimal"`
 		data.ToShardingValue = `fmt.Sprintf("%d", k)`
 		data.ShardingValueTo = `_shardingValue, _ := decimal.NewFromString(v.ShardingValue)
-					shardingValue = ` + _typeStart + `_shardingValue.BigInt().Int64()` + _typeEnd + `
+					shardingValue := ` + _typeStart + `_shardingValue.BigInt().Int64()` + _typeEnd + `
 `
 	}
 
