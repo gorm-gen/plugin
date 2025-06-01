@@ -22,6 +22,9 @@ func (r *Repository) genMultiList(rt reflect.Type, abbr, filename, paths, shardi
 		ShardingKeyType       string
 		ShardingKeyTypeFormat string
 		ChanSign              template.HTML
+		DecimalPkg            template.HTML
+		ToShardingValue       string
+		ShardingValueTo       string
 	}{
 		Package:               filename,
 		GenQueryPkg:           r.genQueryPkg,
@@ -35,6 +38,23 @@ func (r *Repository) genMultiList(rt reflect.Type, abbr, filename, paths, shardi
 		ShardingKeyType:       shardingKeyType,
 		ShardingKeyTypeFormat: shardingKeyTypeFormat,
 		ChanSign:              template.HTML("<-"),
+		ToShardingValue:       "k",
+		ShardingValueTo:       "shardingValue := v.ShardingValue",
+	}
+
+	if shardingKeyType != "string" {
+		_typeStart := shardingKeyType + "("
+		_typeEnd := shardingKeyType + ")"
+		if shardingKeyType == "int64" {
+			_typeStart = ""
+			_typeEnd = ""
+		}
+		data.DecimalPkg = `
+    "github.com/shopspring/decimal"`
+		data.ToShardingValue = `fmt.Sprintf("%d", k)`
+		data.ShardingValueTo = `_shardingValue, _ := decimal.NewFromString(v.ShardingValue)
+					shardingValue = ` + _typeStart + `_shardingValue.BigInt().Int64()` + _typeEnd + `
+`
 	}
 
 	file, err := os.Create(path.Join(paths, "multi.list.gen.go"))
