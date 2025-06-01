@@ -1449,7 +1449,7 @@ type _multiCount struct {
 
 // MultiCount 获取多表数据总条数
 func ({{.Abbr}} *{{.StructName}}) MultiCount(sharding []{{.ShardingKeyType}}) *_multiCount {
-	return &multiCount{
+	return &_multiCount{
 		core:          {{.Abbr}},
 		unscoped:      {{.Abbr}}.unscoped,
 		conditionOpts: make([]ConditionOption, 0),
