@@ -1,6 +1,7 @@
 package repository
 
 import (
+	"fmt"
 	"os"
 	"path"
 	"reflect"
@@ -66,6 +67,11 @@ func (r *Repository) Generate(models ...interface{}) error {
 }
 
 func (r *Repository) ShardingGenerate(shardingStructName string, models ...interface{}) error {
+	for _, model := range models {
+		if err := r.generate(model, shardingStructName); err != nil {
+			return err
+		}
+	}
 	return nil
 }
 
@@ -135,6 +141,42 @@ func (r *Repository) generate(model interface{}, shardingStructName string) erro
 
 	if shardingStructName == "" {
 		return nil
+	}
+
+	shardingKeyExist := false
+	var shardingKeyType string
+	var shardingKeyTypeFormat string
+
+	for i := 0; i < rt.NumField(); i++ {
+		field := rt.Field(i)
+		if field.Name != shardingStructName {
+			continue
+		}
+		allowType := false
+		typ := field.Type.String()
+		if r.isInt(typ) {
+			allowType = true
+			shardingKeyTypeFormat = "d"
+		}
+		if r.isString(typ) {
+			allowType = true
+			shardingKeyTypeFormat = "s"
+		}
+		if !allowType {
+			return fmt.Errorf("%s sharding key %s type %s not support", rt.Name(), shardingStructName, typ)
+		}
+		shardingKeyType = strings.Trim(typ, "*")
+		shardingKeyExist = true
+		break
+	}
+
+	if !shardingKeyExist {
+		return fmt.Errorf("%s not exist sharding key %s", rt.Name(), shardingStructName)
+	}
+
+	// multi.count.go
+	if err := r.genMultiCount(rt, abbr, filename, paths, shardingStructName, shardingKeyType, shardingKeyTypeFormat); err != nil {
+		return err
 	}
 
 	return nil
