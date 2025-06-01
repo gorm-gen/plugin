@@ -44,7 +44,7 @@ func (r *Repository) genMultiList(rt reflect.Type, abbr, filename, paths, shardi
 
 	if shardingKeyType != "string" {
 		_typeStart := shardingKeyType + "("
-		_typeEnd := shardingKeyType + ")"
+		_typeEnd := ")"
 		if shardingKeyType == "int64" {
 			_typeStart = ""
 			_typeEnd = ""
