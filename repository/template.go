@@ -1686,7 +1686,7 @@ func (d *_multiDelete) Do(ctx context.Context) (int64, map[{{.ShardingKeyType}}]
 			defer wg.Done()
 			_conditions := make([]gen.Condition, len(conditions))
 			copy(_conditions, conditions)
-			_conditions = append(_conditions, ConditionSharding(sharding)(d.core))
+			_conditions = append(_conditions, Condition{{.ShardingKey}}(sharding)(d.core))
 			dr := dq.WithContext(ctx)
 			if d.unscoped {
 				dr = dr.Unscoped()
