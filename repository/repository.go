@@ -194,5 +194,10 @@ func (r *Repository) generate(model interface{}, shardingStructName string) erro
 		return err
 	}
 
+	// multi.sum.go
+	if err := r.genMultiSum(rt, abbr, filename, paths, shardingStructName, shardingKeyType, shardingKeyTypeFormat); err != nil {
+		return err
+	}
+
 	return nil
 }
