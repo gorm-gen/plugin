@@ -370,7 +370,7 @@ import (
 	"context"
 
 	"go.uber.org/zap"
-    "gorm.io/gen"
+	"gorm.io/gen"
 
 	"{{.GenQueryPkg}}"
 
