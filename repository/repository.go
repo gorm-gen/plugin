@@ -57,69 +57,84 @@ func (r *Repository) Generate(models ...interface{}) error {
 	}
 
 	for _, model := range models {
-		rt := reflect.TypeOf(model)
-		if rt.Kind() == reflect.Ptr {
-			rt = rt.Elem()
-		}
-
-		abbr := strings.ToLower(rt.Name()[:1])
-		filename := abbr + rt.Name()[1:]
-		paths := path.Join(r.repoPath, filename)
-		if err := os.MkdirAll(paths, os.ModePerm); err != nil {
+		if err := r.generate(model, ""); err != nil {
 			return err
 		}
-		modelPkgArr := strings.Split(rt.PkgPath(), "/")
-		modelName := modelPkgArr[len(modelPkgArr)-1]
+	}
 
-		// base.go
-		if err := r.genBase(rt, abbr, filename, paths); err != nil {
-			return err
-		}
+	return nil
+}
 
-		// count.go
-		if err := r.genCount(rt, abbr, filename, paths); err != nil {
-			return err
-		}
+func (r *Repository) ShardingGenerate(shardingStructName string, models ...interface{}) error {
+	return nil
+}
 
-		// create.go
-		if err := r.genCreate(rt, abbr, filename, paths, modelName); err != nil {
-			return err
-		}
+func (r *Repository) generate(model interface{}, shardingStructName string) error {
+	rt := reflect.TypeOf(model)
+	if rt.Kind() == reflect.Ptr {
+		rt = rt.Elem()
+	}
+	abbr := strings.ToLower(rt.Name()[:1])
+	filename := abbr + rt.Name()[1:]
+	paths := path.Join(r.repoPath, filename)
+	if err := os.MkdirAll(paths, os.ModePerm); err != nil {
+		return err
+	}
+	modelPkgArr := strings.Split(rt.PkgPath(), "/")
+	modelName := modelPkgArr[len(modelPkgArr)-1]
 
-		// delete.go
-		if err := r.genDelete(rt, abbr, filename, paths); err != nil {
-			return err
-		}
+	// base.go
+	if err := r.genBase(rt, abbr, filename, paths); err != nil {
+		return err
+	}
 
-		// first.go
-		if err := r.genFirst(rt, abbr, filename, paths, modelName); err != nil {
-			return err
-		}
+	// count.go
+	if err := r.genCount(rt, abbr, filename, paths); err != nil {
+		return err
+	}
 
-		// last.go
-		if err := r.genLast(rt, abbr, filename, paths, modelName); err != nil {
-			return err
-		}
+	// create.go
+	if err := r.genCreate(rt, abbr, filename, paths, modelName); err != nil {
+		return err
+	}
 
-		// list.go
-		if err := r.genList(rt, abbr, filename, paths, modelName); err != nil {
-			return err
-		}
+	// delete.go
+	if err := r.genDelete(rt, abbr, filename, paths); err != nil {
+		return err
+	}
 
-		// sum.go
-		if err := r.genSum(rt, abbr, filename, paths); err != nil {
-			return err
-		}
+	// first.go
+	if err := r.genFirst(rt, abbr, filename, paths, modelName); err != nil {
+		return err
+	}
 
-		// take.go
-		if err := r.genTake(rt, abbr, filename, paths, modelName); err != nil {
-			return err
-		}
+	// last.go
+	if err := r.genLast(rt, abbr, filename, paths, modelName); err != nil {
+		return err
+	}
 
-		// update.go
-		if err := r.genUpdate(rt, abbr, filename, paths); err != nil {
-			return err
-		}
+	// list.go
+	if err := r.genList(rt, abbr, filename, paths, modelName); err != nil {
+		return err
+	}
+
+	// sum.go
+	if err := r.genSum(rt, abbr, filename, paths); err != nil {
+		return err
+	}
+
+	// take.go
+	if err := r.genTake(rt, abbr, filename, paths, modelName); err != nil {
+		return err
+	}
+
+	// update.go
+	if err := r.genUpdate(rt, abbr, filename, paths); err != nil {
+		return err
+	}
+
+	if shardingStructName == "" {
+		return nil
 	}
 
 	return nil
