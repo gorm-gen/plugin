@@ -1447,7 +1447,7 @@ type _multiCount struct {
 	worker        chan struct{}
 }
 
-// MultiCount 获取多表数据总条数
+// MultiCount 获取多表数据总记录
 func ({{.Abbr}} *{{.StructName}}) MultiCount(sharding []{{.ShardingKeyType}}) *_multiCount {
 	return &_multiCount{
 		core:          {{.Abbr}},
@@ -1490,7 +1490,7 @@ func (c *_multiCount) Where(opts ...ConditionOption) *_multiCount {
 	return c
 }
 
-// Do 执行获取多表数据总条数
+// Do 执行获取多表数据总记录
 func (c *_multiCount) Do(ctx context.Context) (int64, map[{{.ShardingKeyType}}]int64, error) {
 	if len(c.sharding) == 0 {
 		return 0, nil, nil
