@@ -1,0 +1,49 @@
+package repository
+
+import (
+	"html/template"
+	"os"
+	"path"
+	"reflect"
+)
+
+// genCount count.go
+func (r *Repository) genMultiCount(rt reflect.Type, abbr, filename, paths, shardingKey, shardingKeyType, shardingKeyTypeFormat string) error {
+	data := struct {
+		Package               string
+		GenQueryPkg           string
+		RepoPkg               string
+		RepoPkgName           string
+		StructName            string
+		Abbr                  string
+		ShardingKey           string
+		ShardingKeyType       string
+		ShardingKeyTypeFormat string
+	}{
+		Package:               filename,
+		GenQueryPkg:           r.genQueryPkg,
+		RepoPkg:               r.repoPkg,
+		RepoPkgName:           r.repoPkgName,
+		StructName:            rt.Name(),
+		Abbr:                  abbr,
+		ShardingKey:           shardingKey,
+		ShardingKeyType:       shardingKeyType,
+		ShardingKeyTypeFormat: shardingKeyTypeFormat,
+	}
+
+	file, err := os.Create(path.Join(paths, "multi.count.gen.go"))
+	if err != nil {
+		return err
+	}
+	defer func() {
+		_ = file.Close()
+	}()
+	t, err := template.New(r.genMultiCountTemplate()).Parse(r.genMultiCountTemplate())
+	if err != nil {
+		return err
+	}
+	if err = t.Execute(file, data); err != nil {
+		return err
+	}
+	return nil
+}
