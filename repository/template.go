@@ -1514,17 +1514,17 @@ func (c *_multiCount) Do(ctx context.Context) (int64, map[{{.ShardingKeyType}}]i
 	errChan := make(chan error)
 	endChan := make(chan struct{})
 	for _, sharding := range c.sharding {
-		c.worker <- struct{}{}
+		c.worker {{.ChanSign}} struct{}{}
 		wg.Add(1)
 		go func(sharding {{.ShardingKeyType}}) {
 			defer func() {
 				if r := recover(); r != nil {
 					c.core.logger.Error(fmt.Sprintf("【{{.StructName}}.MultiCount.%{{.ShardingKeyTypeFormat}}】执行异常", sharding), zap.Any("recover", r), zap.ByteString("debug.Stack", debug.Stack()))
-					errChan <- fmt.Errorf("recovered from panic: %v", r)
+					errChan {{.ChanSign}} fmt.Errorf("recovered from panic: %v", r)
 				}
 			}()
 			defer func() {
-				<-c.worker
+				{{.ChanSign}}c.worker
 			}()
 			defer wg.Done()
 			_conditions := make([]gen.Condition, len(conditions))
@@ -1539,7 +1539,7 @@ func (c *_multiCount) Do(ctx context.Context) (int64, map[{{.ShardingKeyType}}]i
 				if {{.RepoPkgName}}.IsRealErr(err) {
 					c.core.logger.Error(fmt.Sprintf("【{{.StructName}}.MultiCount.%{{.ShardingKeyTypeFormat}}】失败", sharding), zap.Error(err))
 				}
-				errChan <- err
+				errChan {{.ChanSign}} err
 				return
 			}
 			sm.Store(sharding, count)
@@ -1548,10 +1548,10 @@ func (c *_multiCount) Do(ctx context.Context) (int64, map[{{.ShardingKeyType}}]i
 	}
 	go func() {
 		wg.Wait()
-		endChan <- struct{}{}
+		endChan {{.ChanSign}} struct{}{}
 	}()
 	select {
-	case <-endChan:
+	case {{.ChanSign}}endChan:
 		count := int64(0)
 		m := make(map[{{.ShardingKeyType}}]int64, len(c.sharding))
 		sm.Range(func(key, value interface{}) bool {
@@ -1561,7 +1561,7 @@ func (c *_multiCount) Do(ctx context.Context) (int64, map[{{.ShardingKeyType}}]i
 			return true
 		})
 		return count, m, nil
-	case err := <-errChan:
+	case err := {{.ChanSign}}errChan:
 		return 0, nil, err
 	}
 }

@@ -19,6 +19,7 @@ func (r *Repository) genMultiCount(rt reflect.Type, abbr, filename, paths, shard
 		ShardingKey           string
 		ShardingKeyType       string
 		ShardingKeyTypeFormat string
+		ChanSign              template.HTML
 	}{
 		Package:               filename,
 		GenQueryPkg:           r.genQueryPkg,
@@ -29,6 +30,7 @@ func (r *Repository) genMultiCount(rt reflect.Type, abbr, filename, paths, shard
 		ShardingKey:           shardingKey,
 		ShardingKeyType:       shardingKeyType,
 		ShardingKeyTypeFormat: shardingKeyTypeFormat,
+		ChanSign:              template.HTML("<-"),
 	}
 
 	file, err := os.Create(path.Join(paths, "multi.count.gen.go"))
