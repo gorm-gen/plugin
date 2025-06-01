@@ -184,5 +184,10 @@ func (r *Repository) generate(model interface{}, shardingStructName string) erro
 		return err
 	}
 
+	// multi.first.go
+	if err := r.genMultiFirst(rt, abbr, filename, paths, shardingStructName, shardingKeyType, shardingKeyTypeFormat, modelName); err != nil {
+		return err
+	}
+
 	return nil
 }

@@ -1761,12 +1761,12 @@ type _multiFirst struct {
 	unscoped      bool
 	selects       []field.Expr
 	conditionOpts []ConditionOption
-	sharding      []{{.ShardingKeyType}})
+	sharding      []{{.ShardingKeyType}}
 	worker        chan struct{}
 }
 
 // MultiFirst 获取多表随机第一条记录（主键升序）
-func ({{.Abbr}} *{{.StructName}}) MultiFirst(sharding []{{.ShardingKeyType}})) *_multiFirst {
+func ({{.Abbr}} *{{.StructName}}) MultiFirst(sharding []{{.ShardingKeyType}}) *_multiFirst {
 	return &_multiFirst{
 		core:          {{.Abbr}},
 		unscoped:      {{.Abbr}}.unscoped,
@@ -1885,7 +1885,7 @@ func (f *_multiFirst) Do(ctx context.Context) (*{{.ModelName}}.{{.StructName}}, 
 	for _, sharding := range f.sharding {
 		f.worker {{.ChanSign}} struct{}{}
 		wg.Add(1)
-		go func(sharding {{.ShardingKeyType}})) {
+		go func(sharding {{.ShardingKeyType}}) {
 			defer func() {
 				if r := recover(); r != nil {
 					f.core.logger.Error(fmt.Sprintf("【{{.StructName}}.MultiFirst.%{{.ShardingKeyTypeFormat}}】执行异常", sharding), zap.Any("recover", r), zap.ByteString("debug.Stack", debug.Stack()))
