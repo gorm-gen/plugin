@@ -199,5 +199,10 @@ func (r *Repository) generate(model interface{}, shardingStructName string) erro
 		return err
 	}
 
+	// multi.take.go
+	if err := r.genMultiTake(rt, abbr, filename, paths, shardingStructName, shardingKeyType, shardingKeyTypeFormat, modelName); err != nil {
+		return err
+	}
+
 	return nil
 }
