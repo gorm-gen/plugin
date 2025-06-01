@@ -813,7 +813,7 @@ package {{.Package}}
 import (
 	"context"
 
-    "github.com/gorm-gen/plugin/paginate"
+	"github.com/gorm-gen/plugin/paginate"
 	"go.uber.org/zap"
 	"gorm.io/gen"
 	"gorm.io/gen/field"
