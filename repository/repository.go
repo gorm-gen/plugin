@@ -179,5 +179,10 @@ func (r *Repository) generate(model interface{}, shardingStructName string) erro
 		return err
 	}
 
+	// multi.delete.go
+	if err := r.genMultiDelete(rt, abbr, filename, paths, shardingStructName, shardingKeyType, shardingKeyTypeFormat); err != nil {
+		return err
+	}
+
 	return nil
 }
