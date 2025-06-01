@@ -204,5 +204,10 @@ func (r *Repository) generate(model interface{}, shardingStructName string) erro
 		return err
 	}
 
+	// multi.update.go
+	if err := r.genMultiUpdate(rt, abbr, filename, paths, shardingStructName, shardingKeyType, shardingKeyTypeFormat); err != nil {
+		return err
+	}
+
 	return nil
 }
