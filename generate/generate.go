@@ -12,15 +12,16 @@ import (
 )
 
 type Generate struct {
-	db            *gorm.DB
-	outPath       string
-	mode          gen.GenerateMode
-	modelPkgPath  string
-	dataTypeMap   map[string]func(gorm.ColumnType) string
-	jsonTagName   map[string]JsonTag
-	generateModel []string
-	applyBasic    []interface{}
-	generator     *gen.Generator
+	db             *gorm.DB
+	outPath        string
+	mode           gen.GenerateMode
+	modelPkgPath   string
+	dataTypeMap    map[string]func(gorm.ColumnType) string
+	jsonTagName    map[string]JsonTag
+	generateModel  []generateModel
+	applyBasic     []interface{}
+	generator      *gen.Generator
+	applyInterface []applyInterface
 }
 
 type Option func(*Generate)
@@ -43,15 +44,32 @@ func WithModelPkgPath(modelPkgPath string) Option {
 	}
 }
 
-func (g *Generate) SetGenerateModel(tableNames ...string) {
-	_tableNames := make([]string, 0, len(tableNames))
-	for _, tableName := range tableNames {
-		if tableName == "" {
-			continue
-		}
-		_tableNames = append(_tableNames, tableName)
+type applyInterface struct {
+	fc     interface{}
+	models []interface{}
+}
+
+func (g *Generate) SetApplyInterface(fc interface{}, models ...interface{}) {
+	g.applyInterface = append(g.applyInterface, applyInterface{
+		fc:     fc,
+		models: models,
+	})
+}
+
+type generateModel struct {
+	tableName string
+	opts      []gen.ModelOpt
+}
+
+func (g *Generate) SetGenerateModel(tableName string, opts ...gen.ModelOpt) {
+	gm := generateModel{
+		tableName: tableName,
+		opts:      make([]gen.ModelOpt, 0),
 	}
-	g.generateModel = append(g.generateModel, _tableNames...)
+	if len(opts) > 0 {
+		gm.opts = opts
+	}
+	g.generateModel = append(g.generateModel, gm)
 }
 
 func (g *Generate) SetApplyBasic(models ...interface{}) {
@@ -113,14 +131,15 @@ func WithReplaceJsonTagName(jsonTagName map[string]JsonTag) Option {
 
 func New(db *gorm.DB, opts ...Option) *Generate {
 	g := &Generate{
-		db:            db,
-		outPath:       "./internal/query",
-		mode:          gen.WithoutContext | gen.WithDefaultQuery | gen.WithQueryInterface,
-		modelPkgPath:  "models",
-		dataTypeMap:   dataTypeMap(),
-		jsonTagName:   jsonTagName(),
-		generateModel: make([]string, 0),
-		applyBasic:    make([]interface{}, 0),
+		db:             db,
+		outPath:        "./internal/query",
+		mode:           gen.WithoutContext | gen.WithDefaultQuery | gen.WithQueryInterface,
+		modelPkgPath:   "models",
+		dataTypeMap:    dataTypeMap(),
+		jsonTagName:    jsonTagName(),
+		generateModel:  make([]generateModel, 0),
+		applyBasic:     make([]interface{}, 0),
+		applyInterface: make([]applyInterface, 0),
 	}
 
 	for _, opt := range opts {
@@ -169,12 +188,18 @@ func (g *Generate) Generator() *gen.Generator {
 }
 
 func (g *Generate) Execute() {
-	for _, tableName := range g.generateModel {
-		g.generator.GenerateModel(tableName)
+	for _, gm := range g.generateModel {
+		g.generator.GenerateModel(gm.tableName, gm.opts...)
 	}
 
 	if len(g.applyBasic) > 0 {
 		g.generator.ApplyBasic(g.applyBasic...)
+	}
+
+	if len(g.applyInterface) > 0 {
+		for _, ai := range g.applyInterface {
+			g.generator.ApplyInterface(ai.fc, ai.models...)
+		}
 	}
 
 	g.generator.Execute()
